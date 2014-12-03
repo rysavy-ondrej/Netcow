@@ -1,0 +1,21 @@
+domain Network
+{
+  primitive IntRange ::= (left:Integer, right:Integer).
+  primitive Flow ::=  (src:Integer, dst:Integer).
+  primitive Rule ::= (inp:String, out:String, net:IntRange).
+  primitive Forward ::= (inp:String, out:String, flow:Flow).
+  
+  forward := fwd is Forward, rule is Rule, flow is Flow,
+    rule.inp = fwd.inp, rule.out = fwd.out, fwd.flow = flow, 
+    flow.dst >= rule.net.left, flow.dst <= rule.net.right.
+  
+  conforms   := forward.
+}
+
+partial model Net of Network
+{
+  Rule("p","q", IntRange(10,19))
+  Rule("p","q", IntRange(30,39))
+  Flow(3,15)
+  Forward(_,_,_)
+}

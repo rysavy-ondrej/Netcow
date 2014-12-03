@@ -1,0 +1,122 @@
+/// This is SNET - network model with addresses represented as strings.
+///
+/// address is represented as String and subnet relation. 
+///
+domain Topology
+{
+	Device  ::= new (id:String).
+    Port    ::= new (dev:Device,id:Integer+String).
+	IpRange ::= new (left:PosInteger, right:PosInteger).
+	Net     ::= new (id: String + IpRange).
+	Subnet  ::= new (Net,Net).
+    Edge    ::= new (src:Port, trg:Port).
+    Idge    ::= new (src:Port, trg:Port).
+	Filter  ::= new (e:Edge, src:Net, dst:Net).
+	Forward ::= new (i:Idge, net:Net).
+	
+	flow    ::= (src:Net, dst:Net).
+	flow (src,dst) :- src is Net, dst is Net.
+	
+	subnet ::= (Net,Net).
+	subnet(s,n) :- Subnet(s,n).
+	subnet(s,s) :- s is Net.
+	
+	nReach  ::= (src:Port, dst:Port).
+	nReach(n, n) :- n is Port.
+    nReach(x, y) :- Idge(x, y).
+	nReach(x, y) :- Edge(x, y).
+    nReach(x, z) :- nReach(x, y), nReach(y, z).
+	
+	nsReach  ::= (src:Port, dst:Port, flw:flow).
+	
+	nsReach(x, y, f) :- e is Edge, e = Edge(x, y), Filter(e,s,d), f is flow, subnet(f.src,s), subnet(f.dst,d).
+	nsReach(x, y, f) :- e is Edge, e = Edge(x, y), no { t | t is Filter(e,_,_) }, f is flow.
+	
+	nsReach(x, y, f) :- i is Idge, i = Idge(x, y), Forward(i,r), f is flow, subnet(f.dst,r).
+    nsReach(x, z, f) :- f is flow, nsReach(x, y, f), nsReach(y, z, f).
+	
+///	netReach ::= (src:Port, dst:Port, net:Net).
+///	netReach(s,d,m) :- nsReach(s,d,m).
+///	netReach(s,d,m) :- nsReach(s,d,n), Subnet(m,n). 
+///	netReach(s,d,m) :- s is Port, d is Port, m is Net, count({ n | Subnet(m,n), nsReach(s,d,n) } ) = count({ n | Subnet(m,n)}).
+	
+}
+
+domain Network extends Topology 
+{
+	Protocol ::= { ICMP, IPV4, IPV4_UDP, IPV4_TCP, SMTP, HTTP }.
+	EndPoint ::= new (ip:Integer, pn:Integer).
+	Dscp ::= { CS0, AF11, AF12, AF13, AF21, AF22, AF23, AF31, AF32, AF33, AF41, AF42, AF43, EF, CS6, CS7 }.
+	Ecn ::= { NECT, ECT0, ECT1, CE }.
+	Tos ::= new (dscp: Dscp, ecn : Ecn).
+	
+	_Flow   ::= new (pt:Protocol,src:EndPoint, dst:EndPoint, tos:Tos).	
+	_Filter ::= new (id:String,srcL:Integer,srcR:Integer,dstL:Integer,dstR:Integer).	
+}
+
+
+
+model N1 of Topology {
+	
+	re is Device("re").
+	re_0 is Port(re, 0).
+	re_1 is Port(re, 1).
+	
+	rb is Device("rb").
+	rb_0 is Port(rb,0).
+	rb_1 is Port(rb,1).
+	rb_2 is Port(rb,2).
+	rb_3 is Port(rb,3).
+	
+	r1 is Device("r1").
+	r1_0 is Port(r1,0).
+	r1_1 is Port(r1,1).
+	
+	r2 is Device("r2").
+	r2_0 is Port(r2,0).
+	r2_1 is Port(r2,1).
+
+	r3 is Device("r3").
+	r3_0 is Port(r3,0).
+	r3_1 is Port(r3,1).
+	
+	m0 is Net("10.10.10.0/24").
+	m1 is Net("192.168.10.0/24").
+	m1_1 is Net("192.168.10.0/25").
+	Subnet(m1_1,m1).
+	m2 is Net("192.168.20.0/24").
+	m3 is Net("192.168.30.0/24").
+
+	i1 is Idge(re_0, re_1).
+		  Forward(i1, m1).
+		  Forward(i1, m2).
+		  Forward(i1, m3).
+	e1 is Edge(re_1,rb_0).
+
+	i2 is Idge(rb_0, rb_1).
+	      Forward(i2, m1).
+	i3 is Idge(rb_0, rb_2).
+	      Forward(i3, m2).
+	i4 is Idge(rb_0, rb_3).
+	      Forward(i4, m3).
+		  
+	e2 is Edge(rb_1,r1_0).
+	e3 is Edge(rb_2,r2_0).
+	e4 is Edge(rb_3,r3_0).
+	
+	i5 is Idge(r1_0, r1_1).
+	      Forward(i5, m1).
+	i6 is Idge(r2_0, r2_1).
+	      Forward(i6, m2).
+	i7 is Idge(r3_0, r3_1).
+	      Forward(i7, m3).
+		  
+	/// query N1 nReach(%re_0, %r3_1)   	             ~ TRUE
+	/// query N1 nsReach(%re_0, %re_1, flow(%m0,%m3)) 	 ~ TRUE
+	/// query N1 nsReach(%re_0, %r3_1, flow(%m0,%m1)) 	 ~ FALSE
+	/// query N1 nsReach(%re_0, %rb_0, flow(%m0,%m3))    ~ TRUE
+	/// query N1 nsReach(%re_0, %rb_3, flow(%m0,%m3))    ~ TRUE
+	/// query N1 nsReach(%rb_3, %r3_0, flow(%m0,%m3))    ~ TRUE
+	/// query N1 nsReach(%re_0, %r3_1, flow(%m0,%m3))    ~ TRUE
+	/// query N1 nsReach(%re_1, %rb_0, flow(%m0,%m3))
+}

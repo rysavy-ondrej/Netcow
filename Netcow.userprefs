@@ -1,0 +1,14 @@
+﻿<Properties GitUserInfo="UsingGIT">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench>
+    <Files>
+      <File FileName="NetconfLib/AssemblyInfo.fs" Line="59" Column="59" />
+      <File FileName="NetconfLib/Utils.fs" Line="56" Column="56" />
+      <File FileName="NetconfLib/CiscoCLIParser.fs" Line="10" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

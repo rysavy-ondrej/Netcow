@@ -1,0 +1,293 @@
+//// This domain specifies properties of flow-based abstraction of Internet topology and communication.
+//// In this domain, entities are L3 and L2 devices connected by links and communication flows.
+domain Inet {
+	UInt8 ::= {0..255}.
+	UInt16 ::= {0..65535}.
+	UInt32 ::=  {0..4294967295}.
+
+
+    //// Enumerates all supported internetwork and transport. 
+    Protocol ::= new (name: String). //// valid names are "ip", "ip.icmp", "ip.udp", "ip.tcp"
+    //// Test if protocol p is a "super-protocol" to q. 
+	//// For instance, "ip" is super-protocol of "ip.udp", etc.
+	isSupProtocol ::= (p:Protocol,q:Protocol).
+	isSupProtocol(p,q) :- p is Protocol, q is Protocol, isSubstring(p.name,q.name) = TRUE.
+
+	//// IPAddress is represented as UInt32. Note that only used ip addressed are provable in the model.
+    IpAddress ::= new (value:UInt32).
+    IpAddressRange ::= new (left:UInt32, right:UInt32).
+	//// Port is 16-bit wide unsigned number for TCP and UDP transport.
+    Port ::= new (value:UInt16).
+	PortRange ::= new (left:UInt16, right:UInt16).
+	//// Type of service is a byte which defines a class of the traffic.
+	TypeOfService ::= new (value:UInt8).
+    			   
+    //// Defines direction of flow that traverses the interface.
+	FlowDirection ::= {IN,OUT}.
+	Status ::= {UP,DOWN}.
+	//// This type represents an ip address assigned to the interface.
+	InterfaceAddress ::= new (host:IpAddress,network:IpAddressRange).
+
+	
+    RouterPort ::= new (router:Router,id:String,status:Status,address:InterfaceAddress+{NIL}).
+    //// Represents L3 forwarding (router) devices.
+    Router ::= new (name : String).
+	
+	TrunkEncapsulation ::= {DOT1Q, ISL}.
+	SwitchPortTrunk ::= new (encapsulation:TrunkEncapsulation,native:Integer).
+	SwitchPortAccess ::= new (vlan:Integer). 
+	SwitchPort ::= new (switch:Switch,id:String,status:Status,mode:SwitchPortTrunk+SwitchPortAccess).
+	//// Represents L2 forwarding (switch) devices.
+    Switch ::= new (name : String).
+
+
+    FrameRelaySwitch ::= new (name:String).
+    FrameRelayPort ::= new (switch:FrameRelaySwitch,id:String,status:Status).
+    FrameRelayLink ::= new (srcPort:FrameRelayPort,srcDlci:Integer,trgPort:FrameRelayPort,trgDlci:Integer).
+
+
+	Interface ::= RouterPort + SwitchPort + FrameRelayPort.
+	//// Link is a directed connection between ports. Link can have additional 
+	//// parameters that defines its QoS capabilities. 
+    Link ::= new (source:Interface, target:Interface).
+
+////=========ACL===========================================================================
+	//// Specifies an action of ACL.
+    AclAction ::= { PERMIT, DENY }.
+	
+	//// Specifies rules of an access list.
+	AccessList::= new  (name:String, 
+	         			action:AclAction, 
+			            pt:Protocol, 
+			            srcIp:IpAddressRange, 
+			            dstIp:IpAddressRange, 
+			            srcPn:PortRange, 
+			            dstPn:PortRange).
+			 
+	//// Binds an access list to an interface.  		 
+	AccessGroup ::= new (device:Router, 
+	                     aclname:String,
+						 direction:FlowDirection,
+						 interface:RouterPort).
+
+////=========STATIC ROUTES==================================================================
+	IpRoute ::= new (device:Router, network: IpAddressRange, iface:RouterPort, nexthop: IpAddress+{NIL}).
+
+////=========FLOWS ========================================================================= 
+	//// Flow specification consists of key 6-tuple. Flows are derived from available 
+	//// addresses and port.
+    Flow ::= new (pt     : Protocol,
+                  srcIp  :  IpAddress,
+                  dstIp  :  IpAddress,
+                  srcPn  :  Port,
+			      dstPn  :  Port,
+			      tos    :  TypeOfService ).
+////=========RULES ========================================================================= 
+	//// forward is a flow-relation associated with a router node. It represents 
+	//// relation between inflow at source port and outflow at target port. 
+	forward ::= (device:Router, source:RouterPort, target:RouterPort, inflow:Flow, outflow:Flow).
+	//// forward relation is given by the content of forwarding table.
+	forward (device, source, target, flow, flow) :- forwardRouting(device,source,target,flow).
+
+	forwardRouting ::= (device:Router, source:RouterPort, target:RouterPort, flow:Flow).
+
+	//// Static routes are the only source of routing information.
+	forwardRouting(device,source,target,flow) :-
+		flow is Flow,
+		device is Router,
+		network is IpAddressRange, 
+		target is RouterPort,
+		source is RouterPort, 
+		source.router=device,
+		IpRoute(device, network, target, _),
+		flow.dstIp.value >= network.left, flow.dstIp.value <= network.right.
+	
+				
+	//// filter constrains flows at interface at the given direction.
+	filter ::= (device:Router, interface:RouterPort, direction:FlowDirection, flow:Flow).
+	filter (device, interface, direction,flow) :- filterAcl (device, interface, direction,flow).
+
+    filterAcl ::= (device:Router, interface:RouterPort, direction:FlowDirection, flow:Flow).
+	filterAcl (device, interface, direction,flow) :- 
+		flow is Flow,
+		AccessGroup(device, aclId, direction, interface),
+		AccessList(aclId,action, pt, srcIpRange, dstIpRange, srcPnRange, dstPnRange),
+		isSupProtocol(pt,flow.pt), 
+		flow.srcIp.value >= srcIpRange.left, flow.srcIp.value <= srcIpRange.right,
+		flow.dstIp.value >= dstIpRange.left, flow.dstIp.value <= dstIpRange.right,
+		flow.srcPn.value >= srcPnRange.left, flow.srcPn.value <= srcPnRange.right.
+
+	//// If no access group is defined then all IN flows are permitted on an interface.
+	filterAcl (device, interface, IN, flow) :- 
+	    no AccessGroup(device, _, IN, interface),  
+		flow is Flow, device is Router, interface is RouterPort.
+
+	//// If no access group is defined then all OUT flows are permitted on an interface. 	
+	filterAcl (device, interface, OUT, flow) :- 
+	    no AccessGroup(device, _, OUT, interface),  
+		flow is Flow, device is Router, interface is RouterPort.
+	    
+	//// Determines if inflow from source port can reach target port as outflow. 
+    flowReach ::= (source:Interface, target:Interface, inflow:Flow, outflow:Flow).
+	
+	//// flow is constrained as a funciton of a device.	
+    flowReach(source,target,inflow,outflow) :-
+         filter(dev,source,IN,inflow),
+         forward(dev,source,target,inflow,outflow),
+         filter(dev,target,OUT,outflow).
+
+	//// Flow is not modified on link. 
+	flowReach(source,target,flow,flow) :-
+	     flow is Flow, 
+         Link(source,target).
+
+    //// This type defines list of interface that can be used as a path in 
+	//// the network.
+	InterfaceList ::= new (Interface, any InterfaceList + {NIL}).
+	
+	//// Determines relation between input flow and output flow for
+	//// the given path.
+	flowReachPath ::= (path:InterfaceList, inflow:Flow, outflow:Flow).
+	
+    flowReachPath(InterfaceList(source,InterfaceList(target,NIL)),inflow,outflow) :-
+        flowReach(source,target,inflow,outflow).
+    
+	flowReachPath(InterfaceList(source, InterfaceList(mid,tail)),inflow,outflow) :-
+        flowReachPath(InterfaceList(mid,tail),medflow,outflow),
+        flowReach(source,mid,inflow,medflow).
+
+//// TOPOLOGY UTILS
+    //// Tests if interface x is in the same LAN as interface y.
+	sameLan ::= (x:Interface,y:Interface). 
+	sameLan(x,y) :-
+		Link(x,y).
+	sameLan(x,y) :-
+		sw is Switch,
+		s1 is SwitchPort,
+		s2 is SwitchPort,
+		s1.switch = s2.switch, 
+		Link(x,s1),
+		Link(y,s2).
+	
+//// CONFORMANCE TESTS================================================================
+    
+	//// Checks if there is an unidirectional link, which is usually a network topology error.		
+	unidirectional :-
+		x is Interface, y is Interface, Link(x,y), no Link(y,x).
+	
+	//// Checks if interfaces have consistent addresses.
+	duplicateAddress :-
+		x is RouterPort, y is RouterPort, x != y, 
+		sameLan(x,y), x.address != NIL, y.address != NIL,
+		x.address.host = y.address.host.  
+
+	//// Checks if interfaces have consistent addresses.
+	mismatchNetworkAddress :-
+		x is RouterPort, y is RouterPort, x != y, 
+		sameLan(x,y), x.address != NIL, y.address != NIL,
+		x.address.network != y.address.network.  
+
+	conforms no unidirectional.
+}
+
+////====================================================================
+//// TESTS
+////==================================================================== 
+model TestUnidirectional of Inet {
+	r1 is Router("R1").
+	r1_f0_0 is RouterPort(r1, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236545),IpAddressRange(3232236544,3232236799))).
+	r2 is Router("R2").
+	r2_f0_0 is RouterPort(r2, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236546),IpAddressRange(3232236544,3232236799))).
+	Link(r1_f0_0,r2_f0_0).
+
+	//// ASSERTIONS:
+	//// query TestUnidirectional unidirectional
+}
+model TestDuplicateAddress of Inet {
+	r1 is Router("R1").
+	r1_f0_0 is RouterPort(r1, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236545),IpAddressRange(3232236544,3232236799))).
+	r2 is Router("R2").
+	r2_f0_0 is RouterPort(r2, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236545),IpAddressRange(3232236544,3232236799))).
+	Link(r1_f0_0,r2_f0_0).
+	Link(r2_f0_0,r1_f0_0).
+
+	//// ASSERTIONS:
+	//// query TestDuplicateAddress duplicateAddress
+}
+model TestMismatchNetworkAddress of Inet {
+	r1 is Router("R1").
+	r1_f0_0 is RouterPort(r1, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236545),IpAddressRange(3232236544,3232236799))).
+	r2 is Router("R2").
+	r2_f0_0 is RouterPort(r2, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236546),IpAddressRange(3232236544,3232236798))).
+	Link(r1_f0_0,r2_f0_0).
+	Link(r2_f0_0,r1_f0_0).
+
+	//// ASSERTIONS:
+	//// query TestMismatchNetworkAddress mismatchNetworkAddress
+}
+
+model TestSameLan of Inet {
+	r1 is Router("R1").
+	r1_f0_0 is RouterPort(r1, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236545),IpAddressRange(3232236544,3232236799))).
+	r1_f0_1 is RouterPort(r1, "FastEthernet0/1", UP, InterfaceAddress(IpAddress(3132236545),IpAddressRange(3132236544,3132236799))).
+
+
+	r2 is Router("R2").
+	r2_f0_0 is RouterPort(r2, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236546),IpAddressRange(3232236544,3232236798))).
+	r2_f0_1 is RouterPort(r1, "FastEthernet0/1", UP, InterfaceAddress(IpAddress(3132236545),IpAddressRange(3132236544,3132236799))).
+
+	sw is Switch("LAN").
+	sw_0 is SwitchPort(sw, "FastEthernet0", UP, SwitchPortAccess(1)).
+	sw_1 is SwitchPort(sw, "FastEthernet1", UP, SwitchPortAccess(1)).
+
+	Link(r1_f0_0,sw_0).
+	Link(sw_0,r1_f0_0).
+
+	Link(r2_f0_0,sw_1).	
+	Link(sw_1,r2_f0_0).	
+
+	//// ASSERTIONS:
+	//// query TestSameLan sameLan(%r1_f0_0, %r2_f0_0) = True
+	//// query TestSameLan sameLan(%r1_f0_1, %r2_f0_1) = False
+} 
+
+//// 
+////        f0/1 ______  f0/0    f0/0 ______ f0/1
+//// LAN1 -------| R1 | --------------| R2 |------ LAN2 
+////  0-9        ------      10-19    ------       20-29
+//// 
+model TestForwarding of Inet {
+	r1 is Router("R1").
+		r1_f0_0 is RouterPort(r1, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(11),IpAddressRange(10,19))).
+		r1_f0_1 is RouterPort(r1, "FastEthernet0/1", UP, InterfaceAddress(IpAddress(1),IpAddressRange(0,9))).
+		IpRoute(r1, IpAddressRange(20,29), r1_f0_0, IpAddress(12)).
+		IpRoute(r1, IpAddressRange(0,9), r1_f0_1, NIL).
+
+	r2 is Router("R2").
+		r2_f0_0 is RouterPort(r2, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(12),IpAddressRange(10,19))).
+		r2_f0_1 is RouterPort(r2, "FastEthernet0/1", UP, InterfaceAddress(IpAddress(21),IpAddressRange(20,29))).
+		IpRoute(r2, IpAddressRange(0,9), r2_f0_0, IpAddress(11)).
+		IpRoute(r2, IpAddressRange(20,29), r2_f0_1, NIL).
+
+	sw1 is Switch("LAN1").
+		sw1_0 is SwitchPort(sw1, "FastEthernet0", UP, SwitchPortAccess(1)).
+
+	sw2 is Switch("LAN2").
+		sw2_0 is SwitchPort(sw2, "FastEthernet0", UP, SwitchPortAccess(1)).
+
+	Link(r1_f0_0,r2_f0_0).
+	Link(r2_f0_0,r1_f0_0).
+
+	Link(r1_f0_1,sw1_0).
+	Link(sw1_0,r1_f0_1).
+
+	Link(r2_f0_1,sw2_0).
+	Link(sw2_0,r2_f0_1).
+
+	f1 is Flow(Protocol("ip.tcp"), IpAddress(2), IpAddress(22), Port(12453), Port(80), TypeOfService(0)).
+
+	//// ASSERTIONS:
+	//// query TestForwarding forwardRouting(%r1,%r1_f0_0,%r1_f0_1,%f1)
+	//// query TestForwarding flowReach(%r1_f0_0,%r1_f0_1,%f1,%f1)
+
+}
