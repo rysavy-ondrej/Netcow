@@ -5,9 +5,6 @@ NETwork COnfiguration Verification and Validation
 
 
 
-Terminology
------------
-
-Validation is a process to assure that a product, service, or system meets the needs of stakeholders.
-
-Verification is the evaluation whether a product, service, or system complies with requirements or specification. 
+In the context of this project, terms Validation and Verification have the following meaning:
+* Validation is a process to assure that configuration obey schema and predefined general rules. 
+* Verification is the evaluation whether a configuration complies with requirements or specification. 
