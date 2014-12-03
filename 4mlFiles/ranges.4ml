@@ -1,0 +1,65 @@
+domain Range {
+	/// This is integer range.
+	R       ::= (left:Integer,right:Integer).
+    I       ::= new (left:Integer,right:Integer).
+    R(l,r) :- i is I, l = i.left, r = i.right.     
+    eq ::= (r1:R,r2:R).
+    eq(r1,r2) :- r1 is R, r2 is R, r1.left = r2.left, r1.right = r2.right.
+    
+    inter ::= (r1:R,r2:R).
+    inter(r1,r2) :- r1 is R, r2 is R, r1.left <= r2.left, r1.right >= r2.left;
+                    r1 is R, r2 is R, inter(r2,r1).
+    
+}
+
+domain Rules includes Range::Range 
+{
+	UInt32      ::= {0..4294967295}.
+	UInt16 		::= {0..65535}.
+    PT          ::= new (left:UInt16,right:UInt16).
+    IP          ::= new (left:UInt32,right:UInt32).
+    PN          ::= new (left:UInt16,right:UInt16).
+    
+    R(left,right) :- pt is PT, left = pt.left, right = pt.right.
+    R(left,right) :- ip is IP, left = ip.left, right = ip.right.
+    R(left,right) :- pn is PN, left = pn.left, right = pn.right.
+    
+    
+    
+    Action      ::= { ACCEPT, DENY }.
+	Rule 		::= new (filter:String, priority:Integer, proto:PT, srcIp:IP, srcPn:PN, dstIp:IP, dstPn:PN, action:Action).
+    
+    R(left,right) :- r is Rule, r.srcIp.left = left, r.srcIp.right = right.
+    
+    D ::= { PROTO, SRCIP, SRCPN, DSTIP, DSTPN }.
+    dim ::= (rule:Rule, d:D, range:R).
+    dim(rule,PROTO,range) :- rule is Rule, range is R, range.left = rule.proto.left, range.right = rule.proto.right.
+    dim(rule,SRCIP,range) :- rule is Rule, range is R, range.left = rule.srcIp.left, range.right = rule.srcIp.right.
+    dim(rule,SRCPN,range) :- rule is Rule, range is R, range.left = rule.srcPn.left, range.right = rule.srcPn.right.
+    dim(rule,DSTIP,range) :- rule is Rule, range is R, range.left = rule.dstIp.left, range.right = rule.dstIp.right.
+    dim(rule,DSTPN,range) :- rule is Rule, range is R, range.left = rule.dstPn.left, range.right = rule.dstPn.right.
+}
+
+model R1 of Rules {
+	/// r1            |----------------|
+    /// r2                  |----|
+    /// r3  |----|               
+    /// r4                                  |-----|
+    r1 is Range.I(20,50).
+    r2 is Range.I(30,40).
+    r3 is Range.I(0,10).
+    r4 is I(60,70).
+    pt1 is PT(100,150).
+    ip1 is IP(0,100).
+    ip2 is IP(200,300).
+    pn1 is PN(10,20).
+    pn2 is PN(30,40).
+    
+    q1 is Rule("123", 1, pt1, ip1,pn1,ip2,pn2, ACCEPT).
+    q2 is Rule("456", 2, pt1, IP(300,400), pn1, ip2, pn2, DENY).
+    /// QUERIES:
+	/// query R1 inter(%r1,%r2) ~ TRUE
+    /// query R1 Range.inter(%r1,r), r != %r2, r != %r1   ~ FALSE
+    /// query R1 getDim(q1, PROTO, R(100,150))
+
+}

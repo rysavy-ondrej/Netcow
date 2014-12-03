@@ -1,6 +1,6 @@
 ﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../Netifier/NetworkModelGenerator/CiscoConfig.fs">
+  <MonoDevelop.Ide.Workbench>
     <Files>
       <File FileName="4mlFiles/firewall.4ml" Line="18" Column="18" />
       <File FileName="4mlFiles/intervals.4ml" Line="38" Column="38" />
