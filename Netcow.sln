@@ -1,9 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4mlFiles", "4mlFiles", "{34421C86-0819-4F11-9D85-3087049B3DE8}"
+	ProjectSection(SolutionItems) = preProject
+		4mlFiles\firewall.4ml = 4mlFiles\firewall.4ml
+		4mlFiles\intervals.4ml = 4mlFiles\intervals.4ml
+		4mlFiles\snet.4ml = 4mlFiles\snet.4ml
+		4mlFiles\lab01.4ml = 4mlFiles\lab01.4ml
+		4mlFiles\inet.4ml = 4mlFiles\inet.4ml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal
