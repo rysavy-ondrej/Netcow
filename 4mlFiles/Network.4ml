@@ -214,5 +214,8 @@ model N of NetworkConfiguration {
     /// CONFIGURATION OF R4:
     InterfaceIpAddress(Interface("f0/0", r4_f0_0), 14, UI32Range(10,20)).
 
+
+    /// Queries:
+    /// query N x is RouterPort, y is RouterPort, x != y, sameLan(x,y), InterfaceIpAddress(Interface(_,x),host,_), InterfaceIpAddress(Interface(_,y),host,_)
 }
 
