@@ -1,0 +1,12 @@
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/bin/x86/Debug/libz3.dylib
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/bin/x86/Debug/Microsoft.Z3.dll
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/bin/x86/Debug/Microsoft.Z3.dll.config
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/bin/x86/Debug/libz3.dll
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/bin/x86/Debug/Formula.exe.config
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/bin/x86/Debug/Formula.exe.mdb
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/bin/x86/Debug/Formula.exe
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/obj/x86/Debug/Formula.exe
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/obj/x86/Debug/Formula.exe.mdb
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/bin/x86/Debug/Formula.Core.dll
+/Users/rysavy/Projects/Netifier/MsrFormula/CommandLine/bin/x86/Debug/Formula.Core.dll.mdb

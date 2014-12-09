@@ -1,0 +1,68 @@
+// Parser Conflict Information for grammar file "API/Parser/parser.y - 10/28/2014 5:30:00 AM"
+
+Shift/Reduce conflict on symbol "MUL", parser will shift
+ Reduce 221:	FuncTerm -> FuncTerm, BinOp, FuncTerm
+ Shift "MUL":	State-35 -> State-36
+  Items for From-state State 35
+    221 FuncTerm: FuncTerm BinOp FuncTerm .
+	-lookahead: MUL, DIV, MOD, PLUS, MINUS, COMMA, RULE, DOT, EQ, NE, LT, LE, 
+                GT, GE, COLON, SEMICOLON, RCBRACE, RPAREN, PIPE, UQEND
+    221 FuncTerm: FuncTerm . BinOp FuncTerm 
+  Items for Next-state State 36
+    241 BinOp: MUL .
+	-lookahead: BAREID, QUALID, DIGITS, REAL, FRAC, STRSNGSTART, STRMULSTART, 
+                MINUS, QSTART, LPAREN
+
+Shift/Reduce conflict on symbol "DIV", parser will shift
+ Reduce 221:	FuncTerm -> FuncTerm, BinOp, FuncTerm
+ Shift "DIV":	State-35 -> State-37
+  Items for From-state State 35
+    221 FuncTerm: FuncTerm BinOp FuncTerm .
+	-lookahead: MUL, DIV, MOD, PLUS, MINUS, COMMA, RULE, DOT, EQ, NE, LT, LE, 
+                GT, GE, COLON, SEMICOLON, RCBRACE, RPAREN, PIPE, UQEND
+    221 FuncTerm: FuncTerm . BinOp FuncTerm 
+  Items for Next-state State 37
+    242 BinOp: DIV .
+	-lookahead: BAREID, QUALID, DIGITS, REAL, FRAC, STRSNGSTART, STRMULSTART, 
+                MINUS, QSTART, LPAREN
+
+Shift/Reduce conflict on symbol "MOD", parser will shift
+ Reduce 221:	FuncTerm -> FuncTerm, BinOp, FuncTerm
+ Shift "MOD":	State-35 -> State-38
+  Items for From-state State 35
+    221 FuncTerm: FuncTerm BinOp FuncTerm .
+	-lookahead: MUL, DIV, MOD, PLUS, MINUS, COMMA, RULE, DOT, EQ, NE, LT, LE, 
+                GT, GE, COLON, SEMICOLON, RCBRACE, RPAREN, PIPE, UQEND
+    221 FuncTerm: FuncTerm . BinOp FuncTerm 
+  Items for Next-state State 38
+    243 BinOp: MOD .
+	-lookahead: BAREID, QUALID, DIGITS, REAL, FRAC, STRSNGSTART, STRMULSTART, 
+                MINUS, QSTART, LPAREN
+
+Shift/Reduce conflict on symbol "PLUS", parser will shift
+ Reduce 221:	FuncTerm -> FuncTerm, BinOp, FuncTerm
+ Shift "PLUS":	State-35 -> State-39
+  Items for From-state State 35
+    221 FuncTerm: FuncTerm BinOp FuncTerm .
+	-lookahead: MUL, DIV, MOD, PLUS, MINUS, COMMA, RULE, DOT, EQ, NE, LT, LE, 
+                GT, GE, COLON, SEMICOLON, RCBRACE, RPAREN, PIPE, UQEND
+    221 FuncTerm: FuncTerm . BinOp FuncTerm 
+  Items for Next-state State 39
+    244 BinOp: PLUS .
+	-lookahead: BAREID, QUALID, DIGITS, REAL, FRAC, STRSNGSTART, STRMULSTART, 
+                MINUS, QSTART, LPAREN
+
+Shift/Reduce conflict on symbol "MINUS", parser will shift
+ Reduce 221:	FuncTerm -> FuncTerm, BinOp, FuncTerm
+ Shift "MINUS":	State-35 -> State-40
+  Items for From-state State 35
+    221 FuncTerm: FuncTerm BinOp FuncTerm .
+	-lookahead: MUL, DIV, MOD, PLUS, MINUS, COMMA, RULE, DOT, EQ, NE, LT, LE, 
+                GT, GE, COLON, SEMICOLON, RCBRACE, RPAREN, PIPE, UQEND
+    221 FuncTerm: FuncTerm . BinOp FuncTerm 
+  Items for Next-state State 40
+    245 BinOp: MINUS .
+	-lookahead: BAREID, QUALID, DIGITS, REAL, FRAC, STRSNGSTART, STRMULSTART, 
+                MINUS, QSTART, LPAREN
+
+// End conflict information for parser
