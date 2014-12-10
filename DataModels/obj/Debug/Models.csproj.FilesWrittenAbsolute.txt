@@ -1,0 +1,10 @@
+/Users/rysavy/Projects/Netcow/Models/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/rysavy/Projects/Netcow/Models/obj/Debug/Network.g.cs
+/Users/rysavy/Projects/Netcow/Models/obj/Debug/Firewall.g.cs
+/Users/rysavy/Projects/Netcow/Models/bin/Debug/Netcow.Models.dll.mdb
+/Users/rysavy/Projects/Netcow/Models/bin/Debug/Netcow.Models.dll
+/Users/rysavy/Projects/Netcow/Models/obj/Debug/Netcow.Models.dll
+/Users/rysavy/Projects/Netcow/Models/obj/Debug/Netcow.Models.dll.mdb
+/Users/rysavy/Projects/Netcow/Models/bin/Debug/Formula.Core.dll
+/Users/rysavy/Projects/Netcow/Models/bin/Debug/Formula.Core.dll.mdb
+/Users/rysavy/Projects/Netcow/Models/bin/Debug/Microsoft.Z3.dll

@@ -1,0 +1,222 @@
+//// This domain specifies properties of flow-based abstraction of Internet topology and communication.
+//// In this domain, entities are L3 and L2 devices connected by links and communication flows.
+
+domain Types {
+	UI8 ::= {0..255}.
+	UI16 ::= {0..65535}.
+	UI32 ::=  {0..4294967295}.
+    ID ::= Integer + String.
+
+    UI32Range ::= new (left:UI32,right:UI32).
+    UI16Range ::= new (left:UI16,right:UI16).
+
+    /// These are derived types, which can be used in specification and querying.
+    IP ::= (address:UI32).
+    PN ::= (port:UI16).
+}
+
+domain NetworkTopology includes Types {
+    Router ::= new (name : String).
+    RouterPort ::= new (router:Router,id:ID).
+    
+    FrameRelaySwitch ::= new (name:String).
+    FrameRelayPort ::= new (switch:FrameRelaySwitch,id:ID).
+
+
+    Switch ::= new (name : String).
+	SwitchPort ::= new (switch:Switch,id:ID).
+
+	Port ::= RouterPort + SwitchPort + FrameRelayPort.
+    Device ::= Router + FrameRelaySwitch + Switch.
+    device ::= (port:Port,dev:Device).
+    device(port,dev) :-
+        port is RouterPort, dev is Router, port.router = dev;
+        port is FrameRelayPort, dev is FrameRelaySwitch, port.switch = dev;
+        port is SwitchPort, dev is Switch, port.switch = dev.
+         
+    
+	//// Link is a directed connection between ports. Link can have additional 
+	//// parameters that defines its QoS capabilities. 
+    Link ::= new (source:Port, target:Port).   
+    
+    //// TOPOLOGY UTILS
+    //// Tests if interface x is in the same LAN as interface y.
+	sameLan ::= (x:Port,y:Port). 
+	sameLan(x,y) :-
+		Link(x,y).
+	sameLan(x,y) :-
+		sw is Switch,
+		s1 is SwitchPort,
+		s2 is SwitchPort,
+		s1.switch = s2.switch, 
+		Link(x,s1),
+        Link(y,s2).
+    
+    
+    
+    //// This type defines list of interface that can be used as a path in the network.
+    PortList ::= new (Port, any PortList + {NIL}).
+    edge ::= (Port,Port).
+    edge(u,v) :- Link(u,v).
+    edge(u,v) :- u is Port, v is Port, device(u,d), device(v,d).            
+    path ::= (source:Port, target:Port).
+    path(u, w) :- edge(u, w); edge(u, v), path(v, w).    
+	
+    //// VALIDITY TESTS================================================================
+    	//// Checks if there is an unidirectional link, which is usually a network topology error.		
+    	unidirectional :-
+    		x is Port, y is Port, Link(x,y), no Link(y,x).
+	
+    	conforms no unidirectional.
+}
+
+domain RouterConfiguration includes Types, NetworkTopology {
+    //// Defines direction of flow that traverses the interface.
+	FlowDirection ::= {IN,OUT}.	
+    NatDirection ::= {INSIDE, OUTSIDE}.
+    InterfaceStatus ::= { UP, DOWN }.
+    Interface ::= new (id:String,port:RouterPort).
+    InterfaceIpAddress ::= new (iface:Interface, host:UI32, network:UI32Range).
+    IP(adr) :- x is InterfaceIpAddress, adr = x.host.
+    IP(adr) :- x is InterfaceIpAddress, adr = x.network.left;
+               x is InterfaceIpAddress, adr = x.network.right.
+    InterfaceIpAccessGroup ::= new (iface:Interface, acl:ID, direction:FlowDirection).
+    InterfaceIpNat ::= (iface:Interface, dir:NatDirection).
+    
+    ///=========ACL===========================================================================
+    /// Specifies an action of ACL.
+    AclAction ::= { PERMIT, DENY }.
+    AclProtocol ::= { IPV4, ICMP, IGMP, TCP, UDP }.
+    IcmpOptions ::= { ECHO, ECHO_REPLY }.
+    IgmpOptions ::= new (msgtype:UI16).
+    TcpOptions ::= { ESTABLISHED }.
+    AclOptions ::= IcmpOptions + IgmpOptions + TcpOptions + {NIL}.
+    IpAccessList ::= new (id:ID).
+    AccessList::= new  (acl:IpAccessList, 
+                        action:AclAction, 
+    			        pt:AclProtocol, 
+    			        srcIp:UI32Range, 
+                        srcPn:UI16Range,
+    			        dstIp:UI32Range,   
+    			        dstPn:UI16Range,
+                        opts:AclOptions).
+			 
+    IP(adr) :- x is AccessList, adr = x.srcIp.left;
+               x is AccessList, adr = x.srcIp.right;
+               x is AccessList, adr = x.dstIp.left;
+               x is AccessList, adr = x.dstIp.right.
+    ///=========STATIC ROUTES==================================================================
+    IpRoute ::= new (router:Router, network: UI32Range, iface:RouterPort, nexthop: UI32+{NIL}).    
+    IP(adr) :- x is IpRoute, adr = x.network.left;
+               x is IpRoute, adr = x.network.right.  
+
+    ///=========DYNAMIC ROUTING================================================================    
+    RouterRip ::= new (id:ID).
+    RouterOsfp ::= new (id:ID).
+    RouterEigrp ::= new (id:ID).
+    RouterBgp ::= new (id:ID). 
+
+    ///=========NAT TRANSLATION================================================================
+    IpNatPool ::= new(id:ID, start:UI32, end:UI32, network: UI32Range).
+    NatOrigin ::= {SOURCE,DESTINATION}.
+    IpNatDynamic ::= new (dir:NatDirection, orig:NatOrigin, acl:IpAccessList, pool: IpNatPool).
+    IpNatStatic ::= new (dir:NatDirection, orig:NatOrigin, local:UI32, global:UI32).
+
+
+
+    
+    //// VALIDITY TESTS================================================================
+	//// Checks if interfaces have consistent addresses.
+	duplicateAddress :-
+		x is RouterPort, y is RouterPort, x != y, sameLan(x,y), 
+        InterfaceIpAddress(Interface(_,x),host,_),
+        InterfaceIpAddress(Interface(_,y),host,_),
+        host != NIL.
+
+	//// Checks if interfaces have consistent addresses.
+	mismatchNetworkAddress :-
+	    x is RouterPort, y is RouterPort, x != y, sameLan(x,y), 
+        InterfaceIpAddress(Interface(_,x),_,net1),
+        InterfaceIpAddress(Interface(_,y),_,net2),
+        net1 != net2.
+}
+
+domain SwitchConfiguration includes NetworkTopology {
+	TrunkEncapsulation ::= {DOT1Q, ISL}.
+	SwitchPortTrunk ::= new (encapsulation:TrunkEncapsulation,native:Integer).
+	SwitchPortAccess ::= new (vlan:Integer). 
+	SwitchInterface ::= new (id:ID, port:SwitchPort).
+    SwitchPortMode ::= new(iface:SwitchInterface, mode:SwitchPortTrunk+SwitchPortAccess).
+
+    //// VALIDITY TESTS================================================================
+	//// Checks if connected ports have consistent mode and encapsulation.
+    mismatchPortMode :- 
+        x is SwitchPort, y is SwitchPort, x != y, Link(x,y),
+        SwitchPortMode(SwitchInterface(_,x), m),
+        SwitchPortMode(SwitchInterface(_,x), n),
+        m != n.
+}
+
+domain Network includes NetworkTopology, RouterConfiguration, SwitchConfiguration {
+	
+}
+
+
+model N of Network {
+	/// DEVICES:
+    r1 is Router("R1").
+    r1_f0_0 is RouterPort(r1, "f0/0").
+
+    r2 is Router("R2").
+    r2_f0_0 is RouterPort(r2, "f0/0").
+
+    r3 is Router("R3").
+    r3_f0_0 is RouterPort(r3, "f0/0").
+
+    r4 is Router("R4").
+    r4_f0_0 is RouterPort(r4, "f0/0").
+
+    s1 is Switch("S1").
+    s1_f0_0 is SwitchPort(s1, "f0/0").
+    s1_f0_1 is SwitchPort(s1, "f0/1").
+    s1_f0_2 is SwitchPort(s1, "f0/2").
+
+
+    s2 is Switch("S2").
+    s2_f0_0 is SwitchPort(s2, "f0/0").
+    s2_f0_1 is SwitchPort(s2, "f0/1").
+    s2_f0_2 is SwitchPort(s2, "f0/2").
+
+    /// TOPOLOGY:
+    Link(s1_f0_0, s2_f0_0).
+    Link(s2_f0_0, s1_f0_0).
+
+    Link(r1_f0_0, s1_f0_1).
+    Link(s1_f0_1, r1_f0_0).
+
+    Link(r2_f0_0, s1_f0_2).
+    Link(s1_f0_2, r2_f0_0).
+
+    Link(r3_f0_0, s2_f0_1).
+    Link(s2_f0_1, r3_f0_0).
+
+    Link(r4_f0_0, s2_f0_2).
+    Link(s2_f0_2, r4_f0_0).
+
+    /// CONFIGURATION OF R1:
+    InterfaceIpAddress(Interface("f0/0", r1_f0_0), 11, UI32Range(10,20)).
+
+    /// CONFIGURATION OF R2:
+    InterfaceIpAddress(Interface("f0/0", r2_f0_0), 12, UI32Range(10,20)).
+
+    /// CONFIGURATION OF R3:
+    InterfaceIpAddress(Interface("f0/0", r3_f0_0), 12, UI32Range(10,20)).
+
+    /// CONFIGURATION OF R4:
+    InterfaceIpAddress(Interface("f0/0", r4_f0_0), 14, UI32Range(10,20)).
+
+
+    /// Queries:
+    /// query N x is RouterPort, y is RouterPort, x != y, sameLan(x,y), InterfaceIpAddress(Interface(_,x),host,_), InterfaceIpAddress(Interface(_,y),host,_)
+}
+

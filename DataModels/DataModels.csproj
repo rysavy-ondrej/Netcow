@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0FDF2A95-1979-4ABB-8232-3FFF115E3FEE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Netcow.DataModels</RootNamespace>
+    <AssemblyName>Netcow.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FormulaCsGenPath>$(SolutionDir)Microsoft.Formula\CsGen\bin\Debug</FormulaCsGenPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Numerics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="4mlFiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Cs4mlCompile Include="4mlFiles\Network.4ml" />
+    <Cs4mlCompile Include="4mlFiles\Firewall.4ml" />
+  </ItemGroup>
+  <!--
+    =======================================================================================================
+                                       Generate code from 4ml files
+    =======================================================================================================
+  -->
+  <PropertyGroup>
+    <!--Make sure that the lexer runs before the C# compiler-->
+    <CoreCompileDependsOn>$(CoreCompileDependsOn);GenerateCodeFrom4ml</CoreCompileDependsOn>
+  </PropertyGroup>
+  <Target Name="GenerateCodeFrom4ml" Condition="'$(BuildingProject)'!='false'" Inputs="@(Cs4mlCompile)" Outputs="@(Cs4mlCompile-&gt;'$(IntermediateOutputPath)%(FileName).cs')" DependsOnTargets="$(GenerateCodeFrom4mlDependsOn)">
+    <!--Run the command line tool that generates the cs files.-->
+    <Exec Command="&quot;$(FormulaCsGenPath)\csgen.exe&quot; &quot;@(Cs4mlCompile)&quot; &quot;@(Cs4mlCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')&quot;" />
+    <!--Add the generated files to the list of the files to compile.-->
+    <CreateItem Include="@(Cs4mlCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')">
+      <Output TaskParameter="Include" ItemName="Compile" />
+      <Output TaskParameter="Include" ItemName="FileWrites" />
+    </CreateItem>
+  </Target>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Formula\Core\Formula.Core.csproj">
+      <Project>{1B5724EC-FFF1-48D7-A700-AD46F0150AFC}</Project>
+      <Name>Formula.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
