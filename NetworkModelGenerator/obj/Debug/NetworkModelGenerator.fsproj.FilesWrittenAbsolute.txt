@@ -1,8 +1,0 @@
-/Users/rysavy/Projects/Netcow/NetworkModelGenerator/obj/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.fs
-/Users/rysavy/Projects/Netcow/NetworkModelGenerator/bin/Debug/NetconfLib.dll.mdb
-/Users/rysavy/Projects/Netcow/NetworkModelGenerator/bin/Debug/NetconfLib.dll
-/Users/rysavy/Projects/Netcow/NetworkModelGenerator/obj/Debug/NetconfLib.dll
-/Users/rysavy/Projects/Netcow/NetworkModelGenerator/obj/Debug/NetconfLib.dll.mdb
-/Users/rysavy/Projects/Netcow/NetworkModelGenerator/bin/Debug/FParsec.dll
-/Users/rysavy/Projects/Netcow/NetworkModelGenerator/bin/Debug/FParsecCS.dll
-/Users/rysavy/Projects/Netcow/NetworkModelGenerator/bin/Debug/xunit.dll

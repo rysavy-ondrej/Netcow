@@ -1,9 +1,0 @@
-FCC - FilterConflictChecker
-Filter conflicts checker for Cisco ACL configurations. 
-Copyright (c) 2014 Ondrej Rysavy
-
-[mono] fcc.exe [-conflict:All|Errors] <configuration file>
-
-    -conflict (short: -c) Type of conflict detection. If All is specified then all errors and warnings are reported.
-
-    <configuration file>  The name of the configuration file that contains filter definition. This file should have .CFG extension.
