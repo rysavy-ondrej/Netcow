@@ -54,7 +54,7 @@
   </PropertyGroup>
   <Target Name="GenerateCodeFrom4ml" Condition="'$(BuildingProject)'!='false'" Inputs="@(Cs4mlCompile)" Outputs="@(Cs4mlCompile-&gt;'$(IntermediateOutputPath)%(FileName).cs')" DependsOnTargets="$(GenerateCodeFrom4mlDependsOn)">
     <!--Run the command line tool that generates the cs files.-->
-    <Exec Command="&quot;$(FormulaCsGenPath)\csgen.exe&quot; &quot;@(Cs4mlCompile)&quot; &quot;@(Cs4mlCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')&quot;" />
+    <Exec Command="&quot;$(FormulaCsGenPath)\csgen&quot; &quot;@(Cs4mlCompile)&quot; &quot;@(Cs4mlCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')&quot;" />
     <!--Add the generated files to the list of the files to compile.-->
     <CreateItem Include="@(Cs4mlCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')">
       <Output TaskParameter="Include" ItemName="Compile" />

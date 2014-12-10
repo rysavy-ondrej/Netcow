@@ -110,3 +110,5 @@ NetworkModelGenerator/bin/Debug/xunit.dll
 NetworkModelGenerator/obj/Debug/NetconfLib.dll
 
 NetworkModelGenerator/obj/Debug/NetworkModelGenerator.fsproj.FilesWrittenAbsolute.txt
+
+DataModels/bin/Debug/csgen
