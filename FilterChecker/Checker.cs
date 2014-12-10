@@ -20,7 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-namespace Netifier.FilterConflictChecker
+namespace Netcow.FilterChecker
 {
 	using System;
 	using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace Netifier.FilterConflictChecker
 	using Microsoft.Formula.API.Nodes;
 	using Microsoft.Formula.Common.Terms;
 	using Microsoft.Formula.Common;
-	using Netifier.DataModels;
+	using DataModels;
 
 	/// <summary>
 	/// Helper class that enables to create and query Models for Domain associated with this class.
@@ -126,7 +126,7 @@ namespace Netifier.FilterConflictChecker
 			objects = null;
 			var modelProgramName = new ProgramName (filename);
 			Task<ObjectGraphResult> createTask;
-			if (!Netifier.DataModels.Firewall_Root.CreateObjectGraph(_4mlEnvironment, modelProgramName, modelName, out createTask))
+			if (!DataModels.Firewall_Root.CreateObjectGraph(_4mlEnvironment, modelProgramName, modelName, out createTask))
 			{
 				Console.WriteLine("Could not start object graph creation");
 				return false;

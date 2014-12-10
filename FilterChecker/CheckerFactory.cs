@@ -19,7 +19,7 @@
 //  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace Netifier.FilterConflictChecker
+namespace Netcow.FilterChecker
 {
 	using System;
 	using System.IO;
@@ -30,10 +30,10 @@ namespace Netifier.FilterConflictChecker
 
 
 	using Xunit;
-	using Netifier.ConfigurationObjects;
-	using Netifier.Parsers;
-	using Netifier.DataModels;
-	using Netifier.Extensions;
+
+	using Netcow.Parsers;
+	using DataModels;
+	using Netcow.Extensions;
 
 	using Microsoft.FSharp.Core;
 	using Microsoft.Formula.API;    

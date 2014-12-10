@@ -19,7 +19,7 @@
 //  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module Netifier.Utils 
+module Netcow.Utils 
 open System.Text.RegularExpressions
 let (|InterpretedMatch|_|) pattern input =
     if input = null then None

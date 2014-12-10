@@ -18,14 +18,14 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-namespace Netifier.Parsers
+namespace Netcow.Parsers
 
 open System
 open System.Net
 open FParsec
 open FParsec.CharParsers
-open Netifier.ConfigurationObjects
-open Netifier.Utils
+open DataModels
+open Netcow.Utils
 (*
 autostart = False
 [127.0.0.1:7200]

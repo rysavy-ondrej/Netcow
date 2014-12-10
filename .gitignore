@@ -112,3 +112,19 @@ NetworkModelGenerator/obj/Debug/NetconfLib.dll
 NetworkModelGenerator/obj/Debug/NetworkModelGenerator.fsproj.FilesWrittenAbsolute.txt
 
 DataModels/bin/Debug/csgen
+
+FilterChecker/bin/Debug/csgen
+
+FilterChecker/bin/Debug/firewall.4ml
+
+FilterChecker/bin/Debug/Netcow.ConfigParsers.dll
+
+FilterChecker/bin/Debug/Netcow.Models.dll
+
+FilterChecker/bin/Debug/test1.4ml
+
+NetworkModelGenerator/bin/Debug/csgen
+
+NetworkModelGenerator/bin/Debug/Formula.Core.dll
+
+*.dll

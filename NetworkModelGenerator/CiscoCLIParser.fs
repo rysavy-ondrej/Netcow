@@ -19,12 +19,12 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace Netifier.Parsers
+namespace Netcow.Parsers
 open System
 open System.Net
 open FParsec
 open FParsec.CharParsers
-open Netifier.ConfigurationObjects
+open DataModels
 
 
 module internal _CliParsers =
@@ -355,9 +355,6 @@ type CliConfigParser = class
         CliConfigParser.TryParseFile(path, IO.StreamWriter.Null)
 
 end
-
-
-
 
 module _CliParsers_Tests = 
     open Xunit

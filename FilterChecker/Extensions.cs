@@ -21,7 +21,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-namespace Netifier.Extensions
+namespace Netcow.Extensions
 {
 	public static class Extensions {
 		public static uint ToUInt32(this IPAddress ipa)

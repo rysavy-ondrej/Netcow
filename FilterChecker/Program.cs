@@ -1,5 +1,5 @@
 ﻿
-namespace Netifier.FilterConflictChecker
+namespace Netcow.FilterChecker
 {
 	using System;
 	using System.Collections.Generic;
@@ -10,9 +10,8 @@ namespace Netifier.FilterConflictChecker
 	using ConsoleFx;
 	using ConsoleFx.Programs.Simple;
 	using ConsoleFx.Validators;
-	using Netifier.ConfigurationObjects;
-	using Netifier.Parsers;
-	using Netifier.DataModels;
+	using Netcow.Parsers;
+	using DataModels;
 	using LiftedBool = Microsoft.Formula.Common.LiftedBool;
 	class Program
 	{
