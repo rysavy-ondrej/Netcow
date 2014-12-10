@@ -1,0 +1,5 @@
+//// Router configuration, generated on 10/14/2014 7:30:48 PM
+cherry is Router("Cherry").
+  cherry_loopback0 is RouterPort(cherry, "Loopback0", InterfaceAddress("2.2.2.2/255.255.255.0",33686018,IPAddressRange(33686016,33686271))).
+  cherry_fastethernet0_0 is RouterPort(cherry, "FastEthernet0/0", InterfaceAddress("192.168.12.2/255.255.255.0",3232238594,IPAddressRange(3232238592,3232238847))).
+  cherry_fastethernet1_0 is RouterPort(cherry, "FastEthernet1/0", InterfaceAddress("192.168.24.2/255.255.255.0",3232241666,IPAddressRange(3232241664,3232241919))).

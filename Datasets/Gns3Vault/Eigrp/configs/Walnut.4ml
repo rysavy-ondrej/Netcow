@@ -1,0 +1,7 @@
+//// Router configuration, generated on 10/14/2014 7:32:17 PM
+walnut is Router("Walnut").
+  walnut_loopback0 is RouterPort(walnut, "Loopback0", InterfaceAddress("4.4.4.4/255.255.255.0",67372036,IPAddressRange(67372032,67372287))).
+  walnut_fastethernet0_0 is RouterPort(walnut, "FastEthernet0/0", InterfaceAddress("192.168.24.4/255.255.255.0",3232241668,IPAddressRange(3232241664,3232241919))).
+  walnut_fastethernet1_0 is RouterPort(walnut, "FastEthernet1/0", InterfaceAddress("192.168.34.4/255.255.255.0",3232244228,IPAddressRange(3232244224,3232244479))).
+  walnut_fastethernet2_0 is RouterPort(walnut, "FastEthernet2/0", InterfaceAddress("192.168.45.4/255.255.255.0",3232247044,IPAddressRange(3232247040,3232247295))).
+  walnut_fastethernet3_0 is RouterPort(walnut, "FastEthernet3/0", InterfaceAddress("192.168.54.4/255.255.255.0",3232249348,IPAddressRange(3232249344,3232249599))).

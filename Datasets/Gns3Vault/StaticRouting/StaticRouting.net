@@ -1,0 +1,56 @@
+autostart = False
+[127.0.0.1:7200]
+    workingdir = /tmp
+    udp = 10000
+    [[3640]]
+        image = /Data/GNS3/IOS/C3640-JK.BIN
+        idlepc = 0x603e26f0
+        ghostios = True
+        chassis = 3640
+    [[ROUTER R1]]
+        model = 3640
+        console = 2015
+        aux = 2100
+        cnfg = R1.cfg
+        slot0 = NM-1FE-TX
+        slot1 = NM-1FE-TX
+        f0/0 = R2 f0/0
+        f0/1 = sw1 1
+        x = -279.780266634
+        y = -176.149278299
+    [[ROUTER R2]]
+        model = 3640
+        console = 2025
+        aux = 2101
+        cnfg = R2.cfg
+        slot0 = NM-4T
+        f0/0 = R1 f0/0
+        e0/1/0 = sw2 1
+		x = -74.71930009
+        y = 173.868578389
+        hx = 16.1213203436
+        hy = 38.6396103068
+    [[ROUTER R3]]
+        model = 3640
+        console = 2014
+        aux = 2102
+        cnfg = R3.cfg
+        slot0 = NM-1FE-TX
+        f0/1 = R2 f0/1
+        slot1 = NM-4T
+        f0/0 = sw3 1
+        x = -443.121933088
+        y = -50.2842712475
+        hx = -46.1543289326
+        hy = 4.69848480983
+	[[ETHSW sw1]]
+	    1 = access 1
+	[[ETHSW sw2]]
+	    1 = access 1
+	[[ETHSW sw3]]
+	    1 = access 1
+[GNS3-DATA]
+    configs = configs
+    m11 = 1.41421356237
+    m22 = 1.41421356237
+

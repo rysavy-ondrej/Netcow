@@ -1,0 +1,7 @@
+//// Router configuration, generated on 10/14/2014 7:32:13 PM
+pine is Router("Pine").
+  pine_loopback0 is RouterPort(pine, "Loopback0", InterfaceAddress("6.6.6.6/255.255.255.0",101058054,IPAddressRange(101058048,101058303))).
+  pine_serial0_0 is RouterPort(pine, "Serial0/0", NIL).
+  pine_serial0_1 is RouterPort(pine, "Serial0/1", NIL).
+  pine_serial0_2 is RouterPort(pine, "Serial0/2", NIL).
+  pine_serial0_3 is RouterPort(pine, "Serial0/3", NIL).

@@ -1,8 +1,0 @@
-/Users/rysavy/Projects/Netcow/NetconfLib/obj/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.fs
-/Users/rysavy/Projects/Netcow/NetconfLib/bin/Debug/FParsec.dll
-/Users/rysavy/Projects/Netcow/NetconfLib/bin/Debug/FParsecCS.dll
-/Users/rysavy/Projects/Netcow/NetconfLib/bin/Debug/NetconfLib.dll.mdb
-/Users/rysavy/Projects/Netcow/NetconfLib/bin/Debug/NetconfLib.dll
-/Users/rysavy/Projects/Netcow/NetconfLib/obj/Debug/NetconfLib.dll
-/Users/rysavy/Projects/Netcow/NetconfLib/obj/Debug/NetconfLib.dll.mdb
-/Users/rysavy/Projects/Netcow/NetconfLib/bin/Debug/xunit.dll

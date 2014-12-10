@@ -1,0 +1,7 @@
+//// Router configuration, generated on 10/14/2014 7:32:09 PM
+oak is Router("Oak").
+  oak_loopback0 is RouterPort(oak, "Loopback0", InterfaceAddress("7.7.7.7/255.255.255.0",117901063,IPAddressRange(117901056,117901311))).
+  oak_serial0_0 is RouterPort(oak, "Serial0/0", NIL).
+  oak_serial0_1 is RouterPort(oak, "Serial0/1", NIL).
+  oak_serial0_2 is RouterPort(oak, "Serial0/2", NIL).
+  oak_serial0_3 is RouterPort(oak, "Serial0/3", NIL).

@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4mlFiles", "4mlFiles", "{34
 		4mlFiles\Network.4ml = 4mlFiles\Network.4ml
 	EndProjectSection
 EndProject
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "NetconfLib", "NetconfLib\NetconfLib.fsproj", "{9FB4DE95-954C-4477-B6C9-9A2E384D42E8}"
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "NetworkModelGenerator", "NetworkModelGenerator\NetworkModelGenerator.fsproj", "{9FB4DE95-954C-4477-B6C9-9A2E384D42E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{0FDF2A95-1979-4ABB-8232-3FFF115E3FEE}"
 EndProject

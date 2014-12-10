@@ -1,0 +1,226 @@
+//// Network model file, generated on 11/14/2014 11:34:14 AM//// This domain specifies properties of flow-based abstraction of Internet topology and communication.
+//// In this domain, entities are L3 and L2 devices connected by links and communication flows.
+domain Inet {
+	UInt8 ::= {0..255}.
+	UInt16 ::= {0..65535}.
+	UInt32 ::=  {0..4294967295}.
+
+
+    //// Enumerates all supported internetwork and transport. 
+    Protocol ::= new (name: String). //// valid names are "ip", "ip.icmp", "ip.udp", "ip.tcp"
+    //// Test if protocol p is a "super-protocol" to q. 
+	//// For instance, "ip" is super-protocol of "ip.udp", etc.
+	isSupProtocol ::= (p:Protocol,q:Protocol).
+	isSupProtocol(p,q) :- p is Protocol, q is Protocol, isSubstring(p.name,q.name) = TRUE.
+
+	//// IPAddress is represented as UInt32. Note that only used ip addressed are provable in the model.
+    IpAddress ::= new (value:UInt32).
+    IpAddressRange ::= new (left:UInt32, right:UInt32).
+	//// Port is 16-bit wide unsigned number for TCP and UDP transport.
+    Port ::= new (value:UInt16).
+	PortRange ::= new (left:UInt16, right:UInt16).
+	//// Type of service is a byte which defines a class of the traffic.
+	TypeOfService ::= new (value:UInt8).
+    			   
+    //// Defines direction of flow that traverses the interface.
+	FlowDirection ::= {IN,OUT}.
+	Status ::= {UP,DOWN}.
+	//// This type represents an ip address assigned to the interface.
+	InterfaceAddress ::= new (address:IpAddress,network:IpAddressRange).
+
+	
+    RouterPort ::= new (router:Router,id:String,status:Status,address:InterfaceAddress+{NIL}).
+    //// Represents L3 forwarding (router) devices.
+    Router ::= new (name : String).
+	
+	TrunkEncapsulation ::= {DOT1Q, ISL}.
+	SwitchPortTrunk ::= new (encapsulation:TrunkEncapsulation,native:Integer).
+	SwitchPortAccess ::= new (vlan:Integer). 
+	SwitchPort ::= new (switch:Switch,id:String,status:Status,mode:SwitchPortTrunk+SwitchPortAccess).
+	//// Represents L2 forwarding (switch) devices.
+    Switch ::= new (name : String).
+
+
+    FrameRelaySwitch ::= new (name:String).
+    FrameRelayPort ::= new (switch:FrameRelaySwitch,id:String,status:Status).
+    FrameRelayLink ::= new (srcPort:FrameRelayPort, srcDlci:Integer, trgPort:FrameRelayPort, trgDlci:Integer).
+
+
+	Interface ::= RouterPort + SwitchPort + FrameRelayPort.
+	//// Link is a directed connection between ports. Link can have additional 
+	//// parameters that defines its QoS capabilities. 
+    Link ::= new (source:Interface, target:Interface).
+
+////=========ACL===========================================================================
+	//// Specifies an action of ACL.
+    AclAction ::= { PERMIT, DENY }.
+	
+	//// Specifies rules of an access list.
+	AccessList::= new (name:String, 
+	         action:AclAction, 
+			 pt:Protocol, 
+			 srcIp:IpAddressRange, 
+			 dstIp:IpAddressRange, 
+			 srcPn:PortRange, 
+			 dstPn:PortRange).
+			 
+	//// Binds an access list to an interface.  		 
+	AccessGroup ::= new (device:Router, 
+	                     aclname:String,
+						 direction:FlowDirection,
+						 interface:RouterPort).
+
+////=========STATIC ROUTES==================================================================
+	
+	IpRoute ::= new (device:Router, network: IpAddressRange, iface:RouterPort, nexthop: IpAddress+{NIL}).
+	                 
+	
+////=========FLOWS ========================================================================= 
+	//// Flow specification consists of key 6-tuple. Flows are derived from available 
+	//// addresses and port.
+    Flow ::=     (pt     : Protocol,
+                  srcIp  :  IpAddress,
+                  dstIp  :  IpAddress,
+                  srcPn  :  Port,
+			      dstPn  :  Port,
+			      tos    :  TypeOfService ).
+////=========RULES ========================================================================= 
+	forward ::= (device:Router, source:RouterPort, target:RouterPort, inflow:Flow, outflow:Flow).
+	forward (device, source, target, flow, flow) :- forwardRouting(device,source,target,flow).
+
+	forwardRouting ::= (device:Router, source:RouterPort, target:RouterPort, flow:Flow).
+	forwardRouting(device,source,target,flow) :-
+		flow is Flow,
+		device is Router,
+		network is IpAddressRange, 
+		target is RouterPort,
+		source is RouterPort, source.router=device,
+		IpRoute(device, network, target, _),
+		flow.dstIp.value >= network.left, flow.dstIp.value <= network.right.
+	
+	filter ::= (device:Router, interface:RouterPort, direction:FlowDirection, flow:Flow).
+    filterAcl ::= (device:Router, interface:RouterPort, direction:FlowDirection, flow:Flow).
+	filterAcl (device, interface, direction,flow) :- 
+		flow is Flow,
+		AccessGroup(device, aclId, direction, interface),
+		AccessList(aclId,action, pt, srcIpRange, dstIpRange, srcPnRange, dstPnRange),
+		isSupProtocol(pt,flow.pt), 
+		flow.srcIp.value >= srcIpRange.left, flow.srcIp.value <= srcIpRange.right,
+		flow.dstIp.value >= dstIpRange.left, flow.dstIp.value <= dstIpRange.right,
+		flow.srcPn.value >= srcPnRange.left, flow.srcPn.value <= srcPnRange.right.
+
+	//// If no access group is defined then all IN flows are permitted on an interface.
+	filterAcl (device, interface, IN, flow) :- 
+	    no AccessGroup(device, _, IN, interface),  
+		flow is Flow, device is Router, interface is RouterPort.
+
+	//// If no access group is defined then all OUT flows are permitted on an interface. 	
+	filterAcl (device, interface, OUT, flow) :- 
+	    no AccessGroup(device, _, OUT, interface),  
+		flow is Flow, device is Router, interface is RouterPort.
+		
+    filter (device, interface, direction,flow) :- filterAcl (device, interface, direction,flow).
+
+	//// Determines if inflow from source port can reach target port as outflow. 
+    flowReach ::= (source:Interface, target:Interface, inflow:Flow, outflow:Flow).
+		
+    flowReach(source,target,inflow,outflow) :-
+         filter(dev,source,IN,inflow),
+         filter(dev,target,OUT,outflow),
+         forward(dev,source,target,inflow,outflow).
+    
+	//// Flow is not modified on link. 
+	flowReach(source,target,flow,flow) :-
+	     flow is Flow, 
+         Link(source,target).
+
+    //// This type defines list of interface that can be used as a path in 
+	//// the network.
+	InterfaceList ::= new (Interface, any InterfaceList + {NIL}).
+	
+	//// Determines relation between input flow and output flow for
+	//// the given path.
+	flowReachPath ::= (path:InterfaceList, inflow:Flow, outflow:Flow).
+	
+    flowReachPath(InterfaceList(source,InterfaceList(target,NIL)),inflow,outflow) :-
+        flowReach(source,target,inflow,outflow).
+    
+	flowReachPath(InterfaceList(source, InterfaceList(mid,tail)),inflow,outflow) :-
+        flowReachPath(InterfaceList(mid,tail),medflow,outflow),
+        flowReach(source,mid,inflow,medflow).
+	
+	//// Tests if interface x is in the same LAN as interface y.
+	sameLan ::= (x:Interface,y:Interface). 
+	sameLan(x,y) :-
+		Link(x,y).
+	sameLan(x,y) :-
+		sw is Switch,
+		s1 is SwitchPort,
+		s2 is SwitchPort,
+		s1.switch = s2.switch, 
+		Link(x,s1),
+		Link(y,s2).
+		
+		 
+//// CONFORMANCE TESTS================================================================
+	//// Checks if there is an unidirectional link, which is usually a network topology error.		
+	unidirectional :-
+		x is Interface, y is Interface, Link(x,y), no Link(y,x).
+
+	
+	conforms no unidirectional.
+}
+model topology of Inet {
+  ip is Protocol("ip").
+  icmp is Protocol("ip.icmp").
+  tcp is Protocol("ip.tcp").
+  udp is Protocol("ip.udp").
+r1 is Router("R1").
+  r1_f0_0 is RouterPort(r1, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236545),IpAddressRange(3232236544,3232236799))).
+  r1_f0_1 is RouterPort(r1, "FastEthernet0/1", UP, InterfaceAddress(IpAddress(3232235777),IpAddressRange(3232235776,3232236031))).
+  r1_f0_2 is RouterPort(r1, "FastEthernet0/1", UP, InterfaceAddress(IpAddress(3232235777),IpAddressRange(3232235776,3232236031))).
+  r1_s0_0_0 is RouterPort(r1, "Serial0/0/0", DOWN, NIL).
+  r1_s0_0_1 is RouterPort(r1, "Serial0/0/1", DOWN, NIL).
+  r1_modem0_1_0 is RouterPort(r1, "Modem0/1/0", UP, NIL).
+  r1_modem0_1_1 is RouterPort(r1, "Modem0/1/1", UP, NIL).
+  r1_vlan1 is RouterPort(r1, "Vlan1", DOWN, NIL).
+  IpRoute(r1,IpAddressRange(3232236032,3232236287),r1_f0_0, NIL).
+  IpRoute(r1,IpAddressRange(3232236288,3232236543),r1_f0_0, NIL).
+  IpRoute(r1,IpAddressRange(3232236544,3232236799),r1_f0_0, NIL).
+r2 is Router("R2").
+  r2_f0_0 is RouterPort(r2, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236546),IpAddressRange(3232236544,3232236799))).
+  r2_f0_1 is RouterPort(r2, "FastEthernet0/1", UP, InterfaceAddress(IpAddress(3232236801),IpAddressRange(3232236800,3232237055))).
+  r2_s0_0_0 is RouterPort(r2, "Serial0/0/0", DOWN, NIL).
+  r2_s0_0_1 is RouterPort(r2, "Serial0/0/1", DOWN, NIL).
+  r2_e0_1_0 is RouterPort(r2, "Ethernet0/1/0", UP, InterfaceAddress(IpAddress(3232236033),IpAddressRange(3232236032,3232236287))).
+  r2_vlan1 is RouterPort(r2, "Vlan1", DOWN, NIL).
+  IpRoute(r2,IpAddressRange(3232235776,3232236031),r2_f0_0, NIL).
+  IpRoute(r2,IpAddressRange(3232236288,3232236543),r2_f0_1, NIL).
+r3 is Router("R3").
+  r3_f0_0 is RouterPort(r3, "FastEthernet0/0", UP, InterfaceAddress(IpAddress(3232236289),IpAddressRange(3232236288,3232236543))).
+  r3_f0_1 is RouterPort(r3, "FastEthernet0/1", UP, InterfaceAddress(IpAddress(3232236802),IpAddressRange(3232236800,3232237055))).
+  r3_s0_0_0 is RouterPort(r3, "Serial0/0/0", DOWN, NIL).
+  r3_s0_0_1 is RouterPort(r3, "Serial0/0/1", DOWN, NIL).
+  r3_modem0_1_0 is RouterPort(r3, "Modem0/1/0", UP, NIL).
+  r3_modem0_1_1 is RouterPort(r3, "Modem0/1/1", UP, NIL).
+  r3_vlan1 is RouterPort(r3, "Vlan1", DOWN, NIL).
+  IpRoute(r3,IpAddressRange(3232235776,3232236031),r3_f0_1, NIL).
+  IpRoute(r3,IpAddressRange(3232236544,3232236799),r3_f0_1, NIL).
+  IpRoute(r3,IpAddressRange(3232236032,3232236287),r3_f0_1, NIL).
+sw1 is Switch("sw1").
+  sw1_1 is SwitchPort(sw1,"1",UP,SwitchPortAccess(1)).
+sw2 is Switch("sw2").
+  sw2_1 is SwitchPort(sw2,"1",UP,SwitchPortAccess(1)).
+sw3 is Switch("sw3").
+  sw3_1 is SwitchPort(sw3,"1",UP,SwitchPortAccess(1)).
+  sw3_2 is SwitchPort(sw3,"2",UP,SwitchPortAccess(1)).
+  
+////LINKS>>>>
+  Link(r1_f0_0,r2_f0_0).  Link(r2_f0_0,r1_f0_0).
+  Link(r1_f0_1,sw1_1).  Link(sw1_1,r1_f0_1).
+  Link(r2_f0_0,r1_f0_0).  Link(r1_f0_0,r2_f0_0).
+  Link(r2_e0_1_0,sw2_1).  Link(sw2_1,r2_e0_1_0).
+  Link(r3_f0_1,r2_f0_1).  Link(r2_f0_1,r3_f0_1).
+  Link(r3_f0_0,sw3_1).  Link(sw3_1,r3_f0_0).
+  Link(r1_f0_2, sw3_2). Link(sw3_2,r1_f0_2).
+}

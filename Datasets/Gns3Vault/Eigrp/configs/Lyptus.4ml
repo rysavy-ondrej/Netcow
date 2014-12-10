@@ -1,0 +1,5 @@
+//// Router configuration, generated on 10/14/2014 7:30:55 PM
+lyptus is Router("Lyptus").
+  lyptus_loopback0 is RouterPort(lyptus, "Loopback0", InterfaceAddress("5.5.5.5/255.255.255.0",84215045,IPAddressRange(84215040,84215295))).
+  lyptus_fastethernet0_0 is RouterPort(lyptus, "FastEthernet0/0", InterfaceAddress("192.168.54.5/255.255.255.0",3232249349,IPAddressRange(3232249344,3232249599))).
+  lyptus_fastethernet1_0 is RouterPort(lyptus, "FastEthernet1/0", InterfaceAddress("192.168.45.5/255.255.255.0",3232247045,IPAddressRange(3232247040,3232247295))).

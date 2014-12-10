@@ -1,0 +1,331 @@
+autostart = False
+[127.0.0.1:7200]
+    workingdir = /tmp
+    udp = 10000
+    [[3640]]
+        image = /Data/GNS3/IOS/C3640-JK.BIN
+        idlepc = 0x603e26f0
+        ghostios = True
+        chassis = 3640
+    [[ROUTER Cherry]]
+        model = 3640
+        console = 2015
+        aux = 2100
+        cnfg = configs/Cherry.cfg
+        slot0 = NM-1FE-TX
+        f0/0 = Alder f0/0
+        slot1 = NM-1FE-TX
+        f1/0 = Walnut f0/0
+        x = -279.780266634
+        y = -176.149278299
+    [[ROUTER Oak]]
+        model = 3640
+        console = 2025
+        aux = 2101
+        cnfg = configs/Oak.cfg
+        slot0 = NM-4T
+        s0/0 = FR1 7
+        x = -74.71930009
+        y = 173.868578389
+        hx = 16.1213203436
+        hy = 38.6396103068
+    [[ROUTER Alder]]
+        model = 3640
+        console = 2014
+        aux = 2102
+        cnfg = configs/Alder.cfg
+        slot0 = NM-1FE-TX
+        f0/0 = Cherry f0/0
+        slot1 = NM-4T
+        s1/0 = Maple s0/0
+        x = -443.121933088
+        y = -50.2842712475
+        hx = -46.1543289326
+        hy = 4.69848480983
+    [[ROUTER Pine]]
+        model = 3640
+        console = 2024
+        aux = 2103
+        cnfg = configs/Pine.cfg
+        slot0 = NM-4T
+        s0/0 = FR1 6
+        x = 63.1665222414
+        y = 78.4091629285
+        hx = 7.34314575051
+        hy = -19.3431457505
+    [[ROUTER Walnut]]
+        model = 3640
+        console = 2020
+        aux = 2104
+        cnfg = configs/Walnut.cfg
+        slot0 = NM-1FE-TX
+        f0/0 = Cherry f1/0
+        slot1 = NM-1FE-TX
+        f1/0 = Maple f1/0
+        slot2 = NM-1FE-TX
+        f2/0 = Lyptus f0/0
+        slot3 = NM-1FE-TX
+        f3/0 = Lyptus f1/0
+        x = -111.488852712
+        y = -50.9913780286
+        hx = 3.70710678119
+        hy = -18.6360389693
+    [[FRSW FR1]]
+        3:306 = 6:603
+        3:307 = 7:703
+        6:603 = 3:306
+        7:703 = 3:307
+        3 = Maple s0/1
+        6 = Pine s0/0
+        7 = Oak s0/0
+        x = -99.7462120246
+        y = 67.7167747731
+        hx = 7.70710678119
+        hy = 42.8822509939
+    [[ROUTER Lyptus]]
+        model = 3640
+        console = 2022
+        aux = 2105
+        cnfg = configs/Lyptus.cfg
+        slot0 = NM-1FE-TX
+        f0/0 = Walnut f2/0
+        slot1 = NM-1FE-TX
+        f1/0 = Walnut f3/0
+        x = 133.87720036
+        y = -50.2842712475
+    [[ROUTER Maple]]
+        model = 3640
+        console = 2016
+        aux = 2106
+        cnfg = configs/Maple.cfg
+        slot0 = NM-4T
+        s0/0 = Alder s1/0
+        s0/1 = FR1 3
+        slot1 = NM-1FE-TX
+        f1/0 = Walnut f1/0
+        x = -279.073159853
+        y = 60.0243866176
+        hx = 4.37867965644
+        hy = 37.2253967444
+[GNS3-DATA]
+    configs = configs
+    m11 = 1.41421356237
+    m22 = 1.41421356237
+    [[NOTE 1]]
+        text = 192.168.12.0 /24
+        x = -406.586399182
+        y = -109.580735804
+        color = "#0000ff"
+    [[NOTE 2]]
+        text = 192.168.24.0 /24
+        x = -210.010714012
+        y = -113.518289963
+        color = "#0000ff"
+    [[NOTE 3]]
+        text = 192.168.13.0 /24
+        x = -415.778787338
+        y = 16.0832611207
+        color = "#0000ff"
+    [[NOTE 4]]
+        text = .2
+        x = -236.880771697
+        y = -139.771031918
+        color = "#0000ff"
+    [[NOTE 5]]
+        text = .4
+        x = -132.228968082
+        y = -57.2405486461
+        color = "#0000ff"
+    [[NOTE 6]]
+        text = .4
+        x = -9.89949493661
+        y = -28.8522009977
+        color = "#0000ff"
+    [[NOTE 7]]
+        text = .5
+        x = 77.7817459305
+        y = -58.7516959344
+        color = "#0000ff"
+    [[NOTE 8]]
+        text = .4
+        x = -129.400540957
+        y = -29.8643943066
+        color = "#0000ff"
+    [[NOTE 9]]
+        text = .4
+        x = -9.89949493661
+        y = -56.2283553372
+        color = "#0000ff"
+    [[NOTE 10]]
+        text = 192.168.45.0 /24
+        x = -18.3847763109
+        y = -12.0969337259
+        color = "#0000ff"
+    [[NOTE 11]]
+        text = .5
+        x = 80.6101730553
+        y = -29.2542212513
+        color = "#0000ff"
+    [[NOTE 12]]
+        text = 192.168.45.0 /24
+        x = -19.091883092
+        y = -85.4350288425
+        color = "#0000ff"
+    [[NOTE 13]]
+        text = .6
+        x = 41.0121933088
+        y = 76.7975105768
+        color = "#0000ff"
+    [[NOTE 14]]
+        text = .7
+        x = -52.3259018078
+        y = 152.964032818
+        color = "#0000ff"
+    [[NOTE 15]]
+        text = .3
+        x = -214.960461481
+        y = 93.3660530717
+        color = "#0000ff"
+    [[NOTE 16]]
+        text = .3
+        x = -236.880771697
+        y = 39.4249275748
+        color = "#0000ff"
+    [[NOTE 17]]
+        text = .3
+        x = -283.549819256
+        y = 41.3452377916
+        color = "#0000ff"
+    [[NOTE 18]]
+        text = .1
+        x = -379.009234716
+        y = -56.436508139
+        color = "#0000ff"
+    [[NOTE 19]]
+        text = .1
+        x = -377.595021154
+        y = -31.181674143
+        color = "#0000ff"
+    [[NOTE 20]]
+        text = .2
+        x = -276.478751444
+        y = -139.570021791
+        color = "#0000ff"
+    [[NOTE 21]]
+        text = 192.168.34.0 /24
+        x = -224.859956417
+        y = 11.43860018
+        color = "#0000ff"
+    [[NOTE 22]]
+        text = 192.168.33.0 /24
+        x = -131.521861301
+        y = 43.7645019878
+        color = "#0000ff"
+    [[NOTE 23]]
+        text = s0/1
+        x = 65.0259143912
+        y = 16.631737863
+        interface = Maple s0/1
+        color = "#323232"
+    [[NOTE 24]]
+        text = f1/0
+        x = 71.7020825856
+        y = -13.0908600154
+        interface = Maple f1/0
+        color = "#323232"
+    [[NOTE 25]]
+        text = s0/0
+        x = -38.2542710687
+        y = -0.54961913522
+        interface = Maple s0/0
+        color = "#323232"
+    [[NOTE 26]]
+        text = f1/0
+        x = -36.7534605246
+        y = -8.70155426727
+        interface = Lyptus f1/0
+        color = "#323232"
+    [[NOTE 27]]
+        text = f0/0
+        x = -35.9857488402
+        y = 21.2568329278
+        interface = Lyptus f0/0
+        color = "#323232"
+    [[NOTE 28]]
+        text = 3
+        x = -14.3040889843
+        y = 21.7971943251
+        interface = FR1 3
+        color = "#323232"
+    [[NOTE 29]]
+        text = 6
+        x = 50.611385948
+        y = -0.100208579817
+        interface = FR1 6
+        color = "#323232"
+    [[NOTE 30]]
+        text = 7
+        x = 48.400667107
+        y = 33.1536803136
+        interface = FR1 7
+        color = "#323232"
+    [[NOTE 31]]
+        text = f3/0
+        x = 67.2828553481
+        y = -5.38104251746
+        interface = Walnut f3/0
+        color = "#323232"
+    [[NOTE 32]]
+        text = f2/0
+        x = 65.9233029996
+        y = 23.4502738534
+        interface = Walnut f2/0
+        color = "#323232"
+    [[NOTE 33]]
+        text = f1/0
+        x = 2.07609200748
+        y = 36.584763361
+        interface = Walnut f1/0
+        color = "#323232"
+    [[NOTE 34]]
+        text = f0/0
+        x = -15.1069415254
+        y = -35.4230493247
+        interface = Walnut f0/0
+        color = "#323232"
+    [[NOTE 35]]
+        text = s0/0
+        x = -38.0733267251
+        y = 25.8012187066
+        interface = Pine s0/0
+        color = "#323232"
+    [[NOTE 36]]
+        text = s1/0
+        x = 27.8867387006
+        y = 38.1856581045
+        interface = Alder s1/0
+        color = "#323232"
+    [[NOTE 37]]
+        text = f0/0
+        x = 26.1572276636
+        y = -21.3985747081
+        interface = Alder f0/0
+        color = "#323232"
+    [[NOTE 38]]
+        text = s0/0
+        x = -23.841792604
+        y = -16.6450583422
+        interface = Oak s0/0
+        color = "#323232"
+    [[NOTE 39]]
+        text = f1/0
+        x = 64.8434855581
+        y = 25.6829339545
+        interface = Cherry f1/0
+        color = "#323232"
+    [[NOTE 40]]
+        text = f0/0
+        x = -33.696332907
+        y = 27.9219153052
+        interface = Cherry f0/0
+        color = "#323232"

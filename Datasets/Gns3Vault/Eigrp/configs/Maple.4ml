@@ -1,0 +1,8 @@
+//// Router configuration, generated on 10/14/2014 7:32:00 PM
+maple is Router("Maple").
+  maple_loopback0 is RouterPort(maple, "Loopback0", InterfaceAddress("3.3.3.3/255.255.255.0",50529027,IPAddressRange(50529024,50529279))).
+  maple_serial0_0 is RouterPort(maple, "Serial0/0", InterfaceAddress("192.168.13.3/255.255.255.0",3232238851,IPAddressRange(3232238848,3232239103))).
+  maple_serial0_1 is RouterPort(maple, "Serial0/1", NIL).
+  maple_serial0_2 is RouterPort(maple, "Serial0/2", NIL).
+  maple_serial0_3 is RouterPort(maple, "Serial0/3", NIL).
+  maple_fastethernet1_0 is RouterPort(maple, "FastEthernet1/0", InterfaceAddress("192.168.34.3/255.255.255.0",3232244227,IPAddressRange(3232244224,3232244479))).

@@ -1,0 +1,8 @@
+//// Router configuration, generated on 10/14/2014 7:28:46 PM
+alder is Router("Alder").
+  alder_loopback0 is RouterPort(alder, "Loopback0", InterfaceAddress("1.1.1.1/255.255.255.0",16843009,IPAddressRange(16843008,16843263))).
+  alder_fastethernet0_0 is RouterPort(alder, "FastEthernet0/0", InterfaceAddress("192.168.12.1/255.255.255.0",3232238593,IPAddressRange(3232238592,3232238847))).
+  alder_serial1_0 is RouterPort(alder, "Serial1/0", InterfaceAddress("192.168.13.1/255.255.255.0",3232238849,IPAddressRange(3232238848,3232239103))).
+  alder_serial1_1 is RouterPort(alder, "Serial1/1", NIL).
+  alder_serial1_2 is RouterPort(alder, "Serial1/2", NIL).
+  alder_serial1_3 is RouterPort(alder, "Serial1/3", NIL).

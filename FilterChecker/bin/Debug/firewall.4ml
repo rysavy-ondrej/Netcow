@@ -1,0 +1,167 @@
+domain Firewall {
+	UInt32      ::= {0..4294967295}.
+	UInt16 		::= {0..65535}.
+	Protocol 	::= { IPV4, ICMP, ICMP_ECHO, ICMP_ECHOREPLY, IGMP, UDP, TCP, TCP_ESTABLISHED }.
+    Action      ::= { ACCEPT, DENY }.
+
+
+    /// IP Domain
+	IP       	::= new (ip:String,   left:UInt32, right:UInt32).
+	/// Port Domain
+	PN 			::= new (pn:String,   left:UInt16, right:UInt16).
+    /// Protocol Domain
+    PT          ::= new (pt:Protocol, left:UInt32, right:UInt32).
+ 
+    /// Protocol encoding is P.X.Y.Z, where P is protocol number and X, Y, Z are protocol specific information. 
+    PT(IPV4, 0, 4294967295). 			         
+    PT(ICMP, 16777216, 33554431).               
+    PT(ICMP_ECHO, 16777216,16777216).				 
+    PT(ICMP_ECHOREPLY, 17301504,17301504).  
+    PT(IGMP, 33554432, 50331647). 
+    PT(UDP, 285212672, 301989887). 
+    PT(TCP, 100663296, 117440511).
+    PT(TCP_ESTABLISHED, 109051904, 117440511).    
+    
+    /// Supported domains in firewall domain.
+    D ::= IP + PN + PT.
+
+	Filter 	::= new (id:String+Integer).
+    
+    /// Single rule definition
+	Rule 		::= fun (filter:Filter, priority:Integer, proto:Protocol, srcIp:String, srcPn:String, dstIp:String, dstPn:String => action:Action).
+           
+    /// Relations between individual dimensions:
+    
+    /// x is disjoint to y
+    disjoint ::= (x:D,y:D).
+    disjoint(x,y) :- x is IP, y is IP, x.right < y.left.
+    disjoint(x,y) :- x is IP, y is IP, y.right < x.left.
+    disjoint(x,y) :- x is PN, y is PN, x.right < y.left.
+    disjoint(x,y) :- x is PN, y is PN, y.right < x.left.
+    disjoint(x,y) :- x is PT, y is PT, x.right < y.left.
+    disjoint(x,y) :- x is PT, y is PT, y.right < x.left.
+    
+    /// x is exact to y
+    exact ::= (x:D,y:D).
+    exact(x,y) :- x is IP, y is IP, x.left = y.left, x.right = y.right.
+    exact(x,y) :- x is PN, y is PN, x.left = y.left, x.right = y.right.
+    exact(x,y) :- x is PT, y is PT, x.left = y.left, x.right = y.right.
+    
+    /// x contains y
+    contains ::= (x:D,y:D).
+    contains(x,y) :- x is IP, y is IP, x.left <= y.left, y.right <= x.right.
+    contains(x,y) :- x is PN, y is PN, x.left <= y.left, y.right <= x.right.
+    contains(x,y) :- x is PT, y is PT, x.left <= y.left, y.right <= x.right.
+    
+    /// x an y are not disjoint, they can be in olap, exact or contains relation.
+	nodisjoint ::= (x:D,y:D).
+	nodisjoint(x,y) :- x is IP, y is IP, no disjoint(x,y). 
+    nodisjoint(x,y) :- x is PN, y is PN, no disjoint(x,y).
+    nodisjoint(x,y) :- x is PT, y is PT, no disjoint(x,y).
+    
+    /// x and y overlaps but are not exact nor contained.
+	olap ::= (x:D,y:D).
+	olap(x,y) :- x is IP, y is IP, no disjoint(x,y), no contains(x,y), no contains(y,x).
+    olap(x,y) :- x is PN, y is PN, no disjoint(x,y), no contains(x,y), no contains(y,x).
+    olap(x,y) :- x is PT, y is PT, no disjoint(x,y), no contains(x,y), no contains(y,x).
+    
+
+    ConflictType ::= { SHADOWING, CORRELATION, GENERALIZATION, REDUNDANCY }.
+
+    shadowing    ::= (f: Filter, p : Rule, q:Rule).
+    shadowing(f,p,q) :- i < j,
+        p is Rule(f, i, pt_i, srcIp_i, srcPn_i, dstIp_i, dstPn_i, ac_i),
+        q is Rule(f, j, pt_j, srcIp_j, srcPn_j, dstIp_j, dstPn_j, ac_j),
+        contains(PT(pt_i,_,_), PT(pt_j,_,_)),
+		contains(IP(srcIp_i,_,_), IP(srcIp_j,_,_)),
+		contains(PN(srcPn_i,_,_), PN(srcPn_j,_,_)),
+        contains(IP(dstIp_i,_,_), IP(dstIp_j,_,_)),
+        contains(PN(dstPn_i,_,_), PN(dstPn_j,_,_)),
+        ac_i != ac_j.
+
+
+    conflict    ::= (f: Filter, i:Integer, j:Integer, t:ConflictType).
+
+    /// Rule R_i contains rule R_j, as i < j then j will never be fired.
+    conflict(f,i,j,t) :- i < j,
+        Rule(f, i, pt_i, srcIp_i, srcPn_i, dstIp_i, dstPn_i, ac_i),
+        Rule(f, j, pt_j, srcIp_j, srcPn_j, dstIp_j, dstPn_j, ac_j),
+        contains(PT(pt_i,_,_), PT(pt_j,_,_)),
+		contains(IP(srcIp_i,_,_), IP(srcIp_j,_,_)),
+		contains(PN(srcPn_i,_,_), PN(srcPn_j,_,_)),
+        contains(IP(dstIp_i,_,_), IP(dstIp_j,_,_)),
+        contains(PN(dstPn_i,_,_), PN(dstPn_j,_,_)),
+        ac_i != ac_j,  
+        t = SHADOWING.
+        
+    conflict(f,i,j,t) :-  i < j,
+        Rule(f, i, pt_i, srcIp_i, srcPn_i, dstIp_i, dstPn_i, ac_i),
+        Rule(f, j, pt_j, srcIp_j, srcPn_j, dstIp_j, dstPn_j, ac_j),
+        olap(PT(pt_i,_,_), PT(pt_j,_,_)), 
+    	olap(IP(srcIp_i,_,_), IP(srcIp_j,_,_)),
+    	olap(PN(srcPn_i,_,_), PN(srcPn_j,_,_)),
+        olap(IP(dstIp_i,_,_), IP(dstIp_j,_,_)),
+        olap(PN(dstPn_i,_,_), PN(dstPn_j,_,_)), 
+        ac_i != ac_j,
+        t = CORRELATION.
+ 
+    /// P ~ i, R ~ j
+    conflict(f,i,j,t) :-  i < j,
+        Rule(f, i, pt_i, srcIp_i, srcPn_i, dstIp_i, dstPn_i, ac_i),
+        Rule(f, j, pt_j, srcIp_j, srcPn_j, dstIp_j, dstPn_j, ac_j),
+        contains(PT(pt_j,_,_), PT(pt_i,_,_)),
+    	contains(IP(srcIp_j,_,_), IP(srcIp_i,_,_)),
+    	contains(PN(srcPn_j,_,_), PN(srcPn_i,_,_)),
+        contains(IP(dstIp_j,_,_), IP(dstIp_i,_,_)),
+        contains(PN(dstPn_j,_,_), PN(dstPn_i,_,_)),  
+        ac_i != ac_j,
+        t = GENERALIZATION.  
+        /// P ~ i, R ~ j
+    conflict(f,i,j,t) :-  i < j, 
+        Rule(f, i, pt_i, srcIp_i, srcPn_i, dstIp_i, dstPn_i, ac_i),
+        Rule(f, j, pt_j, srcIp_j, srcPn_j, dstIp_j, dstPn_j, ac_j),
+        contains(PT(pt_j,_,_), PT(pt_i,_,_)),
+    	contains(IP(srcIp_j,_,_), IP(srcIp_i,_,_)),
+    	contains(PN(srcPn_j,_,_), PN(srcPn_i,_,_)),
+        contains(IP(dstIp_j,_,_), IP(dstIp_i,_,_)),
+        contains(PN(dstPn_j,_,_), PN(dstPn_i,_,_)), 
+        
+        no { q | q is         
+            Rule(f, k, pt_k, srcIp_k, srcPn_k, dstIp_k, dstPn_k, ac_k),
+            nodisjoint(PT(pt_j,_,_), PT(pt_k,_,_)),
+    	    nodisjoint(IP(srcIp_j,_,_), IP(srcIp_k,_,_)),
+    	    nodisjoint(PN(srcPn_j,_,_), PN(srcPn_k,_,_)),
+            nodisjoint(IP(dstIp_j,_,_), IP(dstIp_k,_,_)),
+            nodisjoint(PN(dstPn_j,_,_), PN(dstPn_k,_,_)),
+            ac_k != ac_j,
+            i < k, k < j },
+        
+        /// no P_k: P_i < P_k < P_j : correlation(P_k,P_j)
+        ac_i = ac_j,
+        t = REDUNDANCY.  
+}
+
+model F1 of Firewall {
+	IP("*.*.*.*", 0, 4294967295).
+	IP("140.192.37.20", 2361402644,2361402644).
+	IP("140.192.37.*", 2361402624, 2361402879).
+	IP("161.120.33.40", 2709004584,2709004584).
+	PN("*", 0, 65535).
+	PN("80",80,80).
+	
+	f1 is Filter("f1").
+	      Rule(f1, 1, TCP, "140.192.37.20", "*", "*.*.*.*", "80", DENY).
+		  Rule(f1, 2, TCP, "140.192.37.*", "*", "*.*.*.*", "80", ACCEPT).
+		  Rule(f1, 3, TCP, "*.*.*.*", "*", "161.120.33.40", "80", ACCEPT).
+		  Rule(f1, 4, TCP, "140.192.37.*", "*", "161.120.33.40", "80", DENY).
+		  Rule(f1, 5, TCP, "140.192.37.30", "*", "*.*.*.*", "21", DENY).
+		  Rule(f1, 6, TCP, "140.192.37.*", "*", "*.*.*.*", "21", ACCEPT).
+		  Rule(f1, 7, TCP, "140.192.37.*", "*", "161.120.33.40", "21", ACCEPT).
+		  Rule(f1, 8, TCP, "*.*.*.*", "*", "*.*.*.*", "*", DENY).
+          Rule(f1, 9, UDP, "140.192.37.*", "*", "161.120.33.40", "53", ACCEPT).
+          Rule(f1, 10, UDP, "*.*.*.*", "*", "161.120.33.40", "53", ACCEPT).
+          Rule(f1, 11, UDP, "140.192.38.*", "*", "161.120.35.*", "*", ACCEPT).
+		  Rule(f1, 12, UDP, "*.*.*.*", "*", "*.*.*.*", "*", DENY).
+          
+    /// query F1 conflict(%f1, i, j, REDUNDANCY)
+}
