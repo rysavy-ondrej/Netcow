@@ -139,6 +139,18 @@ domain Firewall {
         /// no P_k: P_i < P_k < P_j : correlation(P_k,P_j)
         ac_i = ac_j,
         t = REDUNDANCY.  
+
+
+
+}
+
+
+domain FirewallPolicy {
+	Policy ::= new (id:String).
+	/// See Ou: A logic-programming approach to network securuty analysis for details on HACL.
+	Hacl ::= new (p:Policy, source: String, destination: String, destinationPort: String).
+
+	/// TODO: Define check ::= ()
 }
 
 model F1 of Firewall {
