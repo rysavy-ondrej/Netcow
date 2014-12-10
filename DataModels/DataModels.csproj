@@ -66,5 +66,9 @@
       <Project>{1B5724EC-FFF1-48D7-A700-AD46F0150AFC}</Project>
       <Name>Formula.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Formula\CsGen\Formula.CsGen.csproj">
+      <Project>{B6B314AA-3290-4DD1-BDD5-CE76AF12243E}</Project>
+      <Name>Formula.CsGen</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
