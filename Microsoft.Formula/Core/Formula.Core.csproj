@@ -10,8 +10,8 @@
     <AssemblyName>Formula.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <GPLexPath>..\Ext\GPLEX</GPLexPath>
-    <GPPGPath>..\Ext\GPPG</GPPGPath>
+    <GPLexPath>$(ProjectDir)Ext\GP</GPLexPath>
+    <GPPGPath>$(ProjectDir)Ext\GP</GPPGPath>
     <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -90,8 +90,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft">
-      <HintPath>..\Ext\Z3\Microsoft.Z3.dll</HintPath>
+    <Reference Include="Microsoft.Z3">
+      <HintPath>Ext\Z3\Microsoft.Z3.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -301,7 +301,7 @@
   </PropertyGroup>
   <Target Name="GenerateCodeFromLex" Condition="'$(BuildingProject)'!='false'" Inputs="@(MPLexCompile);$(LexFrameFile)" Outputs="@(MPLexCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')" DependsOnTargets="$(GenerateCodeFromLexDependsOn)">
     <!--Run the command line tool that generates the cs files.-->
-    <Exec Command="&quot;$(GPLexPath)\GPLex45.exe&quot; /babel /parser /unicode /out:@(MPLexCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs') @(MPLexCompile)" />
+    <Exec Command="&quot;$(GPLexPath)\gplex&quot; /babel /parser /unicode /out:@(MPLexCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs') @(MPLexCompile)" />
     <!--Add the generated files to the list of the files to compile.-->
     <CreateItem Include="@(MPLexCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')">
       <Output TaskParameter="Include" ItemName="Compile" />
@@ -319,7 +319,7 @@
   </PropertyGroup>
   <Target Name="GenerateParserCodeFromGrammar" Condition="'$(BuildingProject)'!='false'" Inputs="@(MPPGCompile)" Outputs="@(MPPGCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')" DependsOnTargets="$(GenerateParserCodeFromGrammarDependsOn)">
     <!--Run the command line tool that generates the cs files.-->
-    <Exec Command="&quot;$(GPPGPath)\GPPG45.exe&quot; -babel  -report -verbose -conflicts @(MPPGCompile) &gt; @(MPPGCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')" />
+    <Exec Command="&quot;$(GPPGPath)\gppg&quot; -babel  -report -verbose -conflicts @(MPPGCompile) &gt; @(MPPGCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')" />
     <!--Add the generated files to the list of the files to compile.-->
     <CreateItem Include="@(MPPGCompile-&gt;'$(IntermediateOutputPath)%(FileName).g.cs')">
       <Output TaskParameter="Include" ItemName="Compile" />
@@ -327,20 +327,19 @@
     </CreateItem>
   </Target>
   <ItemGroup>
-    <Folder Include="Z3\" />
     <Folder Include="Ext\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Ext\Z3\Microsoft.Z3.dll">
+    <None Include="Ext\Z3\Microsoft.Z3.dll">
       <Link>Z3\Microsoft.Z3.dll</Link>
     </None>
-    <None Include="..\Ext\Z3\Microsoft.Z3.dll.config">
+    <None Include="Ext\Z3\Microsoft.Z3.dll.config">
       <Link>Z3\Microsoft.Z3.dll.config</Link>
     </None>
-    <None Include="..\Ext\Z3\libz3.dll">
+    <None Include="Ext\Z3\libz3.dll">
       <Link>Z3\libz3.dll</Link>
     </None>
-    <None Include="..\Ext\Z3\libz3.dylib">
+    <None Include="Ext\Z3\libz3.dylib">
       <Link>Z3\libz3.dylib</Link>
     </None>
   </ItemGroup>
