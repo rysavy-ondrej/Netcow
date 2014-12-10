@@ -90,7 +90,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.Z3">
+    <Reference Include="Microsoft">
       <HintPath>..\Ext\Z3\Microsoft.Z3.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -328,6 +328,7 @@
   </Target>
   <ItemGroup>
     <Folder Include="Z3\" />
+    <Folder Include="Ext\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Ext\Z3\Microsoft.Z3.dll">
