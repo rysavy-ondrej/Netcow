@@ -1,0 +1,6 @@
+﻿//// This domain represents models that represent network policy specifications. 
+domain Policy {
+
+
+
+}

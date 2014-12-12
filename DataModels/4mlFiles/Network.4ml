@@ -13,6 +13,7 @@ domain Types {
     /// These are derived types, which can be used in specification and querying.
     IP ::= (address:UI32).
     PN ::= (port:UI16).
+    TrunkEncapsulation ::= {DOT1Q, ISL}.
 }
 
 domain NetworkTopology includes Types {
@@ -27,6 +28,9 @@ domain NetworkTopology includes Types {
 	SwitchPort ::= new (switch:Switch,id:ID).
 
 	Port ::= RouterPort + SwitchPort + FrameRelayPort.
+    //// This type defines list of interface that can be used as a path in the network.
+    PortList ::= new (Port, any PortList + {NIL}).
+
     Device ::= Router + FrameRelaySwitch + Switch.
     device ::= (port:Port,dev:Device).
     device(port,dev) :-
@@ -34,40 +38,32 @@ domain NetworkTopology includes Types {
         port is FrameRelayPort, dev is FrameRelaySwitch, port.switch = dev;
         port is SwitchPort, dev is Switch, port.switch = dev.
          
-    
 	//// Link is a directed connection between ports. Link can have additional 
 	//// parameters that defines its QoS capabilities. 
     Link ::= new (source:Port, target:Port).   
-    
-    //// TOPOLOGY UTILS
-    //// Tests if interface x is in the same LAN as interface y.
-	sameLan ::= (x:Port,y:Port). 
-	sameLan(x,y) :-
-		Link(x,y).
-	sameLan(x,y) :-
-		sw is Switch,
-		s1 is SwitchPort,
-		s2 is SwitchPort,
-		s1.switch = s2.switch, 
-		Link(x,s1),
-        Link(y,s2).
-    
-    
-    
-    //// This type defines list of interface that can be used as a path in the network.
-    PortList ::= new (Port, any PortList + {NIL}).
+   	
+   	/// Edge relation is either link or internal connection among device's ports
     edge ::= (Port,Port).
     edge(u,v) :- Link(u,v).
-    edge(u,v) :- u is Port, v is Port, device(u,d), device(v,d).            
+    edge(u,v) :- u is Port, v is Port, device(u,d), device(v,d). 
+
+    /// Topological path - say nothing about real network reachability.
     path ::= (source:Port, target:Port).
     path(u, w) :- edge(u, w); edge(u, v), path(v, w).    
 	
     //// VALIDITY TESTS================================================================
-    	//// Checks if there is an unidirectional link, which is usually a network topology error.		
-    	unidirectional :-
-    		x is Port, y is Port, Link(x,y), no Link(y,x).
+	//// Checks if there is an unidirectional link, which is usually a network topology error.		
+	unidirectional :-
+		x is Port, y is Port, Link(x,y), no Link(y,x).
+	multilink :-
+		x is Port, y is Port, z is Port, x!=y, x!=z, 
+		Link(x,y), Link(x,z), y!=z.
 	
-    	conforms no unidirectional.
+	conforms no unidirectional, no multilink.
+}
+
+
+domain HostConfiguration includes Types,NetworkTopology {
 }
 
 domain RouterConfiguration includes Types, NetworkTopology {
@@ -75,8 +71,11 @@ domain RouterConfiguration includes Types, NetworkTopology {
 	FlowDirection ::= {IN,OUT}.	
     NatDirection ::= {INSIDE, OUTSIDE}.
     InterfaceStatus ::= { UP, DOWN }.
-    Interface ::= new (id:String,port:RouterPort).
+    /// Interface encapsulation enables to define trunk subinterfaces.
+    InterfaceEncap ::= new (mode:TrunkEncapsulation, vlan:Integer).
+    Interface ::= new (id:String,port:RouterPort, encap:InterfaceEncap+{NIL}).
     InterfaceIpAddress ::= new (iface:Interface, host:UI32, network:UI32Range).
+
     IP(adr) :- x is InterfaceIpAddress, adr = x.host.
     IP(adr) :- x is InterfaceIpAddress, adr = x.network.left;
                x is InterfaceIpAddress, adr = x.network.right.
@@ -123,46 +122,170 @@ domain RouterConfiguration includes Types, NetworkTopology {
     IpNatStatic ::= new (dir:NatDirection, orig:NatOrigin, local:UI32, global:UI32).
 
 
+    //// Tests if interface x is in the same VLAN as interface y.
+	sameLan ::= (x:Interface,y:Interface,vlan:Integer).
 
-    
     //// VALIDITY TESTS================================================================
 	//// Checks if interfaces have consistent addresses.
 	duplicateAddress :-
-		x is RouterPort, y is RouterPort, x != y, sameLan(x,y), 
-        InterfaceIpAddress(Interface(_,x),host,_),
-        InterfaceIpAddress(Interface(_,y),host,_),
+		x is Interface, y is Interface, x != y, sameLan(x,y,_), 
+        InterfaceIpAddress(x,host,_),
+        InterfaceIpAddress(y,host,_),
         host != NIL.
 
 	//// Checks if interfaces have consistent addresses.
 	mismatchNetworkAddress :-
-	    x is RouterPort, y is RouterPort, x != y, sameLan(x,y), 
-        InterfaceIpAddress(Interface(_,x),_,net1),
-        InterfaceIpAddress(Interface(_,y),_,net2),
+	    x is Interface, y is Interface, x != y, sameLan(x,y,_), 
+        InterfaceIpAddress(x,_,net1),
+        InterfaceIpAddress(y,_,net2),
         net1 != net2.
 }
 
 domain SwitchConfiguration includes NetworkTopology {
-	TrunkEncapsulation ::= {DOT1Q, ISL}.
-	SwitchPortTrunk ::= new (encapsulation:TrunkEncapsulation,native:Integer).
-	SwitchPortAccess ::= new (vlan:Integer). 
-	SwitchInterface ::= new (id:ID, port:SwitchPort).
-    SwitchPortMode ::= new(iface:SwitchInterface, mode:SwitchPortTrunk+SwitchPortAccess).
+    PortMode           ::= {ACCESS,TRUNK}.
+	SwitchPortTrunk    ::= new (encapsulation:TrunkEncapsulation,native:Integer).
+	SwitchPortAccess   ::= new (vlan:Integer). 
+	SwitchInterface    ::= new (id:ID, port:SwitchPort).
+    SwitchPortMode     ::= new (iface:SwitchInterface, mode:SwitchPortTrunk+SwitchPortAccess).
+	SwitchPortTrunkAllowedVlan ::= new (iface:SwitchInterface, vlan:Integer).
+	 
+	
+	//// computes vlan database of a switch, i.e. enumerates all interfaces 
+	//// that belongs to the given vlan. It also determines whether interface is 
+	//// access or trunk. 
+	vlanDatabase ::= (sw:Switch, vlan:Integer, iface:SwitchInterface, mode:PortMode).
+	vlanDatabase(sw,vlan,iface,ACCESS) :-
+		iface is SwitchInterface(_,SwitchPort(sw,_)),
+		SwitchPortMode(iface,SwitchPortAccess(vlan)).
+	vlanDatabase(sw,vlan,iface,TRUNK) :-
+		iface is SwitchInterface(_,SwitchPort(sw,_)),
+		SwitchPortMode(iface,SwitchPortTrunk(_,vlan)).
+	vlanDatabase(sw,vlan,iface,TRUNK) :-
+		iface is SwitchInterface(_,SwitchPort(sw,_)),
+		SwitchPortMode(iface,SwitchPortTrunk(_,_)),
+		SwitchPortTrunkAllowedVlan(iface,vlan).				
+
+	//// There is a trunk link between port x and y where vlan is allowed.
+	trunkLink ::= (x:Port,y:Port,native:Integer,allowed:Integer).
+	trunkLink(sw1_st,sw2_st,native,allowed) :-
+		sw1 is Switch, sw2 is Switch, 
+		sw1_st is SwitchPort(sw1,sw1_pt),          /// Trunk port at SW1
+		sw2_st is SwitchPort(sw2,sw2_pt),          /// Trunk port at SW2
+		Link(sw1_st, sw2_st), 
+		sw1_it is SwitchInterface(_,sw1_st),       /// Trunk interface at SW1
+		sw2_it is SwitchInterface(_,sw2_st),       /// Trunk interface at SW2
+		SwitchPortMode(sw1_it, SwitchPortTrunk(encap,native)),
+		SwitchPortMode(sw2_it, SwitchPortTrunk(encap,native)), 
+		SwitchPortTrunkAllowedVlan(sw1_it,allowed),
+		SwitchPortTrunkAllowedVlan(sw2_it,allowed).			 
 
     //// VALIDITY TESTS================================================================
 	//// Checks if connected ports have consistent mode and encapsulation.
     mismatchPortMode :- 
         x is SwitchPort, y is SwitchPort, x != y, Link(x,y),
         SwitchPortMode(SwitchInterface(_,x), m),
-        SwitchPortMode(SwitchInterface(_,x), n),
+        SwitchPortMode(SwitchInterface(_,y), n),
         m != n.
 }
 
-domain Network includes NetworkTopology, RouterConfiguration, SwitchConfiguration {
-	
+/// This domain provides tools for analysis of VLAN configurations.
+domain Vlan includes NetworkTopology, RouterConfiguration, SwitchConfiguration  {
+    /// This relation defines that src and dst are switch interfaces of the same vlan.
+    l2Path ::= (src:SwitchInterface,dst:SwitchInterface,vlan:Integer).
+    l2Path(u,w,t) :- l2Edge(u, w, t); l2Edge(u, v, t), l2Path(v, w, t).   
+    l2Edge ::= (src:SwitchInterface,dst:SwitchInterface,vlan:Integer).
+    /// Case 1: same switch, ifaces in the same vlan:
+    l2Edge(src,dst,vlan) :-
+    	sw is Switch, 
+    	src is SwitchInterface(_,SwitchPort(sw,_)),
+    	dst is SwitchInterface(_,SwitchPort(sw,_)),	 
+    	vlanDatabase(sw, vlan, src,_),
+		vlanDatabase(sw, vlan, dst,_).
+	/// Case 2: access connection between switches in the given vlan    	
+    l2Edge(src,dst,vlan) :-
+    	sw1 is Switch, sw2 is Switch,
+    	src is SwitchInterface(_,SwitchPort(sw1,_)),
+    	dst is SwitchInterface(_,SwitchPort(sw2,_)),	
+    	SwitchPortMode(src,SwitchPortAccess(vlan)),
+    	SwitchPortMode(dst,SwitchPortAccess(vlan)). 
+
+    /// Case 3: trunk connection between switches with given vlan allowed
+    l2Edge(src,dst,vlan) :-	
+    	srcPt is SwitchPort, dstPt is SwitchPort,
+       	src is SwitchInterface(_,srcPt),
+    	dst is SwitchInterface(_,dstPt),
+		trunkLink(srcPt,dstPt,vlan,_).
+
+    l2Edge(src,dst,vlan) :-	
+    	srcPt is SwitchPort, dstPt is SwitchPort,
+       	src is SwitchInterface(_,srcPt),
+    	dst is SwitchInterface(_,dstPt),
+		trunkLink(srcPt,dstPt,_,vlan).
+
+	/// Gets vlan the given router interface connects to.    
+    connectVlan ::= (routerIface:Interface, vlan:Integer).
+    /// Connecting to access interface.
+    connectVlan(iface,vlan) :-
+    	iface is Interface(_,rPt,NIL),
+    	Link(rPt,sPt),					// router.port -> switch.port
+    	y is SwitchInterface(_,sPt), 
+    	SwitchPortMode(y,SwitchPortAccess(vlan)).
+    
+	/// Is subinterface connecting to trunk.
+    connectVlan(iface,vlan) :-
+    	iface is Interface(_,rPt,InterfaceEncap(mode,vlan)),
+    	Link(rPt,sPt),					// router.port -> switch.port
+    	y is SwitchInterface(_,sPt), 
+    	SwitchPortMode(y,SwitchPortTrunk(encap,native)).
+    
+	/// Connects to other router, then vlan = 0.
+	connectVlan(iface,0) :-
+    	iface is Interface(_,rPt,NIL),
+    	Link(rPt,sPt),					// router.port -> switch.port
+    	Interface(_,sPt,NIL). 	
+    
+	/// This relation derives proper connection at the interface level.
+    _connects ::= (src:Interface+SwitchInterface,dst:Interface+SwitchInterface,vlan:Integer).
+    /// R -> S
+    _connects(r,s,vlan) :-
+    	r is Interface(_,rPt,NIL),
+    	s is SwitchInterface(_,sPt),
+    	SwitchPortMode(s,SwitchPortAccess(vlan)),
+    	Link(rPt,sPt).
+    _connects(r,s,vlan) :-
+    	r is Interface(_,rPt,InterfaceEncap(encap,vlan)),
+    	s is SwitchInterface(_,sPt),
+    	SwitchPortMode(s,SwitchPortTrunk(encap,vlan)),
+    	Link(rPt,sPt).
+    _connects(r,s,vlan) :-
+    	r is Interface(_,rPt,InterfaceEncap(encap,vlan)),
+    	s is SwitchInterface(_,sPt),
+    	SwitchPortMode(s,SwitchPortTrunk(encap,_)),
+    	SwitchPortTrunkAllowedVlan(s,vlan),
+    	Link(rPt,sPt).
+    /// R -> R
+    _connects(r1,r2,0) :- 
+    	r1 is Interface(_,r1Pt,NIL),
+    	r2 is Interface(_,r2Pt,NIL),
+    	Link(r1Pt,r2Pt).
+    connects ::= (src:Interface+SwitchInterface,dst:Interface+SwitchInterface,vlan:Integer).
+	connects(s,r,v) :- _connects(s,r,v).
+	connects(r,s,v) :- _connects(s,r,v).
+
+	sameLan(x,y,v) :-
+		x is Interface, y is Interface, x != y,
+		connects(x,y,v).
+	sameLan(x,y,v) :-
+		x is Interface, y is Interface, x != y, 
+		connects(x,xx,v),
+		l2Path(xx,yy,v),
+		connects(yy,y,v).
 }
 
+domain Network includes NetworkTopology, RouterConfiguration, SwitchConfiguration, Vlan { }
 
-model N of Network {
+/// This is example model, see NetworkH.pdf for topology.
+model NetworkH of Network {
 	/// DEVICES:
     r1 is Router("R1").
     r1_f0_0 is RouterPort(r1, "f0/0").
@@ -176,47 +299,83 @@ model N of Network {
     r4 is Router("R4").
     r4_f0_0 is RouterPort(r4, "f0/0").
 
+    r5 is Router("R5").
+    r5_f0_0 is RouterPort(r5, "f0/0").
+
     s1 is Switch("S1").
     s1_f0_0 is SwitchPort(s1, "f0/0").
     s1_f0_1 is SwitchPort(s1, "f0/1").
     s1_f0_2 is SwitchPort(s1, "f0/2").
 
-
     s2 is Switch("S2").
-    s2_f0_0 is SwitchPort(s2, "f0/0").
+    s2_f0_0 is SwitchPort(s2, "f0/0").	// TRUNK
     s2_f0_1 is SwitchPort(s2, "f0/1").
     s2_f0_2 is SwitchPort(s2, "f0/2").
+    s2_f0_3 is SwitchPort(s2, "f0/3").	// TRUNK
 
     /// TOPOLOGY:
-    Link(s1_f0_0, s2_f0_0).
-    Link(s2_f0_0, s1_f0_0).
+    Link(s1_f0_0, s2_f0_0).Link(s2_f0_0, s1_f0_0).  /// S1 <-> S2
 
-    Link(r1_f0_0, s1_f0_1).
-    Link(s1_f0_1, r1_f0_0).
+    Link(r1_f0_0, s1_f0_1).Link(s1_f0_1, r1_f0_0).  /// R1 <-> S1
 
-    Link(r2_f0_0, s1_f0_2).
-    Link(s1_f0_2, r2_f0_0).
+    Link(r2_f0_0, s1_f0_2).Link(s1_f0_2, r2_f0_0).  /// R2 <-> S1
 
-    Link(r3_f0_0, s2_f0_1).
-    Link(s2_f0_1, r3_f0_0).
+    Link(r3_f0_0, s2_f0_1).Link(s2_f0_1, r3_f0_0).  /// R3 <-> S2
+     
+    Link(r4_f0_0, s2_f0_2).Link(s2_f0_2, r4_f0_0).  /// R4 <-> S2
 
-    Link(r4_f0_0, s2_f0_2).
-    Link(s2_f0_2, r4_f0_0).
+    Link(r5_f0_0, s2_f0_3).Link(s2_f0_3, r5_f0_0).  /// R5 <-> S2
 
     /// CONFIGURATION OF R1:
-    InterfaceIpAddress(Interface("f0/0", r1_f0_0), 11, UI32Range(10,20)).
+    r1_F0_0 is Interface("f0/0", r1_f0_0, NIL).
+    InterfaceIpAddress(r1_F0_0, 11, UI32Range(10,19)).
 
     /// CONFIGURATION OF R2:
-    InterfaceIpAddress(Interface("f0/0", r2_f0_0), 12, UI32Range(10,20)).
+    r2_F0_0 is Interface("f0/0", r2_f0_0, NIL).
+    InterfaceIpAddress(r2_F0_0, 22, UI32Range(20,29)).
 
     /// CONFIGURATION OF R3:
-    InterfaceIpAddress(Interface("f0/0", r3_f0_0), 12, UI32Range(10,20)).
+    r3_F0_0 is Interface("f0/0", r3_f0_0, NIL).
+    InterfaceIpAddress(r3_F0_0, 13, UI32Range(10,19)).
 
     /// CONFIGURATION OF R4:
-    InterfaceIpAddress(Interface("f0/0", r4_f0_0), 14, UI32Range(10,20)).
+    r4_F0_0 is Interface("f0/0", r4_f0_0, NIL).
+    InterfaceIpAddress(r4_F0_0, 24, UI32Range(20,29)).
+
+    /// CONFIGURATION OF R5:
+    r5_F0_0_1 is Interface("f0/0.1", r5_f0_0, InterfaceEncap(DOT1Q,1)).
+    InterfaceIpAddress(r5_F0_0_1, 15, UI32Range(10,19)).
+    r5_F0_0_2 is Interface("f0/0.2", r5_f0_0, InterfaceEncap(DOT1Q,2)).
+    InterfaceIpAddress(r5_F0_0_2, 25, UI32Range(20,29)).
+
+    /// CONFIGURATION OF S1:
+    s1_F0_0 is SwitchInterface("f0/0", s1_f0_0).
+    s1_F0_1 is SwitchInterface("f0/1", s1_f0_1).
+    s1_F0_2 is SwitchInterface("f0/2", s1_f0_2).
+    SwitchPortMode(s1_F0_0, SwitchPortTrunk(ISL, 0)).
+    SwitchPortTrunkAllowedVlan(s1_F0_0,1).
+    SwitchPortTrunkAllowedVlan(s1_F0_0,2).
+    SwitchPortMode(s1_F0_1, SwitchPortAccess(1)).
+    SwitchPortMode(s1_F0_2, SwitchPortAccess(2)).
 
 
-    /// Queries:
-    /// query N x is RouterPort, y is RouterPort, x != y, sameLan(x,y), InterfaceIpAddress(Interface(_,x),host,_), InterfaceIpAddress(Interface(_,y),host,_)
+    /// CONFIGURATION OF S2:
+    s2_F0_0 is SwitchInterface("f0/0", s2_f0_0).
+    s2_F0_1 is SwitchInterface("f0/1", s2_f0_1).
+    s2_F0_2 is SwitchInterface("f0/2", s2_f0_2).
+    s2_F0_3 is SwitchInterface("f0/3", s2_f0_3).
+    SwitchPortMode(s2_F0_0, SwitchPortTrunk(ISL, 0)).
+    SwitchPortTrunkAllowedVlan(s2_F0_0,1).
+    SwitchPortTrunkAllowedVlan(s2_F0_0,2).
+    SwitchPortMode(s2_F0_1, SwitchPortAccess(1)).
+    SwitchPortMode(s2_F0_2, SwitchPortAccess(2)).
+    SwitchPortMode(s2_F0_3, SwitchPortTrunk(DOT1Q, 0)).
+    SwitchPortTrunkAllowedVlan(s2_F0_3,1).
+    SwitchPortTrunkAllowedVlan(s2_F0_3,2).
+
+    /// UNIT TESTS:
+    /// query NetworkH trunkLink(x,y,native,allowed)
+    /// query NetworkH l2Path(%s1_F0_1,%s2_F0_2,vlan)
+    /// query NetworkH sameLan(x,y,1)
+    /// TODO....
 }
-

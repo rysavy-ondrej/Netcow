@@ -71,4 +71,9 @@
       <Name>Formula.CsGen</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="4mlFiles\Reachability.4ml" />
+    <None Include="4mlFiles\Routing.4ml" />
+    <None Include="4mlFiles\Policy.4ml" />
+  </ItemGroup>
 </Project>
