@@ -28,7 +28,7 @@ domain NetworkTopology includes Types {
 	SwitchPort ::= new (switch:Switch,id:ID).
 
 	Port ::= RouterPort + SwitchPort + FrameRelayPort.
-    //// This type defines list of interface that can be used as a path in the network.
+    //// This type defines list of interfaces that can be used as a path in the network.
     PortList ::= new (Port, any PortList + {NIL}).
 
     Device ::= Router + FrameRelaySwitch + Switch.

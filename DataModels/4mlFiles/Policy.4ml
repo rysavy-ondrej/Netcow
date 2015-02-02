@@ -1,6 +1,14 @@
 ﻿//// This domain represents models that represent network policy specifications. 
 domain Policy {
-
+    PolicyRule ::= new (name:String).
+    
+    policy ::= (name:String,action:Action,target:Target,scope:Scope,flow:Flow,path:Path).
+    policy(name,action,target,scope,flow,path) :-
+        PolicyRule(name),
+        action is Action,
+        target is Target,
+        
+     
 
 
 }
