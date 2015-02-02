@@ -127,3 +127,9 @@ NetworkModelGenerator/bin/Debug/csgen
 
 NetworkModelGenerator/bin/Debug/Formula.Core.dll
 
+
+NetworkModelGenerator/bin/Debug/Netcow.ConfigParsers.dll
+
+NetworkModelGenerator/bin/Debug/Netcow.Models.dll
+
+NetworkModelGenerator/obj/Debug/Netcow.ConfigParsers.dll
