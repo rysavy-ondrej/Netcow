@@ -7,6 +7,22 @@
 
 *.cache
 
-DataModels\bin\x86\Debug\*.*
+DataModels/bin/*
+DataModels/obj/*
+DataModels/OUTPUT
+
+FilterChecker/bin/*
+FilterChecker/obj/*
+
+Microsoft.Formula/CommandLine/bin/*
+Microsoft.Formula/CommandLine/obj/*
+
+Microsoft.Formula/Core/bin/*
+Microsoft.Formula/Core/obj/*
 
 
+Microsoft.Formula/CsGen/bin/*
+Microsoft.Formula/CsGen/obj/*
+
+NetworkModelGenerator/bin/*
+NetworkModelGenerator/obj/*
