@@ -1,5 +1,5 @@
 //// Program test2.4ml
-model test2 of Firewall at "/users/rysavy/projects/netcow/filterchecker/bin/debug/firewall.4ml"
+model test2 of Firewall at "c:/users/ondrej/documents/github/netcow/filterchecker/bin/debug/firewall.4ml"
 {
   Filter("199"),
   Rule(Filter("199"), 1, TCP_ESTABLISHED, "0.0.0.0%255.255.255.255", "*", "0.0.0.0%255.255.255.255", "*", ACCEPT),
