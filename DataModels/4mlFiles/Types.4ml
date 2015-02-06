@@ -1,0 +1,14 @@
+domain Types {
+	UI8 ::= {0..255}.
+	UI16 ::= {0..65535}.
+	UI32 ::=  {0..4294967295}.
+    ID ::= Integer + String.
+
+    UI32Range ::= new (left:UI32,right:UI32).
+    UI16Range ::= new (left:UI16,right:UI16).
+
+    /// These are derived types, which can be used in specification and querying.
+    IP ::= (address:UI32).
+    PN ::= (port:UI16).
+    TrunkEncapsulation ::= {DOT1Q, ISL}.
+}

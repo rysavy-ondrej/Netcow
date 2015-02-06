@@ -1,14 +1,89 @@
-﻿//// This domain represents models that represent network policy specifications. 
-domain Policy {
-    PolicyRule ::= new (name:String).
+﻿domain Types {
+	UI8 ::= {0..255}.
+	UI16 ::= {0..65535}.
+	UI32 ::=  {0..4294967295}.
+    ID ::= Integer + String.
+
+    UI32Range ::= new (left:UI32,right:UI32).
+    UI16Range ::= new (left:UI16,right:UI16).
+
+    /// These are derived types, which can be used in specification and querying.
+    IP ::= (address:UI32).
+    PN ::= (port:UI16).
+    TrunkEncapsulation ::= {DOT1Q, ISL}.
+}
+domain NetworkBasedApplications {
+    /// NBAR2 classification is used to describe kind of communication:
+    /// http://www.cisco.com/c/en/us/products/collateral/ios-nx-os-software/network-based-application-recognition-nbar/product_bulletin_c25-627831.html
+    Application ::= { FLASHMYSPACE, FLASHVIDEO, FLASHYAHOO, GOPHER, GSSHTTP, HTTP, HTTPALT, QQACCOUNTS, SHOCKWAVE, 
+        RTP
+        }. /// TODO: Add rest protocols...
+    Category ::= { BROWSING, BUSINESS, EMAIL, FILESHARING, GAMING, INDUSTRIAL, MESSAGING, PRIVACY, L3OVERIP, LOCSERVICES, NETADMIN, NEWSGROUP, SOCIALNET, STREAMING, TROJAN, MULTIMEDIA, OTHER, OBSOLETE }.
+    Transport ::= { P2P, TUNNELED, ENCRYPTED }.
+    ApplicationInfo ::= new (application:Application, category:Category, p2p:{YES,NO,NIL},tunneled:{YES,NO,NIL},encrypted:{YES,NO,NIL}).
+    ApplicationInfo(FLASHMYSPACE,BROWSING,NO,NO,NO).
+    ApplicationInfo(FLASHVIDEO,BROWSING,NO,NO,NO).
+    ApplicationInfo(FLASHYAHOO,BROWSING,NO,NO,NO).
+    ApplicationInfo(GOPHER,BROWSING,NO,NO,NO).
+    ApplicationInfo(GSSHTTP,BROWSING,NIL,NIL,NIL).
+    ApplicationInfo(HTTP,BROWSING,NO,NO,NO).
+    ApplicationInfo(HTTPALT,BROWSING,NO,NO,NO).
+    ApplicationInfo(QQACCOUNTS,BROWSING,NO,NO,NO).
+    ApplicationInfo(SHOCKWAVE,BROWSING,NO,NO,NO).
+    ApplicationInfo(RTP,MULTIMEDIA,NO,NO,NO).
+    /// TODO import rest of application info...
+}
+
+//// This domain represents models that represent network policy specifications. 
+domain Policy includes Types, NetworkBasedApplications {
+    /// This class represents known applications and their parameters that can be used in policy specifications.
+    Protocol ::= Application + Protocol + Transport + {ANY}.
     
-    policy ::= (name:String,action:Action,target:Target,scope:Scope,flow:Flow,path:Path).
-    policy(name,action,target,scope,flow,path) :-
-        PolicyRule(name),
-        action is Action,
-        target is Target,
-        
-     
+    Zone ::= new(name:String).
+    Network ::= new(name:String, network:UI32Range).
+    Host ::= new(name:String, address:UI32).
+    Device ::= new(name:String).
+    Netloc ::= Zone + Network + Host + Device.
+    
+    Request ::= new (requestor:Netloc, target:Netloc, protocol: Protocol).
+    Response ::= new (responder:Netloc, target:Netloc, protocol: Protocol). 
+    Flow ::= new (requestor:Netloc, target:Netloc, protocol: Protocol).
 
+    Service ::= new (service:String).
+    /// This action predicates constrains QoS-related parameters.
+    Qos ::= new (latency:Integer+{NIL}, jitter:Integer+{NIL}, band:Integer+{NIL}).
+    /// This action predicate requires that specified key has required value.
+    Set ::= new (key:String,value:String).
+    /// This action predicate defines whether flow is permitted or denied.
+    Access ::= new (exec:{PERMIT, DROP}).
+    /// Flow action is one of the above defined kinds.
+    FlowAction ::= Qos+Set+Access.
 
+    /// Each Policy object should have the unique id and target object.
+    /// Target object of FlowPolicy is a flow object.
+    FlowPolicy ::= new (id:String, flow:Flow, action:FlowAction).
+    
+    ServiceAction::= {ENABLED, DISABLED}.
+    /// Target object of ServicePolicy is a service object.
+    ServicePolicy ::= new (id:String, service:Service, action:ServiceAction).
+    
+    Path ::= new (path:String).
+    Waypoint ::= new (loc:Netloc).
+    Avoid ::= new (loc:Netloc).
+    
+    SpaceScope ::= Path + Waypoint + Avoid.
+    
+    TimeScope ::= new (id:String).
+    Scope ::= SpaceScope + TimeScope.
+    
+    Policy ::= FlowPolicy + ServicePolicy.
+    PolicyScope ::= new (policy:Policy,scope:Scope).
+}
+model QosExample of Policy {
+    customers is Zone("Customers").
+    internet is Zone("Internet").
+    gw is Device("VoiceGateway").
+    voip is Flow(customers, internet,RTP).   
+    p1 is FlowPolicy("p1", voip, Qos(100,5,3000)).
+    PolicyScope(p1, Waypoint(gw)).
 }

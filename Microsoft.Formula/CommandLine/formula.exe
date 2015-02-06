@@ -1,0 +1,9 @@
+#!/bin/sh
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+INPUT=( $(echo $1 | tr ";" " ") )
+OUTPUT=( $(echo $2 | tr ";" " ") )
+
+for ((i=0;i<${#INPUT[@]};++i)); do 
+    echo "$i: ${INPUT[i]} --> ${OUTPUT[i]}"
+    /usr/bin/mono $DIR/Formula.exe "${INPUT[i]}" "${OUTPUT[i]}"
+done
