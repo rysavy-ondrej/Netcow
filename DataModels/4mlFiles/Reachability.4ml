@@ -1,4 +1,128 @@
-﻿domain Reachability {
+﻿domain Topology {
+    ID ::= Integer + String.
+    Device ::= new (id:ID).
+    Interface ::= new (id:ID, dev:Device).
+    Subnet ::= new (id:ID).
+    Idge ::= new (from:Interface, to:Interface).
+    EdgeOut ::= new (from:Interface, to:Subnet). 
+    EdgeIn ::= new (from:Subnet,to:Interface).
+    Edge ::= EdgeOut + EdgeIn.
+    
+    conforms no { e | e is EdgeOut, f is EdgeIn, e.from = f.to, e.to = f.from}.
+    conforms no { e | e is EdgeIn, f is EdgeOut, e.from = f.to, e.to = f.from}.
+    conforms no { d | d is Device, i is Interface(_,d), j is Interface(_,d), i != j, no Idge(i,j)}.
+}
+
+model T1 of Topology {
+	r1 is Device("R1").
+	r1e1 is Interface("e1",r1).
+	r1e2 is Interface("e2",r1).
+	r1e3 is Interface("e3",r1).
+	r1e4 is Interface("e4",r1).
+	r1e5 is Interface("e5",r1).
+	r1e6 is Interface("e6",r1).
+
+	
+	r2 is Device("R2").
+	r2e1 is Interface("e1",r2).
+	r2e2 is Interface("e2",r2).
+	r2e3 is Interface("e3",r2).
+	r2e4 is Interface("e4",r2).
+	r2e5 is Interface("e5",r2).
+	r2e6 is Interface("e6",r2).
+
+	r3 is Device("R3").
+	r3e1 is Interface("e1",r3).
+	r3e2 is Interface("e2",r3).
+	r3e3 is Interface("e3",r3).
+	r3e4 is Interface("e4",r3).
+	r3e5 is Interface("e5",r3).
+	r3e6 is Interface("e6",r3).
+		  	
+	r4 is Device("R4").
+	r4e1 is Interface("e1",r4).
+	r4e2 is Interface("e2",r4).
+	r4e3 is Interface("e3",r4).
+	r4e4 is Interface("e4",r4).
+	r4e5 is Interface("e5",r4).
+	r4e6 is Interface("e6",r4).
+		  	
+	r5 is Device("R5").
+	r5e1 is Interface("e1",r5).
+	r5e2 is Interface("e2",r5).
+	r5e3 is Interface("e3",r5).
+	r5e4 is Interface("e4",r5).
+	r5e5 is Interface("e5",r5).
+	r5e6 is Interface("e6",r5).
+		  	
+	r6 is Device("R6").
+	r6e1 is Interface("e1",r6).
+	r6e2 is Interface("e2",r6).
+	r6e3 is Interface("e3",r6).
+	r6e4 is Interface("e4",r6).
+	r6e5 is Interface("e5",r6).
+	r6e6 is Interface("e6",r6).
+}
 
 
+domain Flow {
+   ID ::= Integer + String.
+   Ip ::= {0..4294967295}.
+   Pn ::= {0..65535}.
+   Pt ::= {IP,ICMP,IGMP,TCP,UDP}.
+   Packet  ::= new (id:ID).
+   IpRange ::= new (l:Ip, r:Ip).
+   PnRange ::= new (l:Pn, r:Pn).
+   SrcIp ::= new (p:Packet, IpRange).
+   DstIp ::= new (p:Packet, IpRange).
+   SrcPn ::= new (p:Packet, PnRange).
+   DstPn ::= new (p:Packet, PnRange). 
+   App   ::= new (p:Packet, Pt).
+   
+   IpPool ::= new (Ip).
+   PnPool ::= new (Pn).
+   PtPool ::= new (Pt).
+   
+   packet ::= (p:Packet,srcIp:Ip,dstIp:Ip, srcPn:Pn,dstPn:Pn,app:Pt).
+   packet (p,srcip,0,0,0,IP) :-
+       p is Packet, SrcIp(p, IpRange(l,r)), IpPool(srcip), srcip >= l, srcip <= r.
+       
+   flow ::= (id:ID,srcIp:Ip,dstIp:Ip,srcPn:Pn,dstPn:Pn,app:Pt).
+   
+   flow(id,srcip,dstip,srcpn,dstpn,app) :- 
+       p is Packet(id), packet(p, srcip,dstip,srcpn,dstpn,app).   
+       
+    packet_to_flow ::= (p:Packet,f:flow).
+    packet_to_flow(p,f) :-
+        p is Packet(x), f is flow(x,_,_,_,_,_).
+}
+
+domain Reachability includes Topology, Flow {
+    Filter ::= new (e:Edge, fp:Packet).
+    Transform ::= new (i:Idge, inp:Packet, outr:Packet).
+    Path ::= new (Edge+Idge, any Path + {NIL}).
+    
+    reach ::= (p:Path,f:flow,g:flow).
+    reach(Path(edge,NIL),flw,flw) :- edge is Edge, Filter(edge,pck),
+        packet_to_flow(pck,flw).
+    
+    reach(Path(idge,NIL),fin,fout) :- idge is Idge, Transform(idge,pin,pout),
+        packet_to_flow(pin,fin), packet_to_flow(pout,fout).
+        
+    reach(Path(edge,path),fin,fout) :- edge is Edge, Filter(edge,pck),
+        packet_to_flow(pck,fin), reach(path,fin,fout).
+        
+    reach(Path(idge,NIL),fin,fout) :- idge is Idge, Transform(idge,pin,pout),
+        packet_to_flow(pin,fin), packet_to_flow(pout,fmid), reach(path,fmid,fout).  
+}
+
+
+model F1 of Flow {
+    IpPool(10). IpPool(20). IpPool(40). IpPool(15). IpPool(30).
+    p is Packet("f1").
+    SrcIp(p,IpRange(10,20)).
+    DstIp(p,IpRange(40,40)).
+    DstPn(p,PnRange(80,80)).
+    DstPn(p,PnRange(443,443)).
+    App(p,TCP).
 }

@@ -1,17 +1,29 @@
-﻿domain Types {
+﻿///
+/// This is simplified formalization to be presented in thesis.
+///
+///
+domain Types {
 	UI8 ::= {0..255}.
 	UI16 ::= {0..65535}.
 	UI32 ::=  {0..4294967295}.
     ID ::= Integer + String.
 
-    UI32Range ::= new (left:UI32,right:UI32).
-    UI16Range ::= new (left:UI16,right:UI16).
+    UI32R ::= new (left:UI32,right:UI32).
+    UI16R ::= new (left:UI16,right:UI16).
 
-    /// These are derived types, which can be used in specification and querying.
-    IP ::= (address:UI32).
-    PN ::= (port:UI16).
-    TrunkEncapsulation ::= {DOT1Q, ISL}.
+    /// This predicate tests if x in range r. 
+    inrange ::= (r:UI32R,x:Integer).
+    inrange(r,x) :- r is UI32R(x,_).
+    inrange(r,y) :- inrange(r,x), y = x + 1, y <= r.right.  
 }
+
+model TypesTest of Types {
+    r is UI32R(10,20).
+    /// query TypesTest inrange(%r, 15) ~ true
+    /// query TypesTest inrange(%r, 5) ~ false
+    /// query TypesTest inrange(%r, 25) ~ false
+}
+
 domain NetworkBasedApplications {
     /// NBAR2 classification is used to describe kind of communication:
     /// http://www.cisco.com/c/en/us/products/collateral/ios-nx-os-software/network-based-application-recognition-nbar/product_bulletin_c25-627831.html
@@ -19,71 +31,418 @@ domain NetworkBasedApplications {
         RTP
         }. /// TODO: Add rest protocols...
     Category ::= { BROWSING, BUSINESS, EMAIL, FILESHARING, GAMING, INDUSTRIAL, MESSAGING, PRIVACY, L3OVERIP, LOCSERVICES, NETADMIN, NEWSGROUP, SOCIALNET, STREAMING, TROJAN, MULTIMEDIA, OTHER, OBSOLETE }.
-    Transport ::= { P2P, TUNNELED, ENCRYPTED }.
-    ApplicationInfo ::= new (application:Application, category:Category, p2p:{YES,NO,NIL},tunneled:{YES,NO,NIL},encrypted:{YES,NO,NIL}).
-    ApplicationInfo(FLASHMYSPACE,BROWSING,NO,NO,NO).
-    ApplicationInfo(FLASHVIDEO,BROWSING,NO,NO,NO).
-    ApplicationInfo(FLASHYAHOO,BROWSING,NO,NO,NO).
-    ApplicationInfo(GOPHER,BROWSING,NO,NO,NO).
-    ApplicationInfo(GSSHTTP,BROWSING,NIL,NIL,NIL).
-    ApplicationInfo(HTTP,BROWSING,NO,NO,NO).
-    ApplicationInfo(HTTPALT,BROWSING,NO,NO,NO).
-    ApplicationInfo(QQACCOUNTS,BROWSING,NO,NO,NO).
-    ApplicationInfo(SHOCKWAVE,BROWSING,NO,NO,NO).
-    ApplicationInfo(RTP,MULTIMEDIA,NO,NO,NO).
-    /// TODO import rest of application info...
+    ApplicationTable ::= new (application:Application, category:Category).
+    ApplicationTable(FLASHMYSPACE,BROWSING).
+    ApplicationTable(FLASHVIDEO,BROWSING).
+    ApplicationTable(FLASHYAHOO,BROWSING).
+    ApplicationTable(GOPHER,BROWSING).
+    ApplicationTable(GSSHTTP,BROWSING).
+    ApplicationTable(HTTP,BROWSING).
+    ApplicationTable(HTTPALT,BROWSING).
+    ApplicationTable(QQACCOUNTS,BROWSING).
+    ApplicationTable(SHOCKWAVE,BROWSING).
+    ApplicationTable(RTP,MULTIMEDIA).
+    
+    isApplication ::= (a:Application).
+    isApplication(a) :- ApplicationTable(a,_).
+    isCategory ::= (c:Category).
+    isCategory(c) :- ApplicationTable(_,c).
+    
+    /// Maps categories to applications...      
+    application ::= (p:Application+Category,a:Application).
+    application(c,a) :- isCategory(c), ApplicationTable(a,c).
+    application(a,a) :- isApplication(a).
 }
 
 //// This domain represents models that represent network policy specifications. 
+//// Policy contains:
+////   Path         which 
+////   Target       which can be flow or service
+////   Conditions   that represent additional constraints 
+////   Action Items that express actions that should be enforced 
+////                on Target if Conditions are met.
 domain Policy includes Types, NetworkBasedApplications {
-    /// This class represents known applications and their parameters that can be used in policy specifications.
-    Protocol ::= Application + Protocol + Transport + {ANY}.
-    
-    Zone ::= new(name:String).
-    Network ::= new(name:String, network:UI32Range).
-    Host ::= new(name:String, address:UI32).
-    Device ::= new(name:String).
-    Netloc ::= Zone + Network + Host + Device.
-    
-    Request ::= new (requestor:Netloc, target:Netloc, protocol: Protocol).
-    Response ::= new (responder:Netloc, target:Netloc, protocol: Protocol). 
-    Flow ::= new (requestor:Netloc, target:Netloc, protocol: Protocol).
 
-    Service ::= new (service:String).
-    /// This action predicates constrains QoS-related parameters.
-    Qos ::= new (latency:Integer+{NIL}, jitter:Integer+{NIL}, band:Integer+{NIL}).
-    /// This action predicate requires that specified key has required value.
-    Set ::= new (key:String,value:String).
-    /// This action predicate defines whether flow is permitted or denied.
-    Access ::= new (exec:{PERMIT, DROP}).
-    /// Flow action is one of the above defined kinds.
-    FlowAction ::= Qos+Set+Access.
-
-    /// Each Policy object should have the unique id and target object.
-    /// Target object of FlowPolicy is a flow object.
-    FlowPolicy ::= new (id:String, flow:Flow, action:FlowAction).
+    /// SCOPE:
+    /// Zone consists of networks...
+    Zone ::= new (name:String).
+    /// Service is provided  to clients...
+    Service ::= new (name:String).
+    /// 
+    Netloc ::= Zone + Service.
     
-    ServiceAction::= {ENABLED, DISABLED}.
-    /// Target object of ServicePolicy is a service object.
-    ServicePolicy ::= new (id:String, service:Service, action:ServiceAction).
-    
-    Path ::= new (path:String).
+    /// Paths are composed of network locations. A path may contain wildcard
+    /// that can be substituted for zero or mode netwotk locations.
+    Path ::= new (Netloc, any Path + {NIL}).
     Waypoint ::= new (loc:Netloc).
     Avoid ::= new (loc:Netloc).
-    
     SpaceScope ::= Path + Waypoint + Avoid.
+    Scope ::= SpaceScope.  
+    /// TARGET:
+    /// This class represents known applications and their parameters that can be used in policy specifications.
+    Protocol ::= Application + Category + {ANY}.
+
+    Conversation ::= new (client:Netloc, server:Netloc, protocol: Protocol).
+            
+    /// This action predicate constrains QoS-related parameters.
+    Qos ::= new (latency:Integer+{NIL}, jitter:Integer+{NIL}, band:Integer+{NIL}).
     
-    TimeScope ::= new (id:String).
-    Scope ::= SpaceScope + TimeScope.
+    /// Requires priority of the traffic.
+    Priority ::= new (priority:{0..7}).
+    /// This action predicate defines whether flow is permitted or denied.
+    Access ::= new (exec: {PERMIT,DENY}).
+    /// Flow action is one of the above de= Qos + Ensure + Priorityfined kinds.
+    Action ::= Access + Qos + Priority.
     
-    Policy ::= FlowPolicy + ServicePolicy.
-    PolicyScope ::= new (policy:Policy,scope:Scope).
+    QosClass ::= new (id:ID,qos:Qos).
+    /// Each Policy object should have the unique id and target object.
+    /// Target object of FlowPolicy is a flow object.
+    Rule ::= new (conv:Conversation, scope:Scope, action:Action).
+    Policy ::= new (id:ID, rule:Rule).
+    
+    /// Maps locations to integer representation of ip address.
+    ///location ::= (nl:Netloc,l:Integer).
+    ///location(nl,l) :- nl : Network, nl is Network(_, UI32R(l,_)).
+    ///location(nl,x) :- nl is Network, location(nl,k), x = k + 1, x <= nl.network.right.
 }
-model QosExample of Policy {
-    customers is Zone("Customers").
-    internet is Zone("Internet").
-    gw is Device("VoiceGateway").
-    voip is Flow(customers, internet,RTP).   
-    p1 is FlowPolicy("p1", voip, Qos(100,5,3000)).
-    PolicyScope(p1, Waypoint(gw)).
+
+domain ServicePolice includes Types {
+    User ::= new (id:ID).
+    Group ::= new (id:ID).
+    Machine ::= new (id:ID).
+    Device ::= new (id:ID).
+    Service ::= new (id:ID).
+    ServiceAccess ::= {ANY, NONE, SPECIFIED}.
+    UserAccess ::= new (r:ServiceRule, u:User).
+    GroupAccess ::= new (r:ServiceRule, g:Group).
+    MachineAccess ::= new (r:ServiceRule, m:Machine).
+    ServiceRule :: = new (s:Service, scope:Scope, access:ServiceAccess).
 }
+
+domain AuthenticationService includes ServicePolicy{
+    Authentication ::= new (s:Service).
+    AuthPrimary ::= new (s:Service, s:AuthService).
+    AuthFallback ::= new (s:Service, s:AuthService)
+    
+    AAAServerType ::= { TACACS, RADIUS }.
+    RadiusAAA ::= new (s:Service).
+    TacacsAAA ::= new (s:Service).
+    LocalAAA ::= new (s:Service).
+    AuthService ::= RadiusAAA + TacacsAAA + LocalAAA.
+}
+
+
+domain NTPService includes ServicePolicy {
+    NtpMode ::= {FLAT, HIERARCHY, STAR}.
+    Ntp ::= new(s:Service,mode:NtpMode).
+    NtpPublicServer ::= new (s:Service, dns:String).
+    NtpMasterServer ::= new (s:Service, dev:Device).
+
+}
+
+
+domain PolicyComposition includes Policy {
+    Extend ::= new (p1:Policy,p2:Policy).
+    Combine ::= new (p1:Policy,p2:Policy).
+    Merge ::= new (p1:Policy,p2:Policy).
+} 
+
+/// This domain provides link information for deducing network graph.
+domain Network includes Types {
+    /// Provides flow routing and forwarding + security services
+    NetRouter ::= new (id:ID).
+    /// Provides services, eg. Mail, Web, ...
+    NetServer ::= new (id:ID).
+    NetNode ::= NetRouter + NetServer.
+    NetLink ::= new (node:NetNode, host:UI32, net:UI32R).
+    
+    link_ok ::= (l:NetLink).
+    link_ok(l) :- l is NetLink, l.host > 0, 
+        l.host + l.net.left < l.net.right.
+}
+
+/// This domain provides mapping from policy to network.
+domain NetworkPolicy includes Policy, Network {
+    /// Assigns a network to a zone:
+    ZoneNets ::= new (z:Zone, adr:UI32R).
+    /// Assigns a service to a device 
+    NetService ::= new (s:Service, dev:NetNode).
+} 
+
+/// Flowsets domain represents a set of flows
+domain Reachability includes Types, NetworkBasedApplications {
+    IP ::= UI32.
+    PT ::= Application.
+    Priority ::= {0..7}.
+    anyPrio ::= new(val:Priority).
+    anyPrio(x) :- x = 0; x = 1; x = 2; x = 3; x = 4; x = 5; x = 6; x = 7.
+    anyClass ::= new(cls:{ BE,EF,AF,CS}).
+    anyClass(c) :- c = BE; c = EF; c = AF; c = CS.
+    //// This represents an Id of Qos class.
+    Dscp ::= new (class:{ BE, EF, AF, CS}, value:Priority).
+    /// Flow 
+    Flow ::= new (srcIp:IP,dstIp:IP,pt:PT,dscp:Dscp).
+    /// Specifies a filter as a set of permitted flows.
+    PathFilter ::= new (path:Path, flow:Flow).
+    Interface ::= new (ip:IP).
+    Target ::= new (net:UI32R).
+    Location ::= Interface + Target.
+    Idge ::= new(dev:ID,ids:Interface,idd:Interface).
+    Edge ::= new(eds:Location,edd:Location).
+    
+    IX ::= new (Idge, any EX).
+    EX ::= new (Edge, any IX + {NIL}).
+    contain ::= (eix:EX+IX,e:Edge).
+    
+    PX ::= new (Edge+Idge, any PX + {NIL}).
+    Path ::= PX.
+    px ::= (source:Edge,target:Edge, rec: PX).
+    px(e1, e2, PX(e1,PX(i,PX(e2,NIL)))) :- 
+        e1 is Edge(l1,l2), e2 is Edge(l3,l4), i is Idge(r,l2,l3).
+    px(e1, e3,PX(e1,PX(i,p))) :-
+	    e1 is Edge(l1,l2), e2 is Edge(l3,l4), i is Idge(r,l2,l3), e3 is Edge,
+		px(e2,e3,p).
+		///lstFind(#PX,p,e2,NIL) = NIL. 
+    
+    /// compute paths here:
+    ///path ::= (source:Edge, target:Edge, rec:Path).
+    ///path(Edge(l1,l2), Edge(l3,l4), EX(Edge(l1,l2),IX(Idge(r,l2,l3),EX(Edge(l3,l4),NIL))) ) :- 
+    ///    l1 is Location, l4 is Location, Idge(r,l2,l3). 
+    
+	/// THE FOLLOWING CAUSES NONTERMINATION!
+    ///path(Edge(l1,l2),w,EX(Edge(l1,l2),IX(Idge(r,l2,l3),p))) :- 
+    ///    l1 is Location, l2 is Interface, l3 is Interface, l4 is Location,
+    ///    w is Edge, Idge(r,l2,l3), 
+    ///    path(Edge(l3,l4),w,p).
+    
+    /// Conformance testing rules:
+    invalidEdge :-  
+        e is Edge(Target(_),Target(_)). 
+    ///conforms no invalidEdge.
+}
+
+model Path1 of Reachability {
+    ///        e1         e2	    
+    ///   A | --> | R1 | --> | B |
+    ///				 |  
+	///              |  e3
+	///              v	  e4
+	///           |	R2 | --> | B |
+    a is Target(UI32R(100,199)).
+    b is Target(UI32R(200,299)).
+    r1_toA is Interface(101).
+    r1_toB is Interface(201).
+	r1_to2 is Interface(401).
+    r2_to1 is Interface(402).
+	r2_toB is Interface(202).
+
+
+    i is Idge("r1",r1_toA,r1_toB).
+	     Idge("r1",r1_toA,r1_to2).
+	     Idge("r1",r1_toB,r1_toA).
+	     Idge("r1",r1_toB,r1_to2).
+	     Idge("r1",r1_to2,r1_toA).
+	     Idge("r1",r1_to2,r1_toB).
+
+    e1 is Edge(a,r1_toA).
+    e2 is Edge(r1_toB, b).
+		  
+		  Idge("r2",r2_to1,r2_toB).
+	e3 is Edge(r1_to2, r2_to1).
+	e4 is Edge(r2_toB, b).
+
+    /// query Path1 path(Edge(a,r1_toA),Edge(r1_toB, b))
+    /// query Path1 px(Edge(%a,%r1_toA),Edge(%r1_toB,%b), r)
+    /// query Path1 px(%e1,%e2, PX(%e1,PX(%i,PX(%e2,NIL))))
+}
+
+model ReachabilityExample {
+
+
+}
+
+model PathTest of Reachability {
+    r1_toA is Interface(101).
+    r1_to2 is Interface(1201).
+    r1_to3 is Interface(1301).
+    r1_to4 is Interface(1401).
+    Idge("r1",r1_toA,r1_to2).
+    Idge("r1",r1_toA,r1_to3).
+    Idge("r1",r1_toA,r1_to4).
+    Idge("r1",r1_to2,r1_toA).
+    Idge("r1",r1_to2,r1_to3).
+    Idge("r1",r1_to2,r1_to4).
+    Idge("r1",r1_to3,r1_toA).
+    Idge("r1",r1_to3,r1_to2).
+    Idge("r1",r1_to3,r1_to4).
+    Idge("r1",r1_to4,r1_toA).
+    Idge("r1",r1_to4,r1_to2).
+    Idge("r1",r1_to4,r1_to3).
+    
+    Edge(r1_toA,a).
+    Edge(a,r1_toA).
+    
+    Edge(r1_to2, r2_to1).
+    Edge(r2_to1, r1_to2).
+    /// query PathTest path(Edge(a,r1_toA),Edge(r1_to2, r2_to1),
+    /// EX(Edge(a,r1_toA), IX(Idge("r1",r1_toA,r1_to2), EX(Edge(r1_to2,r2_to1),NIL))) )
+    
+    r2_to1 is Interface(1202).
+    r2_to5 is Interface(2502).
+    r2_to6 is Interface(2602).
+    
+    r3_to1 is Interface(1303).
+    r3_to2 is Interface(2303).
+    r3_to4 is Interface(3403).
+    r3_to5 is Interface(3503).
+    r3_to6 is Interface(3603).
+    
+    r4_to1 is Interface(1404).
+    r4_to2 is Interface(2404).
+    r4_to3 is Interface(3404).
+    r4_to5 is Interface(4504).
+    r4_to6 is Interface(4604).
+    
+    r5_to3 is Interface(5305).
+    r5_to4 is Interface(5405).
+    r5_toS is Interface(301).
+    
+    r6_to3 is Interface(3606).
+    r6_to4 is Interface(4606).
+    r6_toE is Interface(201).
+    a is Target(UI32R(100,199)).
+    e is Target(UI32R(200,299)).
+    s is Target(UI32R(300,399)). 
+}
+
+domain QosCube {
+    /// We need to provide mapping from priority and Qos specifications to Dscp.
+    ///QosMap ::= new (from: Priority + Qos, dscp:Dscp).
+    ///QosMap(x, Dscp(CS,x)).
+}
+
+transform SMap (policy::NetworkPolicy) returns (output::Reachability)
+{
+    Interface(ip) :- NetLink(_,ip,_).
+    Target(net)  :- NetLink(_,_,net).
+    
+    Edge(es,ed) :- NetLink(_,ip1,net), NetLink(_,ip2,net), es is Interface(ip1), ed is Interface(ip2), es != ed.
+    Edge(Interface(ip),Target(net)) :- NetLink(_,ip,net).
+    Edge(Target(net),Interface(ip)) :- NetLink(_,ip,net). 
+    
+    Idge(r,ids,idd) :- NetLink(n,ip1,net1), ids is Interface(ip1),
+                       NetLink(n,ip2,net2), idd is Interface(ip2), net1 != net2, r = n.id.
+    
+    anyDscp ::= (dscp:Dscp).
+    anyDscp(Dscp(c,p)) :- anyClass(c), anyPrio(p).
+    prioDscp ::= (priority:Integer, dscp:Dscp).
+    prioDscp(x,Dscp(CS,x)) :- anyPrio(x).
+    
+    qosDscp ::= (qos:Qos, dscp:Dscp).
+     
+    /// tests if scope s admits path p 
+    admit ::= (s:policy.SpaceScope,p:output.Path).
+    
+    /// provides all ip addresses associated with the provided network location
+    addr ::= (l:Netloc, i:output.IP).
+    
+    
+    deny ::= (path:output.Path, flow:Flow).
+    deny(pth,Flow(srcIp,dstIp,pt,dscp)) :- 
+        policy.Rule(Conversation(cc,cs,cp),scope,Access(DENY)),
+        policy.application(cp,pt),
+        addr(cc,srcIp), addr(cs,dstIp),
+        admit(scope,pth),
+        anyDscp(dscp).
+       
+    permit ::= (path:output.Path, flow:Flow).           
+    permit(pth,Flow(srcIp,dstIp,pt,dscp)) :- 
+        policy.Rule(Conversation(cc,cs,cp),scope,Access(PERMIT)),
+        policy.application(cp,pt),
+        addr(cc,srcIp), addr(cs,dstIp),
+        admit(scope,pth),
+        anyDscp(dscp).
+        
+    permit(pth,Flow(srcIp,dstIp,pt,dscp)) :-    
+        policy.Rule(Conversation(cc,cs,cp),scope,Priority(pr)),
+        policy.application(cp,pt),
+        addr(cc,srcIp), addr(cs,dstIp),
+        admit(scope,pth),
+        prioDscp(pr, dscp).    
+    
+    permit(pth,Flow(srcIp,dstIp,pt,dscp)) :-    
+        policy.Rule(Conversation(cc,cs,cp),scope,qos),
+        policy.application(cp,pt),
+        addr(cc,srcIp), addr(cs,dstIp),
+        admit(scope,pth),
+        qosDscp(qos, dscp). 
+            
+    /// PathFilter assocites with every path a set of permitted flows. 
+    PathFilter(p,f) :- permit(p,f), no deny(p,f).
+     
+}
+
+/// This represents a policy applicable to networks that 
+/// follows described architecture.
+model SafePolicy of Policy  {
+    /// Definition of zones:
+    z_management is Zone("Management").
+    z_access is Zone("Access").
+    z_data is Zone("Data Center").
+    z_core is Zone("Core").
+    z_edge is Zone("Internet Edge").
+    z_public is Zone("Public Services").    
+    z_internet is Zone("Internet").
+    z_branch is Zone("Branch"). 
+    z_partner is Zone("Partner Site"). 
+    z_tworker is Zone("Teleworker").
+    
+    s_vpngw is Service("VPN Gateway").
+    s_mail is Service("Mail").
+    s_web is Service("Web").
+}
+
+/// This is example of network that implements SafePolicy 
+/// and have specified topology. 
+model SafeNet of NetworkPolicy includes SafePolicy {
+    r_border is NetRouter("Internet Border Router").
+    r_secapp is NetRouter("Security Appliance").
+    r_vpngw  is NetServer("VPN Gateway").
+    
+    
+    ZoneNets(z_edge, n_edge).
+    n_edge is UI32R(10,19).
+    NetLink(r_border,1, n_edge).  
+    NetLink(r_secapp,2, n_edge).   
+    NetLink(r_vpngw,3, n_edge).     
+    
+    ZoneNets(z_public, n_public).
+    n_public is UI32R(20,29).
+    d_mail   is NetServer("Mail Server").
+    d_web    is NetServer("Web Server").
+    NetLink(r_secapp, 1, n_public).
+    NetLink(d_mail, 2,n_public).
+    NetLink(d_web,  3,n_public).
+    
+    NetService(s_mail, d_mail).
+    NetService(s_web, d_web).
+    
+    n_edge_core is UI32R(30,39).
+    NetLink(r_secapp,1, n_edge_core).
+    NetLink(r_core,2, n_edge_core).
+    
+    n_access_core is UI32R(40,49).
+    r_access is NetRouter("Access Router").
+    r_core   is NetRouter("Core Router").
+    
+    NetLink(r_access,1,n_access_core).
+    NetLink(r_core,2,n_access_core). 
+    
+    /// Test queries:
+    /// query CExample common_proto(HTTP,EMAIL)    -> false
+    /// query CExample common_proto(HTTP,BROWSING) -> true
+    /// query CExample common_proto(ANY,RTP)       -> true
+}
+
+partial model A of Reachability {}
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>Netcow.Reachability</name></assembly>
+<members>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:ReachabilityProgram.toLinqFunc``1(Microsoft.FSharp.Quotations.FSharpExpr{Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``0}})">
+<summary>
+ This is a helper function to convert parameterless lambda function to Func expression of LINQ.
+</summary>
+</member>
+<member name="T:ReachabilityProgram">
+
+</member>
+</members>
+</doc>
