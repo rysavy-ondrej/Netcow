@@ -19,6 +19,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formula.CsGen", "Microsoft.
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Reachability", "Reachability\Reachability.fsproj", "{BB31E89B-816D-4811-876C-46D2E041AE00}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{6E696B6D-6E39-472D-AC9C-9A6471B35836}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Networks", "Networks", "{C927EEC9-7277-43B0-9EDF-46C73515D070}"
+	ProjectSection(SolutionItems) = preProject
+		Examples\Networks\outside_nat.xml = Examples\Networks\outside_nat.xml
+		Examples\Networks\zpf.xml = Examples\Networks\zpf.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalTools", "ExternalTools", "{6676BCAD-9F05-4039-ADD8-A099CE84F2B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PacketTracer", "PacketTracer", "{A085D58B-A365-4432-8FB7-603804F92877}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{3615C33D-9CF0-4FF5-B95E-16FA669C042E}"
+	ProjectSection(SolutionItems) = preProject
+		ExternalTools\PacketTracer\Extensions\ExportNetwork.pts = ExternalTools\PacketTracer\Extensions\ExportNetwork.pts
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +128,9 @@ Global
 		{1B5724EC-FFF1-48D7-A700-AD46F0150AFC} = {E0E5F134-D26A-42AB-8EB7-8FE273400F13}
 		{25CC6D40-B4A3-4896-B2A9-5B72E460F84D} = {E0E5F134-D26A-42AB-8EB7-8FE273400F13}
 		{B6B314AA-3290-4DD1-BDD5-CE76AF12243E} = {E0E5F134-D26A-42AB-8EB7-8FE273400F13}
+		{C927EEC9-7277-43B0-9EDF-46C73515D070} = {6E696B6D-6E39-472D-AC9C-9A6471B35836}
+		{A085D58B-A365-4432-8FB7-603804F92877} = {6676BCAD-9F05-4039-ADD8-A099CE84F2B0}
+		{3615C33D-9CF0-4FF5-B95E-16FA669C042E} = {A085D58B-A365-4432-8FB7-603804F92877}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = NetworkModelGenerator\NetworkModelGenerator.fsproj

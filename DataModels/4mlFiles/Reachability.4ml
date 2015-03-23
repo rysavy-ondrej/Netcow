@@ -7,7 +7,8 @@
     EdgeOut ::= new (from:Interface, to:Subnet). 
     EdgeIn ::= new (from:Subnet,to:Interface).
     Edge ::= EdgeOut + EdgeIn.
-    
+
+    /// Conformance constraints:
     conforms no { e | e is EdgeOut, f is EdgeIn, e.from = f.to, e.to = f.from}.
     conforms no { e | e is EdgeIn, f is EdgeOut, e.from = f.to, e.to = f.from}.
     conforms no { d | d is Device, i is Interface(_,d), j is Interface(_,d), i != j, no Idge(i,j)}.

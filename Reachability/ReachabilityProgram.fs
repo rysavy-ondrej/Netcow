@@ -46,6 +46,15 @@ let programHandler () =
         Console.WriteLine(s)
     Console.WriteLine ("Processing {0}...", inputFile);
     let checker = CheckerFactory.Create("Reachability");
+
+    /// Load Network file and print out all devices...
+    let net = DataModels.PacketTracer.PtNetwork(inputFile);
+    for dev in net.Devices do
+        Console.WriteLine("{0}:{1}", dev.Name, dev.DeviceType)
+        //Console.WriteLine(String.concat "\n" dev.RunningConfig)
+        for prt in net.GetPortMap(dev) do
+            Console.WriteLine("  {0}", prt.Name)
+
     0
     
 [<EntryPoint>]
@@ -57,7 +66,7 @@ let main argv =
     in try
         app.AddArgument(false)
            .ValidateWith(new PathValidator(checkIfExists=true))
-           .ValidateWith(new CustomValidator(fun arg -> Path.GetExtension(arg).Equals(".4ml", StringComparison.OrdinalIgnoreCase)))  
+           .ValidateWith(new CustomValidator(fun arg -> Path.GetExtension(arg).Equals(".xml", StringComparison.OrdinalIgnoreCase)))  
            .AssignTo(<@ fun () -> inputFile @> |> toLinqFunc );
 
         app.SetUsageBuilder<Programs.Simple.SimpleResourceUsageBuilder>()
