@@ -79,8 +79,8 @@ namespace DataModels.PacketTracer
     }
     public class PtPort
     {
-        XElement _xdata;
-        PtDevice _device;
+        internal XElement _xdata;
+        internal PtDevice _device;
 
         internal PtPort(PtDevice device, XElement xdata)
         {
@@ -101,6 +101,14 @@ namespace DataModels.PacketTracer
             get
             {
                 return this._xdata.Attribute("name").Value;
+            }
+        }
+
+        public bool IsConnected
+        {
+            get
+            {
+                return this._xdata.Attribute("type") != null;
             }
         }
     }
@@ -133,17 +141,26 @@ namespace DataModels.PacketTracer
                 return xdev;
             }
         }
+        public PtDevice GetDevice(String name)
+        {
+            return this.Devices.SingleOrDefault(x => x.Name.Equals(name));        
+        }
 
 
         public PtPort[] GetPortMap(PtDevice device)
         {
-            var xdev = from x in _xdoc.Descendants("PORTMAP")
-                       where (x.Attribute("device").Value.Equals(device.Name))
-                       select x;
-
-            return (from y in xdev.First().Descendants()
+            var xdev = _xdoc.Descendants("PORTMAP").SingleOrDefault(x => x.Attribute("device").Value.Equals(device.Name));
+            return (from y in xdev.Descendants()
                     select new PtPort(device, y)).ToArray();
         }
 
+        public PtPort GetRemotePort(PtPort localPort)
+        {
+            var otherDev = localPort._xdata.Attribute("other-dev");
+            var otherPort = localPort._xdata.Attribute("other-port");
+
+            var remoteDevice = this.GetDevice(otherDev.Value);
+            return GetPortMap(remoteDevice).SingleOrDefault(x => x.Name.Equals(otherPort.Value));
+        }
     }
 }

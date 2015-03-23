@@ -53,8 +53,13 @@ let programHandler () =
         Console.WriteLine("{0}:{1}", dev.Name, dev.DeviceType)
         //Console.WriteLine(String.concat "\n" dev.RunningConfig)
         for prt in net.GetPortMap(dev) do
-            Console.WriteLine("  {0}", prt.Name)
-
+            Console.Write("  {0}", prt.Name)
+            
+            if prt.IsConnected 
+            then 
+                let oth = net.GetRemotePort(prt)
+                Console.WriteLine(" -> {0}.{1}", oth.Device.Name,oth.Name) 
+            else Console.WriteLine()
     0
     
 [<EntryPoint>]
