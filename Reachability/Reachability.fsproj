@@ -25,6 +25,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DocumentationFile>bin\Debug\Reachability.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <StartArguments>zpf.xml</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -81,6 +82,7 @@
       <Project>{0fdf2a95-1979-4abb-8232-3fff115e3fee}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

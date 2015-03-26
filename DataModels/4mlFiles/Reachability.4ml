@@ -1,129 +1,252 @@
-﻿domain Topology {
-    ID ::= Integer + String.
-    Device ::= new (id:ID).
-    Interface ::= new (id:ID, dev:Device).
-    Subnet ::= new (id:ID).
-    Idge ::= new (from:Interface, to:Interface).
-    EdgeOut ::= new (from:Interface, to:Subnet). 
-    EdgeIn ::= new (from:Subnet,to:Interface).
-    Edge ::= EdgeOut + EdgeIn.
+﻿/// This domain collects various types defined at other domains in Reachability namespace.
+domain NetworkTypes {
+	TrafficType ::= {   
+		ARP,  
+		BGP,  
+		CDP,  
+		DHCP,  
+		DNS,  
+		DTP,  
+		EIGRP,  
+		FTP,  
+		H323,  
+		HTTP,  
+		HTTPS,		  
+		ICMP,  
+		ICMPV6,  
+		IKE,  
+		IPSEC,
+		IPV4,
+		IPV6,  
+		LACP,  
+		NAT,  
+		NTP,  
+		OSPF,  
+		PAGP,  
+		POP3,  
+		RADIUS,  
+		RIP_V1,  
+		RIP_V2,  
+		RTP,  
+		SCCP,  
+		SMTP,  
+		SNMP,  
+		SSH,  
+		STP,  
+		SYSLOG,  
+		TACACS,  
+		TCP,  
+		TELNET,  
+		TFTP,  
+		UDP,  
+		VTP }.
+
+	DeviceType ::= {
+	    ACESSPOINT,  
+        ANALOGPHONE,  
+        BRIDGE,  
+        CABLEMODEM,  
+        CLOUD,  
+        COAXIALSPLITTER,  
+        DSLMODEM,  
+        HOMEVOIP,  
+        HUB,  
+        IPPHONE,  
+        LAPTOP,  
+        MULTILAYERSWITCH,  
+        MULTIUSER,  
+        PC,  
+        PDA,  
+        PRINTER,  
+        REMOTENETWORK,  
+        REPEATER,  
+        ROUTER,  
+        SERVER,  
+        SWITCH,  
+        TABLETPC,  
+        TV,  
+        WIREDENDDEVICE,  
+        WIRELESSENDDEVICE,  
+        WIRELESSROUTER
+	}.
+	ID ::= Integer + String.
+	IP ::= new (value:{0..4294967295}).
+	PN ::= new (value:{0..65535}).
+    R ::= new (l:IP+PN, r:IP+PN).
+
+	_tt ::= (TrafficType).	   
+	_tt(ARP). _tt(BGP).  _tt(CDP).  _tt(DHCP).  _tt(DNS).  _tt(DTP).  
+	_tt(EIGRP).  _tt(FTP).  _tt(H323).  _tt(HTTP).  _tt(HTTPS). _tt(ICMP).  
+	_tt(ICMPV6).  _tt(IKE).  _tt(IPV4)._tt(IPV6)._tt(IPSEC).  _tt(LACP).  _tt(NAT).  
+	_tt(NTP).  _tt(OSPF).  _tt(PAGP).  _tt(POP3).  _tt(RADIUS).  _tt(RIP_V1).  
+	_tt(RIP_V2).  _tt(RTP).  _tt(SCCP).  _tt(SMTP).  _tt(SNMP).  _tt(SSH).  
+	_tt(STP).  _tt(SYSLOG).  _tt(TACACS).  _tt(TCP).  _tt(TELNET).  _tt(TFTP).  
+	_tt(UDP).  _tt(VTP).
+}
+
+/// This domain represents an L3-layer topology model. 
+domain NetworkTopology includes NetworkTypes {   
+    Device ::= new (id:ID,type:DeviceType).
+    Port ::= new (id:ID, dev:Device).
+    Link ::= new (id:ID).
+    Idge ::= new (from:Port, to:Port).
+    EdgeO ::= new (from:Port, to:Link). 
+    EdgeI ::= new (from:Link,to:Port).
+    Edge ::= EdgeO + EdgeI.
 
     /// Conformance constraints:
-    conforms no { e | e is EdgeOut, f is EdgeIn, e.from = f.to, e.to = f.from}.
-    conforms no { e | e is EdgeIn, f is EdgeOut, e.from = f.to, e.to = f.from}.
-    conforms no { d | d is Device, i is Interface(_,d), j is Interface(_,d), i != j, no Idge(i,j)}.
+	// for every out edge there is a corresponding in edge:
+    conforms count({ e | e is EdgeO, f is EdgeI, e.from = f.to, e.to = f.from}) = count({e | e is EdgeO }).
+	// for every in edge there is a corresponding out edge:
+	conforms count({ e | e is EdgeI, f is EdgeO, e.from = f.to, e.to = f.from}) = count({e | e is EdgeI }).
+	// every device has a complete idge system
+    conforms no { d | d is Device, i is Port(_,d), j is Port(_,d), i != j, no Idge(i,j)}.
 }
 
-model T1 of Topology {
-	r1 is Device("R1").
-	r1e1 is Interface("e1",r1).
-	r1e2 is Interface("e2",r1).
-	r1e3 is Interface("e3",r1).
-	r1e4 is Interface("e4",r1).
-	r1e5 is Interface("e5",r1).
-	r1e6 is Interface("e6",r1).
+///
+domain NetworkFlow includes NetworkTypes {
+   /// flow is an aggregation of packets. Flow is defined 
+   /// using range constructors for each of its dimensions.
+   Flow  ::= new (id:ID).
+   SrcIp ::= new (Flow, IP, IP).
+   DstIp ::= new (Flow, IP, IP).
+   SrcPn ::= new (Flow, PN, PN).
+   DstPn ::= new (Flow, PN, PN). 
+   App   ::= new (Flow, TrafficType).
+  
+	_(x) :- SrcIp(_,x,_); SrcIp(_,_,x).
+	_(x) :- DstIp(_,x,_); DstIp(_,_,x).
+	_(x) :- SrcPn(_,x,_); SrcPn(_,_,x).	
+	_(x) :- DstPn(_,x,_); DstPn(_,_,x).
 
-	
-	r2 is Device("R2").
-	r2e1 is Interface("e1",r2).
-	r2e2 is Interface("e2",r2).
-	r2e3 is Interface("e3",r2).
-	r2e4 is Interface("e4",r2).
-	r2e5 is Interface("e5",r2).
-	r2e6 is Interface("e6",r2).
+   Flow("*").
+   SrcIp(Flow("*"), IP(0),IP(4294967295)).
+   DstIp(Flow("*"), IP(0),IP(4294967295)).
+   SrcPn(Flow("*"), PN(0),PN(65535)).
+   DstPn(Flow("*"), PN(0),PN(65535)).
+   App(Flow("*"), ARP). App(Flow("*"),BGP). App(Flow("*"),CDP).  
+   App(Flow("*"),DHCP). App(Flow("*"),DNS). App(Flow("*"),DTP).  
+   App(Flow("*"),EIGRP). App(Flow("*"),FTP). App(Flow("*"),H323).  
+   App(Flow("*"),HTTP). App(Flow("*"),HTTPS). App(Flow("*"),ICMP).  
+   App(Flow("*"),ICMPV6). App(Flow("*"),IKE). App(Flow("*"),IPV4).App(Flow("*"),IPV6).
+   App(Flow("*"),IPSEC). App(Flow("*"),LACP). App(Flow("*"),NAT).  
+   App(Flow("*"),NTP). 	App(Flow("*"),OSPF). App(Flow("*"),PAGP).  
+   App(Flow("*"),POP3). App(Flow("*"),RADIUS). App(Flow("*"),RIP_V1).  
+   App(Flow("*"),RIP_V2). App(Flow("*"),RTP). App(Flow("*"),SCCP).  
+   App(Flow("*"),SMTP). App(Flow("*"),SNMP). App(Flow("*"),SSH).  
+   App(Flow("*"),STP). 	App(Flow("*"),SYSLOG). App(Flow("*"),TACACS).  
+   App(Flow("*"),TCP). App(Flow("*"),TELNET). App(Flow("*"),TFTP).  
+   App(Flow("*"),UDP). 	App(Flow("*"),VTP).
 
-	r3 is Device("R3").
-	r3e1 is Interface("e1",r3).
-	r3e2 is Interface("e2",r3).
-	r3e3 is Interface("e3",r3).
-	r3e4 is Interface("e4",r3).
-	r3e5 is Interface("e5",r3).
-	r3e6 is Interface("e6",r3).
-		  	
-	r4 is Device("R4").
-	r4e1 is Interface("e1",r4).
-	r4e2 is Interface("e2",r4).
-	r4e3 is Interface("e3",r4).
-	r4e4 is Interface("e4",r4).
-	r4e5 is Interface("e5",r4).
-	r4e6 is Interface("e6",r4).
-		  	
-	r5 is Device("R5").
-	r5e1 is Interface("e1",r5).
-	r5e2 is Interface("e2",r5).
-	r5e3 is Interface("e3",r5).
-	r5e4 is Interface("e4",r5).
-	r5e5 is Interface("e5",r5).
-	r5e6 is Interface("e6",r5).
-		  	
-	r6 is Device("R6").
-	r6e1 is Interface("e1",r6).
-	r6e2 is Interface("e2",r6).
-	r6e3 is Interface("e3",r6).
-	r6e4 is Interface("e4",r6).
-	r6e5 is Interface("e5",r6).
-	r6e6 is Interface("e6",r6).
+   /// Determines whether the specified packet is a part of the given flow.
+   packet ::= (flow:Flow,srcip:IP,dstip:IP, 
+               srcpn:PN,dstpn:PN,app:TrafficType).
+
+   packet (flow,srcip,dstip,srcpn,dstpn,app) :-
+       flow is Flow, 
+	   SrcIp(f, IP(l1),IP(r1)), srcip is IP(x1), l1 <= x1, x1 <= r1,    
+	   DstIp(f, IP(l2),IP(r2)), dstip is IP(x2), l2 <= x2, x2 <= r2,    
+	   SrcPn(f, PN(l3),PN(r3)), srcpn is PN(x3), l3 <= x3, x3 <= r3,     
+	   DstPn(f, PN(l4),PN(r4)), dstpn is PN(x4), l4 <= x4, x4 <= r4,    
+	   App(f,app). 
+             
+   packets ::= (f:Flow,p:packet).
+   packets(f,p) :- f is Flow, p is packet(f,_,_,_,_,_).
 }
 
-
-domain Flow {
-   ID ::= Integer + String.
-   Ip ::= {0..4294967295}.
-   Pn ::= {0..65535}.
-   Pt ::= {IP,ICMP,IGMP,TCP,UDP}.
-   Packet  ::= new (id:ID).
-   IpRange ::= new (l:Ip, r:Ip).
-   PnRange ::= new (l:Pn, r:Pn).
-   SrcIp ::= new (p:Packet, IpRange).
-   DstIp ::= new (p:Packet, IpRange).
-   SrcPn ::= new (p:Packet, PnRange).
-   DstPn ::= new (p:Packet, PnRange). 
-   App   ::= new (p:Packet, Pt).
-   
-   IpPool ::= new (Ip).
-   PnPool ::= new (Pn).
-   PtPool ::= new (Pt).
-   
-   packet ::= (p:Packet,srcIp:Ip,dstIp:Ip, srcPn:Pn,dstPn:Pn,app:Pt).
-   packet (p,srcip,0,0,0,IP) :-
-       p is Packet, SrcIp(p, IpRange(l,r)), IpPool(srcip), srcip >= l, srcip <= r.
-       
-   flow ::= (id:ID,srcIp:Ip,dstIp:Ip,srcPn:Pn,dstPn:Pn,app:Pt).
-   
-   flow(id,srcip,dstip,srcpn,dstpn,app) :- 
-       p is Packet(id), packet(p, srcip,dstip,srcpn,dstpn,app).   
-       
-    packet_to_flow ::= (p:Packet,f:flow).
-    packet_to_flow(p,f) :-
-        p is Packet(x), f is flow(x,_,_,_,_,_).
-}
-
-domain Reachability includes Topology, Flow {
-    Filter ::= new (e:Edge, fp:Packet).
-    Transform ::= new (i:Idge, inp:Packet, outr:Packet).
+domain Reachability includes NetworkTopology, NetworkFlow {
+    Filter ::= new (edge:Edge, flow:Flow).
+    Transform ::= new (idge:Idge, inflow:Flow, outflow:Flow).
     Path ::= new (Edge+Idge, any Path + {NIL}).
+	
+	filter ::= (edge:Edge, flw:Flow).
+	filter(edge,Flow("*")) :- edge is Edge, no Filter(edge,_).
+	filter(edge,flw) :- edge is Edge, Filter(edge, flw).
+
+	transformation ::= (idge:Idge, inflow:Flow, outflow:Flow).
+	transformation(idge, Flow("*"), Flow("*")) :- idge is Idge, no Transform(idge,_,_).
+
+	/// This is real problem!!!
+	/// How to write 
+	mem ::= (path:Path, item:Edge+Idge).
+	mem(Path(x,NIL),x) :- x is Edge; x is Idge. 
+	mem(Path(y,path),x) :- y is Edge, mem(path,x).
+	mem(Path(y,path),x) :- y is Idge, mem(path,x).
+
+	/// reach computes for the given path a relation between input and output packets.
+    reach ::= (path:Path,packetIn:packet,packetOut:packet).
+    reach(Path(edge,NIL),pck,pck) :- edge is Edge, filter(edge,flw),
+        packets(flw,pck).
     
-    reach ::= (p:Path,f:flow,g:flow).
-    reach(Path(edge,NIL),flw,flw) :- edge is Edge, Filter(edge,pck),
-        packet_to_flow(pck,flw).
-    
-    reach(Path(idge,NIL),fin,fout) :- idge is Idge, Transform(idge,pin,pout),
-        packet_to_flow(pin,fin), packet_to_flow(pout,fout).
+    reach(Path(idge,NIL),pin,pout) :- idge is Idge, transformation(idge,flowIn,flowOut),
+        packets(flowIn,pin), packets(flowOut,pout).
+    NAME ::= (String).    
+    reach(Path(edge,Path(edge2,path)),pin,pout) :- edge is Edge, filter(edge,flw),
+        edge2 is Edge, edge.to = edge2.from, isSubterm(path,edge2) = true, 
+        packets(flw,pin), 
+		reach(Path(edge2,path),pin,pout).
         
-    reach(Path(edge,path),fin,fout) :- edge is Edge, Filter(edge,pck),
-        packet_to_flow(pck,fin), reach(path,fin,fout).
-        
-    reach(Path(idge,NIL),fin,fout) :- idge is Idge, Transform(idge,pin,pout),
-        packet_to_flow(pin,fin), packet_to_flow(pout,fmid), reach(path,fmid,fout).  
+    reach(Path(idge,Path(edge,path)),pin,pout) :- idge is Idge, transformation(idge,flowIn,flowOut),
+        edge is Edge, idge.to = edge.from, 
+		packets(flowIn,pin), packets(flowOut,pmid), 
+		reach(Path(edge,path),pmid,pout).  
 }
 
+model M1 of Reachability {
 
-model F1 of Flow {
-    IpPool(10). IpPool(20). IpPool(40). IpPool(15). IpPool(30).
-    p is Packet("f1").
-    SrcIp(p,IpRange(10,20)).
-    DstIp(p,IpRange(40,40)).
-    DstPn(p,PnRange(80,80)).
-    DstPn(p,PnRange(443,443)).
+	///
+	///					 src.ip in 10..20
+	///					 dst.ip = 40
+	/// Packet("f1") <== src.pn in 0..65535  
+	///					 dst.pn in {80,443}
+	///					 app in {TCP}
+	///
+    p is Flow("f1").
+    SrcIp(p,IP(10),IP(20)).
+    DstIp(p,IP(40),IP(40)).
+    SrcPn(p,PN(0),PN(65535)).
+	DstPn(p,PN(80),PN(80)).
+    DstPn(p,PN(443),PN(443)).
     App(p,TCP).
+
+    d_private_router is Device("private_router", ROUTER).
+        p_private_router_FastEthernet0_0 is Port("FastEthernet0/0",d_private_router).
+        p_private_router_Serial0_0_0 is Port("Serial0/0/0",d_private_router).
+        i1 is Idge(p_private_router_FastEthernet0_0, p_private_router_Serial0_0_0).
+        i2 is Idge(p_private_router_Serial0_0_0, p_private_router_FastEthernet0_0).
+    d_zfwRouter is Device("zfwRouter", ROUTER).
+        p_zfwRouter_Serial0_0_0 is Port("Serial0/0/0",d_zfwRouter).
+        p_zfwRouter_Serial0_0_1 is Port("Serial0/0/1",d_zfwRouter).
+        i3 is Idge(p_zfwRouter_Serial0_0_0, p_zfwRouter_Serial0_0_1).
+        i4 is Idge(p_zfwRouter_Serial0_0_1, p_zfwRouter_Serial0_0_0).
+    d_public_router is Device("public_router", ROUTER).
+        p_public_router_Serial0_0_1 is Port("Serial0/0/1",d_public_router).
+    l0 is Link("private_switch.vlan1").
+    l1 is Link("private_router.Serial0/0/0+zfwRouter.Serial0/0/0").
+    l2 is Link("public_router.Serial0/0/1+zfwRouter.Serial0/0/1").
+    e1 is EdgeO(p_private_router_FastEthernet0_0,l0).
+    e2 is EdgeO(p_private_router_Serial0_0_0,l1).
+    e3 is EdgeI(l1,p_zfwRouter_Serial0_0_0).
+    e4 is EdgeO(p_zfwRouter_Serial0_0_0,l1).
+    e5 is EdgeI(l1,p_private_router_Serial0_0_0).
+    e6 is EdgeO(p_zfwRouter_Serial0_0_1,l2).
+    e7 is EdgeI(l2,p_public_router_Serial0_0_1).
+    e8 is EdgeO(p_public_router_Serial0_0_1,l2).
+    e9 is EdgeI(l2,p_zfwRouter_Serial0_0_1).
+    e10 is EdgeI(l0,p_private_router_FastEthernet0_0).
+
+	p1 is Path(i1,Path(e2,Path(e3,NIL))).
 }
+
+///	query M1 filter(EdgeO(%p_private_router_FastEthernet0_0,%l0),p)
+/// query M1 filter(EdgeO(%p_private_router_FastEthernet0_0,%l0),packet(_,IP(0),IP(0),PN(0),PN(0),_))
+///
+/// This takes a lot of time (~17s):
+///	query M1 no Filter(EdgeO(%p_private_router_FastEthernet0_0,%l0),_)
+///
+/// This is also not so fast (~6s):
+///	query M1 NoFilter(EdgeO(%p_private_router_FastEthernet0_0,%l0))
+///
+///	Majority of time is spend for (~6s):
+/// query M1 EdgeO(%p_private_router_FastEthernet0_0,%l0)
+

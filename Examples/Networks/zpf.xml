@@ -1,1290 +1,1596 @@
 ﻿<NETWORK>
-<!--
-zfwRouter is configured with a Zone-Based Policy Firewall to block traffic flowing from the public network to
-the private network. It is also configured with inspection policy-maps to allow telnet, http, icmp, and TCP
-established traffic to pass through the device.
+  <DEVICE>
+    <ENGINE>
+      <TYPE customModel="" model="1841">Router</TYPE>
+      <NAME translate="true">private_router</NAME>
+      <POWER>true</POWER>
+      <DESCRIPTION></DESCRIPTION>
+      <MODULE>
+        <TYPE>eNonRemovableModule</TYPE>
+        <MODEL/>
+        <SLOT>
+          <TYPE>eNonRemovableModule</TYPE>
+          <MODULE>
+            <TYPE>eNonRemovableModule</TYPE>
+            <MODEL/>
+            <SLOT>
+              <TYPE>eInterfaceCard</TYPE>
+              <MODULE>
+                <TYPE>eInterfaceCard</TYPE>
+                <MODEL>WIC-2T</MODEL>
+                <PORT>
+                  <TYPE>eSmartSerial</TYPE>
+                  <POWER>true</POWER>
+                  <PINS>false</PINS>
+                  <BANDWIDTH>1544</BANDWIDTH>
+                  <FULLDUPLEX>true</FULLDUPLEX>
+                  <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+                  <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+                  <MACADDRESS>0001.96D1.5C01</MACADDRESS>
+                  <BIA>0001.96D1.5C01</BIA>
+                  <CLOCKRATE>2000000</CLOCKRATE>
+                  <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
+                  <DESCRIPTION/>
+                  <CHANNEL>0</CHANNEL>
+                  <IP>10.10.1.1</IP>
+                  <SUBNET>255.0.0.0</SUBNET>
+                  <PORT_GATEWAY/>
+                  <PORT_DNS/>
+                  <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+                  <ND_SUPPRESSED>false</ND_SUPPRESSED>
+                  <TIMEOUT>14400000</TIMEOUT>
+                  <PC_FIREWALL>false</PC_FIREWALL>
+                  <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+                  <IPV6_ENABLED>false</IPV6_ENABLED>
+                  <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+                  <IPV6_PORT_GATEWAY/>
+                  <IPV6_PORT_DNS/>
+                  <IPV6_LINK_LOCAL/>
+                  <IPV6_DEFAULT_LINK_LOCAL>FE80::201:96FF:FED1:5C01</IPV6_DEFAULT_LINK_LOCAL>
+                  <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+                  <IPV6_ADDRESSES/>
+                </PORT>
+                <PORT>
+                  <TYPE>eSmartSerial</TYPE>
+                  <POWER>false</POWER>
+                  <PINS>false</PINS>
+                  <BANDWIDTH>1544</BANDWIDTH>
+                  <FULLDUPLEX>true</FULLDUPLEX>
+                  <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+                  <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+                  <MACADDRESS>0001.96D1.5C02</MACADDRESS>
+                  <BIA>0001.96D1.5C02</BIA>
+                  <CLOCKRATE>2000000</CLOCKRATE>
+                  <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
+                  <DESCRIPTION/>
+                  <CHANNEL>0</CHANNEL>
+                  <IP/>
+                  <SUBNET/>
+                  <PORT_GATEWAY/>
+                  <PORT_DNS/>
+                  <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+                  <ND_SUPPRESSED>false</ND_SUPPRESSED>
+                  <TIMEOUT>14400000</TIMEOUT>
+                  <PC_FIREWALL>false</PC_FIREWALL>
+                  <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+                  <IPV6_ENABLED>false</IPV6_ENABLED>
+                  <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+                  <IPV6_PORT_GATEWAY/>
+                  <IPV6_PORT_DNS/>
+                  <IPV6_LINK_LOCAL/>
+                  <IPV6_DEFAULT_LINK_LOCAL>FE80::201:96FF:FED1:5C02</IPV6_DEFAULT_LINK_LOCAL>
+                  <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+                  <IPV6_ADDRESSES/>
+                </PORT>
+              </MODULE>
+            </SLOT>
+            <SLOT>
+              <TYPE>eInterfaceCard</TYPE>
+              <MODULE>
+                <TYPE>eInterfaceCard</TYPE>
+                <MODEL>WIC-Cover</MODEL>
+              </MODULE>
+            </SLOT>
+            <PORT>
+              <TYPE>eCopperFastEthernet</TYPE>
+              <POWER>true</POWER>
+              <PINS>false</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>true</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0002.16E8.EE01</MACADDRESS>
+              <BIA>0002.16E8.EE01</BIA>
+              <CLOCKRATE>0</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+              <IP>192.168.88.1</IP>
+              <SUBNET>255.255.255.0</SUBNET>
+              <PORT_GATEWAY/>
+              <PORT_DNS/>
+              <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+              <ND_SUPPRESSED>false</ND_SUPPRESSED>
+              <TIMEOUT>14400000</TIMEOUT>
+              <PC_FIREWALL>false</PC_FIREWALL>
+              <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+              <IPV6_ENABLED>false</IPV6_ENABLED>
+              <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+              <IPV6_PORT_GATEWAY/>
+              <IPV6_PORT_DNS/>
+              <IPV6_LINK_LOCAL/>
+              <IPV6_DEFAULT_LINK_LOCAL>FE80::202:16FF:FEE8:EE01</IPV6_DEFAULT_LINK_LOCAL>
+              <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+              <IPV6_ADDRESSES/>
+            </PORT>
+            <PORT>
+              <TYPE>eCopperFastEthernet</TYPE>
+              <POWER>false</POWER>
+              <PINS>false</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>false</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0002.16E8.EE02</MACADDRESS>
+              <BIA>0002.16E8.EE02</BIA>
+              <CLOCKRATE>0</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+              <IP/>
+              <SUBNET/>
+              <PORT_GATEWAY/>
+              <PORT_DNS/>
+              <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+              <ND_SUPPRESSED>false</ND_SUPPRESSED>
+              <TIMEOUT>14400000</TIMEOUT>
+              <PC_FIREWALL>false</PC_FIREWALL>
+              <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+              <IPV6_ENABLED>false</IPV6_ENABLED>
+              <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+              <IPV6_PORT_GATEWAY/>
+              <IPV6_PORT_DNS/>
+              <IPV6_LINK_LOCAL/>
+              <IPV6_DEFAULT_LINK_LOCAL>FE80::202:16FF:FEE8:EE02</IPV6_DEFAULT_LINK_LOCAL>
+              <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+              <IPV6_ADDRESSES/>
+            </PORT>
+          </MODULE>
+        </SLOT>
+      </MODULE>
+      <CUSTOM_VARS>AAAAAA==</CUSTOM_VARS>
+      <CUSTOM_INTERFACE></CUSTOM_INTERFACE>
+      <SYS_CONTACT></SYS_CONTACT>
+      <SYS_LOCATION></SYS_LOCATION>
+      <COORD_SETTINGS>
+        <X_COORD>1924.35</X_COORD>
+        <Y_COORD>1924.35</Y_COORD>
+        <Z_COORD>0</Z_COORD>
+      </COORD_SETTINGS>
+      <SERIALNUMBER>FTX1111F4U9</SERIALNUMBER>
+      <SYS_NAME>private_router</SYS_NAME>
+      <RUNNINGCONFIG>
+        <LINE>!</LINE>
+        <LINE>version 12.4</LINE>
+        <LINE>no service timestamps log datetime msec</LINE>
+        <LINE>no service timestamps debug datetime msec</LINE>
+        <LINE>no service password-encryption</LINE>
+        <LINE>!</LINE>
+        <LINE>hostname private_router</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>ip cef</LINE>
+        <LINE>no ipv6 cef</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>ip ssh version 1</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>spanning-tree mode pvst</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/0</LINE>
+        <LINE> ip address 192.168.88.1 255.255.255.0</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/0</LINE>
+        <LINE> ip address 10.10.1.1 255.0.0.0</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> clock rate 2000000</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Vlan1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>ip classless</LINE>
+        <LINE>ip route 0.0.0.0 0.0.0.0 10.10.1.10 </LINE>
+        <LINE>!</LINE>
+        <LINE>ip flow-export version 9</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>line con 0</LINE>
+        <LINE>!</LINE>
+        <LINE>line aux 0</LINE>
+        <LINE>!</LINE>
+        <LINE>line vty 0 4</LINE>
+        <LINE> login</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>end</LINE>
+      </RUNNINGCONFIG>
+      <STARTUPCONFIG>
+        <LINE>!</LINE>
+        <LINE>version 12.4</LINE>
+        <LINE>no service timestamps debug datetime msec</LINE>
+        <LINE>no service password-encryption</LINE>
+        <LINE>!</LINE>
+        <LINE>hostname private_router</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>ip ssh version 1</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/0</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/0</LINE>
+        <LINE> ip address 10.10.1.1 255.0.0.0</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Vlan1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>ip classless</LINE>
+        <LINE>ip route 0.0.0.0 0.0.0.0 10.10.1.10 </LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>line con 0</LINE>
+        <LINE>line vty 0 4</LINE>
+        <LINE> login</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>end</LINE>
+      </STARTUPCONFIG>
+      <CURRENT_COMMAND_SET>1841_advip_12.4</CURRENT_COMMAND_SET>
+      <FILE_MANAGER>
+        <FILE class="CDirectory">
+          <FILE_NUMBER>0</FILE_NUMBER>
+          <NAME></NAME>
+          <DATE_TIME>0</DATE_TIME>
+          <PERMISSION>6</PERMISSION>
+          <FILE_CONTENT/>
+          <FILES>
+            <FILE class="CFileSystem">
+              <FILE_NUMBER>0</FILE_NUMBER>
+              <NAME>flash:</NAME>
+              <DATE_TIME>0</DATE_TIME>
+              <PERMISSION>6</PERMISSION>
+              <FILE_CONTENT/>
+              <FILES>
+                <FILE class="CFile">
+                  <FILE_NUMBER>1</FILE_NUMBER>
+                  <NAME>c1841-advipservicesk9-mz.124-15.T1.bin</NAME>
+                  <DATE_TIME>0</DATE_TIME>
+                  <PERMISSION>6</PERMISSION>
+                  <FILE_CONTENT class="CIosFileContent">
+                    <DEVICE_TYPE>Router</DEVICE_TYPE>
+                    <SET_NAME>1841_advip_12.4</SET_NAME>
+                  </FILE_CONTENT>
+                </FILE>
+              </FILES>
+              <FILE_COUNTER>1</FILE_COUNTER>
+              <CAPACITY>64016384</CAPACITY>
+            </FILE>
+          </FILES>
+        </FILE>
+      </FILE_MANAGER>
+      <CONFIG_REGISTER>8450</CONFIG_REGISTER>
+      <NEXT_CONFIG_REGISTER>8450</NEXT_CONFIG_REGISTER>
+      <CURRENT_BOOT_FILE>flash:/c1841-advipservicesk9-mz.124-15.T1.bin</CURRENT_BOOT_FILE>
+      <BUILD_IN_ADDR>000C.CF8E.7662</BUILD_IN_ADDR>
+      <SECURITY>
+        <KEY_NAME></KEY_NAME>
+        <TEMP_KEY_NAME></TEMP_KEY_NAME>
+        <RSA_KEY></RSA_KEY>
+        <TEMP_RSA_KEY></TEMP_RSA_KEY>
+        <TIME_DATE></TIME_DATE>
+        <ENABLED>0</ENABLED>
+        <MODULUS_BITS>0</MODULUS_BITS>
+      </SECURITY>
+      <ALGORITHM_SETTINGS>
+        <USE_GLOBAL>true</USE_GLOBAL>
+        <CBAC_HALF_OPEN_SESSION_MULTIPLIER>1</CBAC_HALF_OPEN_SESSION_MULTIPLIER>
+        <TCP_MAX_CONNECTING_SESSIONS>100</TCP_MAX_CONNECTING_SESSIONS>
+        <TCP_MAX_OPENED_SESSIONS>1000</TCP_MAX_OPENED_SESSIONS>
+        <INTERFACE_QUEUE_SIZE>10</INTERFACE_QUEUE_SIZE>
+        <STORM_CONTROL_MULTIPLIER>1000</STORM_CONTROL_MULTIPLIER>
+        <TCP_MAX_RETRANSMISSION_TIMEOUT>1000</TCP_MAX_RETRANSMISSION_TIMEOUT>
+      </ALGORITHM_SETTINGS>
+      <VLANS>
+        <VLAN number="1" name="default"/>
+        <VLAN number="1002" name="fddi-default"/>
+        <VLAN number="1003" name="token-ring-default"/>
+        <VLAN number="1004" name="fddinet-default"/>
+        <VLAN number="1005" name="trnet-default"/>
+      </VLANS>
+      <VTP>
+        <DOMAIN_NAME></DOMAIN_NAME>
+        <MODE>0</MODE>
+        <VERSION>1</VERSION>
+        <PASSWORD></PASSWORD>
+        <CONFIG_REVISION>0</CONFIG_REVISION>
+        <UPDATER_IP>0.0.0.0</UPDATER_IP>
+        <UPDATE_TIMESTAMP>0-0-00 00:00:00</UPDATE_TIMESTAMP>
+      </VTP>
+      <SIG_IPSPROCESS>
+        <SIGNATURE>
+          <SIG_ID>2004</SIG_ID>
+          <SUB_ID>0</SUB_ID>
+          <RETIRED>0</RETIRED>
+          <ENABLED>0</ENABLED>
+          <EVENT_ACTION>0</EVENT_ACTION>
+        </SIGNATURE>
+      </SIG_IPSPROCESS>
+    </ENGINE>
+  </DEVICE>
 
-Test ZFW Configuration
-1. From public_router ping 10.10.1.1. The ping fails due to the firewall rules.
-2. From private_router ping 172.16.1.89. The ping succeeds due to the inspection rules.
--->
-<DEVICE>
- <ENGINE>
-  <TYPE customModel="" model="1841">Router</TYPE>
-  <NAME translate="true">private_router</NAME>
-  <POWER>true</POWER>
-  <DESCRIPTION></DESCRIPTION>
-  <MODULE>
-   <TYPE>eNonRemovableModule</TYPE>
-   <MODEL/>
-   <SLOT>
-    <TYPE>eNonRemovableModule</TYPE>
-    <MODULE>
-     <TYPE>eNonRemovableModule</TYPE>
-     <MODEL/>
-     <SLOT>
-      <TYPE>eInterfaceCard</TYPE>
+  <PORTMAP device='private_router'>
+    <PORT name='Vlan1' power='false'
+/>
+    <PORT name='FastEthernet0/0' power='true'
+>
+      <LINK type='8100'
+      device='private_switch' port='FastEthernet0/1'/>
+    </PORT>
+    <PORT name='FastEthernet0/1' power='false'
+/>
+    <PORT name='Serial0/0/0' power='true'
+>
+      <LINK type='8106'
+      device='zfwRouter' port='Serial0/0/0'/>
+    </PORT>
+    <PORT name='Serial0/0/1' power='false'
+/>
+  </PORTMAP>
+  <DEVICE>
+    <ENGINE>
+      <TYPE customModel="" model="1841">Router</TYPE>
+      <NAME translate="true">zfwRouter</NAME>
+      <POWER>true</POWER>
+      <DESCRIPTION></DESCRIPTION>
       <MODULE>
-       <TYPE>eInterfaceCard</TYPE>
-       <MODEL>WIC-2T</MODEL>
-       <PORT>
-        <TYPE>eSmartSerial</TYPE>
-        <POWER>true</POWER>
-        <PINS>false</PINS>
-        <BANDWIDTH>1544</BANDWIDTH>
-        <FULLDUPLEX>true</FULLDUPLEX>
-        <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-        <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-        <MACADDRESS>0001.96D1.5C01</MACADDRESS>
-        <BIA>0001.96D1.5C01</BIA>
-        <CLOCKRATE>2000000</CLOCKRATE>
-        <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
-        <DESCRIPTION/>
-        <CHANNEL>0</CHANNEL>
-        <IP>10.10.1.1</IP>
-        <SUBNET>255.0.0.0</SUBNET>
-        <PORT_GATEWAY/>
-        <PORT_DNS/>
-        <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-        <ND_SUPPRESSED>false</ND_SUPPRESSED>
-        <TIMEOUT>14400000</TIMEOUT>
-        <PC_FIREWALL>false</PC_FIREWALL>
-        <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-        <IPV6_ENABLED>false</IPV6_ENABLED>
-        <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-        <IPV6_PORT_GATEWAY/>
-        <IPV6_PORT_DNS/>
-        <IPV6_LINK_LOCAL/>
-        <IPV6_DEFAULT_LINK_LOCAL>FE80::201:96FF:FED1:5C01</IPV6_DEFAULT_LINK_LOCAL>
-        <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-        <IPV6_ADDRESSES/>
-       </PORT>
-       <PORT>
-        <TYPE>eSmartSerial</TYPE>
-        <POWER>false</POWER>
-        <PINS>false</PINS>
-        <BANDWIDTH>1544</BANDWIDTH>
-        <FULLDUPLEX>true</FULLDUPLEX>
-        <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-        <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-        <MACADDRESS>0001.96D1.5C02</MACADDRESS>
-        <BIA>0001.96D1.5C02</BIA>
-        <CLOCKRATE>2000000</CLOCKRATE>
-        <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
-        <DESCRIPTION/>
-        <CHANNEL>0</CHANNEL>
-        <IP/>
-        <SUBNET/>
-        <PORT_GATEWAY/>
-        <PORT_DNS/>
-        <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-        <ND_SUPPRESSED>false</ND_SUPPRESSED>
-        <TIMEOUT>14400000</TIMEOUT>
-        <PC_FIREWALL>false</PC_FIREWALL>
-        <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-        <IPV6_ENABLED>false</IPV6_ENABLED>
-        <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-        <IPV6_PORT_GATEWAY/>
-        <IPV6_PORT_DNS/>
-        <IPV6_LINK_LOCAL/>
-        <IPV6_DEFAULT_LINK_LOCAL>FE80::201:96FF:FED1:5C02</IPV6_DEFAULT_LINK_LOCAL>
-        <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-        <IPV6_ADDRESSES/>
-       </PORT>
+        <TYPE>eNonRemovableModule</TYPE>
+        <MODEL/>
+        <SLOT>
+          <TYPE>eNonRemovableModule</TYPE>
+          <MODULE>
+            <TYPE>eNonRemovableModule</TYPE>
+            <MODEL/>
+            <SLOT>
+              <TYPE>eInterfaceCard</TYPE>
+              <MODULE>
+                <TYPE>eInterfaceCard</TYPE>
+                <MODEL>WIC-2T</MODEL>
+                <PORT>
+                  <TYPE>eSmartSerial</TYPE>
+                  <POWER>true</POWER>
+                  <PINS>false</PINS>
+                  <BANDWIDTH>1544</BANDWIDTH>
+                  <FULLDUPLEX>true</FULLDUPLEX>
+                  <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+                  <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+                  <MACADDRESS>0090.2B5E.B501</MACADDRESS>
+                  <BIA>0090.2B5E.B501</BIA>
+                  <CLOCKRATE>64000</CLOCKRATE>
+                  <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
+                  <DESCRIPTION/>
+                  <CHANNEL>0</CHANNEL>
+                  <IP>10.10.1.10</IP>
+                  <SUBNET>255.0.0.0</SUBNET>
+                  <PORT_GATEWAY/>
+                  <PORT_DNS/>
+                  <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+                  <ND_SUPPRESSED>false</ND_SUPPRESSED>
+                  <TIMEOUT>14400000</TIMEOUT>
+                  <PC_FIREWALL>false</PC_FIREWALL>
+                  <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+                  <IPV6_ENABLED>false</IPV6_ENABLED>
+                  <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+                  <IPV6_PORT_GATEWAY/>
+                  <IPV6_PORT_DNS/>
+                  <IPV6_LINK_LOCAL/>
+                  <IPV6_DEFAULT_LINK_LOCAL>FE80::290:2BFF:FE5E:B501</IPV6_DEFAULT_LINK_LOCAL>
+                  <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+                  <IPV6_ADDRESSES/>
+                </PORT>
+                <PORT>
+                  <TYPE>eSmartSerial</TYPE>
+                  <POWER>true</POWER>
+                  <PINS>false</PINS>
+                  <BANDWIDTH>1544</BANDWIDTH>
+                  <FULLDUPLEX>true</FULLDUPLEX>
+                  <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+                  <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+                  <MACADDRESS>0090.2B5E.B502</MACADDRESS>
+                  <BIA>0090.2B5E.B502</BIA>
+                  <CLOCKRATE>64000</CLOCKRATE>
+                  <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
+                  <DESCRIPTION/>
+                  <CHANNEL>0</CHANNEL>
+                  <IP>172.16.1.88</IP>
+                  <SUBNET>255.255.255.0</SUBNET>
+                  <PORT_GATEWAY/>
+                  <PORT_DNS/>
+                  <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+                  <ND_SUPPRESSED>false</ND_SUPPRESSED>
+                  <TIMEOUT>14400000</TIMEOUT>
+                  <PC_FIREWALL>false</PC_FIREWALL>
+                  <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+                  <IPV6_ENABLED>false</IPV6_ENABLED>
+                  <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+                  <IPV6_PORT_GATEWAY/>
+                  <IPV6_PORT_DNS/>
+                  <IPV6_LINK_LOCAL/>
+                  <IPV6_DEFAULT_LINK_LOCAL>FE80::290:2BFF:FE5E:B502</IPV6_DEFAULT_LINK_LOCAL>
+                  <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+                  <IPV6_ADDRESSES/>
+                </PORT>
+              </MODULE>
+            </SLOT>
+            <SLOT>
+              <TYPE>eInterfaceCard</TYPE>
+              <MODULE>
+                <TYPE>eInterfaceCard</TYPE>
+                <MODEL>WIC-Cover</MODEL>
+              </MODULE>
+            </SLOT>
+            <PORT>
+              <TYPE>eCopperFastEthernet</TYPE>
+              <POWER>false</POWER>
+              <PINS>false</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>false</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0010.112B.A101</MACADDRESS>
+              <BIA>0010.112B.A101</BIA>
+              <CLOCKRATE>0</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+              <IP/>
+              <SUBNET/>
+              <PORT_GATEWAY/>
+              <PORT_DNS/>
+              <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+              <ND_SUPPRESSED>false</ND_SUPPRESSED>
+              <TIMEOUT>14400000</TIMEOUT>
+              <PC_FIREWALL>false</PC_FIREWALL>
+              <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+              <IPV6_ENABLED>false</IPV6_ENABLED>
+              <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+              <IPV6_PORT_GATEWAY/>
+              <IPV6_PORT_DNS/>
+              <IPV6_LINK_LOCAL/>
+              <IPV6_DEFAULT_LINK_LOCAL>FE80::210:11FF:FE2B:A101</IPV6_DEFAULT_LINK_LOCAL>
+              <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+              <IPV6_ADDRESSES/>
+            </PORT>
+            <PORT>
+              <TYPE>eCopperFastEthernet</TYPE>
+              <POWER>false</POWER>
+              <PINS>false</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>false</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0010.112B.A102</MACADDRESS>
+              <BIA>0010.112B.A102</BIA>
+              <CLOCKRATE>0</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+              <IP/>
+              <SUBNET/>
+              <PORT_GATEWAY/>
+              <PORT_DNS/>
+              <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+              <ND_SUPPRESSED>false</ND_SUPPRESSED>
+              <TIMEOUT>14400000</TIMEOUT>
+              <PC_FIREWALL>false</PC_FIREWALL>
+              <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+              <IPV6_ENABLED>false</IPV6_ENABLED>
+              <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+              <IPV6_PORT_GATEWAY/>
+              <IPV6_PORT_DNS/>
+              <IPV6_LINK_LOCAL/>
+              <IPV6_DEFAULT_LINK_LOCAL>FE80::210:11FF:FE2B:A102</IPV6_DEFAULT_LINK_LOCAL>
+              <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+              <IPV6_ADDRESSES/>
+            </PORT>
+          </MODULE>
+        </SLOT>
       </MODULE>
-     </SLOT>
-     <SLOT>
-      <TYPE>eInterfaceCard</TYPE>
-      <MODULE>
-       <TYPE>eInterfaceCard</TYPE>
-       <MODEL>WIC-Cover</MODEL>
-      </MODULE>
-     </SLOT>
-     <PORT>
-      <TYPE>eCopperFastEthernet</TYPE>
-      <POWER>false</POWER>
-      <PINS>false</PINS>
-      <BANDWIDTH>100000</BANDWIDTH>
-      <FULLDUPLEX>false</FULLDUPLEX>
-      <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-      <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-      <MACADDRESS>0002.16E8.EE01</MACADDRESS>
-      <BIA>0002.16E8.EE01</BIA>
-      <CLOCKRATE>0</CLOCKRATE>
-      <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
-      <DESCRIPTION/>
-      <CHANNEL>0</CHANNEL>
-      <IP/>
-      <SUBNET/>
-      <PORT_GATEWAY/>
-      <PORT_DNS/>
-      <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-      <ND_SUPPRESSED>false</ND_SUPPRESSED>
-      <TIMEOUT>14400000</TIMEOUT>
-      <PC_FIREWALL>false</PC_FIREWALL>
-      <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-      <IPV6_ENABLED>false</IPV6_ENABLED>
-      <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-      <IPV6_PORT_GATEWAY/>
-      <IPV6_PORT_DNS/>
-      <IPV6_LINK_LOCAL/>
-      <IPV6_DEFAULT_LINK_LOCAL>FE80::202:16FF:FEE8:EE01</IPV6_DEFAULT_LINK_LOCAL>
-      <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-      <IPV6_ADDRESSES/>
-     </PORT>
-     <PORT>
-      <TYPE>eCopperFastEthernet</TYPE>
-      <POWER>false</POWER>
-      <PINS>false</PINS>
-      <BANDWIDTH>100000</BANDWIDTH>
-      <FULLDUPLEX>false</FULLDUPLEX>
-      <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-      <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-      <MACADDRESS>0002.16E8.EE02</MACADDRESS>
-      <BIA>0002.16E8.EE02</BIA>
-      <CLOCKRATE>0</CLOCKRATE>
-      <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
-      <DESCRIPTION/>
-      <CHANNEL>0</CHANNEL>
-      <IP/>
-      <SUBNET/>
-      <PORT_GATEWAY/>
-      <PORT_DNS/>
-      <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-      <ND_SUPPRESSED>false</ND_SUPPRESSED>
-      <TIMEOUT>14400000</TIMEOUT>
-      <PC_FIREWALL>false</PC_FIREWALL>
-      <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-      <IPV6_ENABLED>false</IPV6_ENABLED>
-      <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-      <IPV6_PORT_GATEWAY/>
-      <IPV6_PORT_DNS/>
-      <IPV6_LINK_LOCAL/>
-      <IPV6_DEFAULT_LINK_LOCAL>FE80::202:16FF:FEE8:EE02</IPV6_DEFAULT_LINK_LOCAL>
-      <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-      <IPV6_ADDRESSES/>
-     </PORT>
-    </MODULE>
-   </SLOT>
-  </MODULE>
-  <CUSTOM_VARS>AAAAAA==</CUSTOM_VARS>
-  <CUSTOM_INTERFACE></CUSTOM_INTERFACE>
-  <SYS_CONTACT></SYS_CONTACT>
-  <SYS_LOCATION></SYS_LOCATION>
-  <COORD_SETTINGS>
-   <X_COORD>1924.35</X_COORD>
-   <Y_COORD>1924.35</Y_COORD>
-   <Z_COORD>0</Z_COORD>
-  </COORD_SETTINGS>
-  <SERIALNUMBER>FHK111173TI</SERIALNUMBER>
-  <SYS_NAME>private_router</SYS_NAME>
-  <RUNNINGCONFIG>
-   <LINE>!</LINE>
-   <LINE>version 12.4</LINE>
-   <LINE>no service timestamps log datetime msec</LINE>
-   <LINE>no service timestamps debug datetime msec</LINE>
-   <LINE>no service password-encryption</LINE>
-   <LINE>!</LINE>
-   <LINE>hostname private_router</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>ip cef</LINE>
-   <LINE>no ipv6 cef</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>ip ssh version 1</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>spanning-tree mode pvst</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/0</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/0</LINE>
-   <LINE> ip address 10.10.1.1 255.0.0.0</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> clock rate 2000000</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Vlan1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>ip classless</LINE>
-   <LINE>ip route 0.0.0.0 0.0.0.0 10.10.1.10 </LINE>
-   <LINE>!</LINE>
-   <LINE>ip flow-export version 9</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>line con 0</LINE>
-   <LINE>!</LINE>
-   <LINE>line aux 0</LINE>
-   <LINE>!</LINE>
-   <LINE>line vty 0 4</LINE>
-   <LINE> login</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>end</LINE>
-  </RUNNINGCONFIG>
-  <STARTUPCONFIG>
-   <LINE>!</LINE>
-   <LINE>version 12.4</LINE>
-   <LINE>no service timestamps debug datetime msec</LINE>
-   <LINE>no service password-encryption</LINE>
-   <LINE>!</LINE>
-   <LINE>hostname private_router</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>ip ssh version 1</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/0</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/0</LINE>
-   <LINE> ip address 10.10.1.1 255.0.0.0</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Vlan1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>ip classless</LINE>
-   <LINE>ip route 0.0.0.0 0.0.0.0 10.10.1.10 </LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>line con 0</LINE>
-   <LINE>line vty 0 4</LINE>
-   <LINE> login</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>end</LINE>
-  </STARTUPCONFIG>
-  <CURRENT_COMMAND_SET>1841_advip_12.4</CURRENT_COMMAND_SET>
-  <FILE_MANAGER>
-   <FILE class="CDirectory">
-    <FILE_NUMBER>0</FILE_NUMBER>
-    <NAME></NAME>
-    <DATE_TIME>0</DATE_TIME>
-    <PERMISSION>6</PERMISSION>
-    <FILE_CONTENT/>
-    <FILES>
-     <FILE class="CFileSystem">
-      <FILE_NUMBER>0</FILE_NUMBER>
-      <NAME>flash:</NAME>
-      <DATE_TIME>0</DATE_TIME>
-      <PERMISSION>6</PERMISSION>
-      <FILE_CONTENT/>
-      <FILES>
-       <FILE class="CFile">
-        <FILE_NUMBER>1</FILE_NUMBER>
-        <NAME>c1841-advipservicesk9-mz.124-15.T1.bin</NAME>
-        <DATE_TIME>0</DATE_TIME>
-        <PERMISSION>6</PERMISSION>
-        <FILE_CONTENT class="CIosFileContent">
-         <DEVICE_TYPE>Router</DEVICE_TYPE>
-         <SET_NAME>1841_advip_12.4</SET_NAME>
-        </FILE_CONTENT>
-       </FILE>
-      </FILES>
-      <FILE_COUNTER>1</FILE_COUNTER>
-      <CAPACITY>64016384</CAPACITY>
-     </FILE>
-    </FILES>
-   </FILE>
-  </FILE_MANAGER>
-  <CONFIG_REGISTER>8450</CONFIG_REGISTER>
-  <NEXT_CONFIG_REGISTER>8450</NEXT_CONFIG_REGISTER>
-  <CURRENT_BOOT_FILE>flash:/c1841-advipservicesk9-mz.124-15.T1.bin</CURRENT_BOOT_FILE>
-  <BUILD_IN_ADDR>000C.CF8E.7662</BUILD_IN_ADDR>
-  <SECURITY>
-   <KEY_NAME></KEY_NAME>
-   <TEMP_KEY_NAME></TEMP_KEY_NAME>
-   <RSA_KEY></RSA_KEY>
-   <TEMP_RSA_KEY></TEMP_RSA_KEY>
-   <TIME_DATE></TIME_DATE>
-   <ENABLED>0</ENABLED>
-   <MODULUS_BITS>0</MODULUS_BITS>
-  </SECURITY>
-  <ALGORITHM_SETTINGS>
-   <USE_GLOBAL>true</USE_GLOBAL>
-   <CBAC_HALF_OPEN_SESSION_MULTIPLIER>1</CBAC_HALF_OPEN_SESSION_MULTIPLIER>
-   <TCP_MAX_CONNECTING_SESSIONS>100</TCP_MAX_CONNECTING_SESSIONS>
-   <TCP_MAX_OPENED_SESSIONS>1000</TCP_MAX_OPENED_SESSIONS>
-   <INTERFACE_QUEUE_SIZE>10</INTERFACE_QUEUE_SIZE>
-   <STORM_CONTROL_MULTIPLIER>1000</STORM_CONTROL_MULTIPLIER>
-   <TCP_MAX_RETRANSMISSION_TIMEOUT>1000</TCP_MAX_RETRANSMISSION_TIMEOUT>
-  </ALGORITHM_SETTINGS>
-  <VLANS>
-   <VLAN number="1" name="default"/>
-   <VLAN number="1002" name="fddi-default"/>
-   <VLAN number="1003" name="token-ring-default"/>
-   <VLAN number="1004" name="fddinet-default"/>
-   <VLAN number="1005" name="trnet-default"/>
-  </VLANS>
-  <VTP>
-   <DOMAIN_NAME></DOMAIN_NAME>
-   <MODE>0</MODE>
-   <VERSION>1</VERSION>
-   <PASSWORD></PASSWORD>
-   <CONFIG_REVISION>0</CONFIG_REVISION>
-   <UPDATER_IP>0.0.0.0</UPDATER_IP>
-   <UPDATE_TIMESTAMP>0-0-00 00:00:00</UPDATE_TIMESTAMP>
-  </VTP>
-  <SIG_IPSPROCESS>
-   <SIGNATURE>
-    <SIG_ID>2004</SIG_ID>
-    <SUB_ID>0</SUB_ID>
-    <RETIRED>0</RETIRED>
-    <ENABLED>0</ENABLED>
-    <EVENT_ACTION>0</EVENT_ACTION>
-   </SIGNATURE>
-  </SIG_IPSPROCESS>
- </ENGINE>
-</DEVICE>
+      <CUSTOM_VARS>AAAAAA==</CUSTOM_VARS>
+      <CUSTOM_INTERFACE></CUSTOM_INTERFACE>
+      <SYS_CONTACT></SYS_CONTACT>
+      <SYS_LOCATION></SYS_LOCATION>
+      <COORD_SETTINGS>
+        <X_COORD>1924.35</X_COORD>
+        <Y_COORD>1924.35</Y_COORD>
+        <Z_COORD>0</Z_COORD>
+      </COORD_SETTINGS>
+      <SERIALNUMBER>FHK11115X3Z</SERIALNUMBER>
+      <SYS_NAME>zfwRouter</SYS_NAME>
+      <RUNNINGCONFIG>
+        <LINE>!</LINE>
+        <LINE>version 12.4</LINE>
+        <LINE>no service timestamps log datetime msec</LINE>
+        <LINE>no service timestamps debug datetime msec</LINE>
+        <LINE>no service password-encryption</LINE>
+        <LINE>!</LINE>
+        <LINE>hostname zfwRouter</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>ip cef</LINE>
+        <LINE>no ipv6 cef</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>ip ssh version 1</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>spanning-tree mode pvst</LINE>
+        <LINE>!</LINE>
+        <LINE>class-map type inspect match-any priv-allow-class</LINE>
+        <LINE> match protocol telnet</LINE>
+        <LINE> match protocol http</LINE>
+        <LINE> match protocol icmp</LINE>
+        <LINE> match protocol tcp</LINE>
+        <LINE>!</LINE>
+        <LINE>policy-map type inspect pmap</LINE>
+        <LINE> class type inspect priv-allow-class</LINE>
+        <LINE>  inspect</LINE>
+        <LINE> class type inspect class-default</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>zone security private</LINE>
+        <LINE>zone security public</LINE>
+        <LINE>zone-pair security priv-pub source private destination public</LINE>
+        <LINE> service-policy type inspect pmap</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/0</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/0</LINE>
+        <LINE> ip address 10.10.1.10 255.0.0.0</LINE>
+        <LINE> zone-member security private</LINE>
+        <LINE> clock rate 64000</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/1</LINE>
+        <LINE> ip address 172.16.1.88 255.255.255.0</LINE>
+        <LINE> zone-member security public</LINE>
+        <LINE> clock rate 64000</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Vlan1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>ip classless</LINE>
+        <LINE>!</LINE>
+        <LINE>ip flow-export version 9</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>line con 0</LINE>
+        <LINE>!</LINE>
+        <LINE>line aux 0</LINE>
+        <LINE>!</LINE>
+        <LINE>line vty 0 4</LINE>
+        <LINE> login</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>end</LINE>
+      </RUNNINGCONFIG>
+      <STARTUPCONFIG>
+        <LINE>!</LINE>
+        <LINE>version 12.4</LINE>
+        <LINE>no service timestamps debug datetime msec</LINE>
+        <LINE>no service password-encryption</LINE>
+        <LINE>!</LINE>
+        <LINE>hostname zfwRouter</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>ip ssh version 1</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/0</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/0</LINE>
+        <LINE> ip address 10.10.1.10 255.0.0.0</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE> clock rate 64000</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/1</LINE>
+        <LINE> ip address 172.16.1.88 255.255.255.0</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE> clock rate 64000</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Vlan1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>ip classless</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>line con 0</LINE>
+        <LINE>line vty 0 4</LINE>
+        <LINE> login</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>end</LINE>
+      </STARTUPCONFIG>
+      <CURRENT_COMMAND_SET>1841_advip_12.4</CURRENT_COMMAND_SET>
+      <FILE_MANAGER>
+        <FILE class="CDirectory">
+          <FILE_NUMBER>0</FILE_NUMBER>
+          <NAME></NAME>
+          <DATE_TIME>0</DATE_TIME>
+          <PERMISSION>6</PERMISSION>
+          <FILE_CONTENT/>
+          <FILES>
+            <FILE class="CFileSystem">
+              <FILE_NUMBER>0</FILE_NUMBER>
+              <NAME>flash:</NAME>
+              <DATE_TIME>0</DATE_TIME>
+              <PERMISSION>6</PERMISSION>
+              <FILE_CONTENT/>
+              <FILES>
+                <FILE class="CFile">
+                  <FILE_NUMBER>1</FILE_NUMBER>
+                  <NAME>c1841-advipservicesk9-mz.124-15.T1.bin</NAME>
+                  <DATE_TIME>0</DATE_TIME>
+                  <PERMISSION>6</PERMISSION>
+                  <FILE_CONTENT class="CIosFileContent">
+                    <DEVICE_TYPE>Router</DEVICE_TYPE>
+                    <SET_NAME>1841_advip_12.4</SET_NAME>
+                  </FILE_CONTENT>
+                </FILE>
+              </FILES>
+              <FILE_COUNTER>1</FILE_COUNTER>
+              <CAPACITY>64016384</CAPACITY>
+            </FILE>
+          </FILES>
+        </FILE>
+      </FILE_MANAGER>
+      <CONFIG_REGISTER>8450</CONFIG_REGISTER>
+      <NEXT_CONFIG_REGISTER>8450</NEXT_CONFIG_REGISTER>
+      <CURRENT_BOOT_FILE>flash:/c1841-advipservicesk9-mz.124-15.T1.bin</CURRENT_BOOT_FILE>
+      <BUILD_IN_ADDR>0001.4348.4623</BUILD_IN_ADDR>
+      <SECURITY>
+        <KEY_NAME></KEY_NAME>
+        <TEMP_KEY_NAME></TEMP_KEY_NAME>
+        <RSA_KEY></RSA_KEY>
+        <TEMP_RSA_KEY></TEMP_RSA_KEY>
+        <TIME_DATE></TIME_DATE>
+        <ENABLED>0</ENABLED>
+        <MODULUS_BITS>0</MODULUS_BITS>
+      </SECURITY>
+      <ALGORITHM_SETTINGS>
+        <USE_GLOBAL>true</USE_GLOBAL>
+        <CBAC_HALF_OPEN_SESSION_MULTIPLIER>1</CBAC_HALF_OPEN_SESSION_MULTIPLIER>
+        <TCP_MAX_CONNECTING_SESSIONS>100</TCP_MAX_CONNECTING_SESSIONS>
+        <TCP_MAX_OPENED_SESSIONS>1000</TCP_MAX_OPENED_SESSIONS>
+        <INTERFACE_QUEUE_SIZE>10</INTERFACE_QUEUE_SIZE>
+        <STORM_CONTROL_MULTIPLIER>1000</STORM_CONTROL_MULTIPLIER>
+        <TCP_MAX_RETRANSMISSION_TIMEOUT>1000</TCP_MAX_RETRANSMISSION_TIMEOUT>
+      </ALGORITHM_SETTINGS>
+      <VLANS>
+        <VLAN number="1" name="default"/>
+        <VLAN number="1002" name="fddi-default"/>
+        <VLAN number="1003" name="token-ring-default"/>
+        <VLAN number="1004" name="fddinet-default"/>
+        <VLAN number="1005" name="trnet-default"/>
+      </VLANS>
+      <VTP>
+        <DOMAIN_NAME></DOMAIN_NAME>
+        <MODE>0</MODE>
+        <VERSION>1</VERSION>
+        <PASSWORD></PASSWORD>
+        <CONFIG_REVISION>0</CONFIG_REVISION>
+        <UPDATER_IP>0.0.0.0</UPDATER_IP>
+        <UPDATE_TIMESTAMP>0-0-00 00:00:00</UPDATE_TIMESTAMP>
+      </VTP>
+      <SIG_IPSPROCESS>
+        <SIGNATURE>
+          <SIG_ID>2004</SIG_ID>
+          <SUB_ID>0</SUB_ID>
+          <RETIRED>0</RETIRED>
+          <ENABLED>0</ENABLED>
+          <EVENT_ACTION>0</EVENT_ACTION>
+        </SIGNATURE>
+      </SIG_IPSPROCESS>
+    </ENGINE>
+  </DEVICE>
 
-<PORTMAP device='private_router'>
-<PORT name='Vlan1' 
+  <PORTMAP device='zfwRouter'>
+    <PORT name='Vlan1' power='false'
 />
-<PORT name='FastEthernet0/0' 
+    <PORT name='FastEthernet0/0' power='false'
 />
-<PORT name='FastEthernet0/1' 
+    <PORT name='FastEthernet0/1' power='false'
 />
-<PORT name='Serial0/0/0' 
-type='8106'
- other-dev='zfwRouter' other-port='Serial0/0/0'/>
-<PORT name='Serial0/0/1' 
-/>
-</PORTMAP>
-<DEVICE>
- <ENGINE>
-  <TYPE customModel="" model="1841">Router</TYPE>
-  <NAME translate="true">zfwRouter</NAME>
-  <POWER>true</POWER>
-  <DESCRIPTION></DESCRIPTION>
-  <MODULE>
-   <TYPE>eNonRemovableModule</TYPE>
-   <MODEL/>
-   <SLOT>
-    <TYPE>eNonRemovableModule</TYPE>
-    <MODULE>
-     <TYPE>eNonRemovableModule</TYPE>
-     <MODEL/>
-     <SLOT>
-      <TYPE>eInterfaceCard</TYPE>
+    <PORT name='Serial0/0/0' power='true'
+>
+      <LINK type='8106'
+      device='private_router' port='Serial0/0/0'/>
+    </PORT>
+    <PORT name='Serial0/0/1' power='true'
+>
+      <LINK type='8106'
+      device='public_router' port='Serial0/0/1'/>
+    </PORT>
+  </PORTMAP>
+  <DEVICE>
+    <ENGINE>
+      <TYPE customModel="" model="1841">Router</TYPE>
+      <NAME translate="true">public_router</NAME>
+      <POWER>true</POWER>
+      <DESCRIPTION></DESCRIPTION>
       <MODULE>
-       <TYPE>eInterfaceCard</TYPE>
-       <MODEL>WIC-2T</MODEL>
-       <PORT>
-        <TYPE>eSmartSerial</TYPE>
-        <POWER>true</POWER>
-        <PINS>false</PINS>
-        <BANDWIDTH>1544</BANDWIDTH>
-        <FULLDUPLEX>true</FULLDUPLEX>
-        <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-        <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-        <MACADDRESS>0090.2B5E.B501</MACADDRESS>
-        <BIA>0090.2B5E.B501</BIA>
-        <CLOCKRATE>64000</CLOCKRATE>
-        <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
-        <DESCRIPTION/>
-        <CHANNEL>0</CHANNEL>
-        <IP>10.10.1.10</IP>
-        <SUBNET>255.0.0.0</SUBNET>
-        <PORT_GATEWAY/>
-        <PORT_DNS/>
-        <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-        <ND_SUPPRESSED>false</ND_SUPPRESSED>
-        <TIMEOUT>14400000</TIMEOUT>
-        <PC_FIREWALL>false</PC_FIREWALL>
-        <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-        <IPV6_ENABLED>false</IPV6_ENABLED>
-        <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-        <IPV6_PORT_GATEWAY/>
-        <IPV6_PORT_DNS/>
-        <IPV6_LINK_LOCAL/>
-        <IPV6_DEFAULT_LINK_LOCAL>FE80::290:2BFF:FE5E:B501</IPV6_DEFAULT_LINK_LOCAL>
-        <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-        <IPV6_ADDRESSES/>
-       </PORT>
-       <PORT>
-        <TYPE>eSmartSerial</TYPE>
-        <POWER>true</POWER>
-        <PINS>false</PINS>
-        <BANDWIDTH>1544</BANDWIDTH>
-        <FULLDUPLEX>true</FULLDUPLEX>
-        <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-        <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-        <MACADDRESS>0090.2B5E.B502</MACADDRESS>
-        <BIA>0090.2B5E.B502</BIA>
-        <CLOCKRATE>64000</CLOCKRATE>
-        <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
-        <DESCRIPTION/>
-        <CHANNEL>0</CHANNEL>
-        <IP>172.16.1.88</IP>
-        <SUBNET>255.255.255.0</SUBNET>
-        <PORT_GATEWAY/>
-        <PORT_DNS/>
-        <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-        <ND_SUPPRESSED>false</ND_SUPPRESSED>
-        <TIMEOUT>14400000</TIMEOUT>
-        <PC_FIREWALL>false</PC_FIREWALL>
-        <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-        <IPV6_ENABLED>false</IPV6_ENABLED>
-        <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-        <IPV6_PORT_GATEWAY/>
-        <IPV6_PORT_DNS/>
-        <IPV6_LINK_LOCAL/>
-        <IPV6_DEFAULT_LINK_LOCAL>FE80::290:2BFF:FE5E:B502</IPV6_DEFAULT_LINK_LOCAL>
-        <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-        <IPV6_ADDRESSES/>
-       </PORT>
+        <TYPE>eNonRemovableModule</TYPE>
+        <MODEL/>
+        <SLOT>
+          <TYPE>eNonRemovableModule</TYPE>
+          <MODULE>
+            <TYPE>eNonRemovableModule</TYPE>
+            <MODEL/>
+            <SLOT>
+              <TYPE>eInterfaceCard</TYPE>
+              <MODULE>
+                <TYPE>eInterfaceCard</TYPE>
+                <MODEL>WIC-2T</MODEL>
+                <PORT>
+                  <TYPE>eSmartSerial</TYPE>
+                  <POWER>false</POWER>
+                  <PINS>false</PINS>
+                  <BANDWIDTH>1544</BANDWIDTH>
+                  <FULLDUPLEX>true</FULLDUPLEX>
+                  <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+                  <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+                  <MACADDRESS>0000.0CB5.E401</MACADDRESS>
+                  <BIA>0000.0CB5.E401</BIA>
+                  <CLOCKRATE>2000000</CLOCKRATE>
+                  <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
+                  <DESCRIPTION/>
+                  <CHANNEL>0</CHANNEL>
+                  <IP/>
+                  <SUBNET/>
+                  <PORT_GATEWAY/>
+                  <PORT_DNS/>
+                  <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+                  <ND_SUPPRESSED>false</ND_SUPPRESSED>
+                  <TIMEOUT>14400000</TIMEOUT>
+                  <PC_FIREWALL>false</PC_FIREWALL>
+                  <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+                  <IPV6_ENABLED>false</IPV6_ENABLED>
+                  <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+                  <IPV6_PORT_GATEWAY/>
+                  <IPV6_PORT_DNS/>
+                  <IPV6_LINK_LOCAL/>
+                  <IPV6_DEFAULT_LINK_LOCAL>FE80::200:CFF:FEB5:E401</IPV6_DEFAULT_LINK_LOCAL>
+                  <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+                  <IPV6_ADDRESSES/>
+                </PORT>
+                <PORT>
+                  <TYPE>eSmartSerial</TYPE>
+                  <POWER>true</POWER>
+                  <PINS>false</PINS>
+                  <BANDWIDTH>1544</BANDWIDTH>
+                  <FULLDUPLEX>true</FULLDUPLEX>
+                  <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+                  <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+                  <MACADDRESS>0000.0CB5.E402</MACADDRESS>
+                  <BIA>0000.0CB5.E402</BIA>
+                  <CLOCKRATE>2000000</CLOCKRATE>
+                  <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
+                  <DESCRIPTION/>
+                  <CHANNEL>0</CHANNEL>
+                  <IP>172.16.1.89</IP>
+                  <SUBNET>255.255.255.0</SUBNET>
+                  <PORT_GATEWAY/>
+                  <PORT_DNS/>
+                  <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+                  <ND_SUPPRESSED>false</ND_SUPPRESSED>
+                  <TIMEOUT>14400000</TIMEOUT>
+                  <PC_FIREWALL>false</PC_FIREWALL>
+                  <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+                  <IPV6_ENABLED>false</IPV6_ENABLED>
+                  <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+                  <IPV6_PORT_GATEWAY/>
+                  <IPV6_PORT_DNS/>
+                  <IPV6_LINK_LOCAL/>
+                  <IPV6_DEFAULT_LINK_LOCAL>FE80::200:CFF:FEB5:E402</IPV6_DEFAULT_LINK_LOCAL>
+                  <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+                  <IPV6_ADDRESSES/>
+                </PORT>
+              </MODULE>
+            </SLOT>
+            <SLOT>
+              <TYPE>eInterfaceCard</TYPE>
+              <MODULE>
+                <TYPE>eInterfaceCard</TYPE>
+                <MODEL>WIC-Cover</MODEL>
+              </MODULE>
+            </SLOT>
+            <PORT>
+              <TYPE>eCopperFastEthernet</TYPE>
+              <POWER>false</POWER>
+              <PINS>false</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>false</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0004.9A72.DC01</MACADDRESS>
+              <BIA>0004.9A72.DC01</BIA>
+              <CLOCKRATE>0</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+              <IP/>
+              <SUBNET/>
+              <PORT_GATEWAY/>
+              <PORT_DNS/>
+              <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+              <ND_SUPPRESSED>false</ND_SUPPRESSED>
+              <TIMEOUT>14400000</TIMEOUT>
+              <PC_FIREWALL>false</PC_FIREWALL>
+              <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+              <IPV6_ENABLED>false</IPV6_ENABLED>
+              <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+              <IPV6_PORT_GATEWAY/>
+              <IPV6_PORT_DNS/>
+              <IPV6_LINK_LOCAL/>
+              <IPV6_DEFAULT_LINK_LOCAL>FE80::204:9AFF:FE72:DC01</IPV6_DEFAULT_LINK_LOCAL>
+              <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+              <IPV6_ADDRESSES/>
+            </PORT>
+            <PORT>
+              <TYPE>eCopperFastEthernet</TYPE>
+              <POWER>false</POWER>
+              <PINS>false</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>false</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0004.9A72.DC02</MACADDRESS>
+              <BIA>0004.9A72.DC02</BIA>
+              <CLOCKRATE>0</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+              <IP/>
+              <SUBNET/>
+              <PORT_GATEWAY/>
+              <PORT_DNS/>
+              <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
+              <ND_SUPPRESSED>false</ND_SUPPRESSED>
+              <TIMEOUT>14400000</TIMEOUT>
+              <PC_FIREWALL>false</PC_FIREWALL>
+              <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
+              <IPV6_ENABLED>false</IPV6_ENABLED>
+              <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
+              <IPV6_PORT_GATEWAY/>
+              <IPV6_PORT_DNS/>
+              <IPV6_LINK_LOCAL/>
+              <IPV6_DEFAULT_LINK_LOCAL>FE80::204:9AFF:FE72:DC02</IPV6_DEFAULT_LINK_LOCAL>
+              <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
+              <IPV6_ADDRESSES/>
+            </PORT>
+          </MODULE>
+        </SLOT>
       </MODULE>
-     </SLOT>
-     <SLOT>
-      <TYPE>eInterfaceCard</TYPE>
-      <MODULE>
-       <TYPE>eInterfaceCard</TYPE>
-       <MODEL>WIC-Cover</MODEL>
-      </MODULE>
-     </SLOT>
-     <PORT>
-      <TYPE>eCopperFastEthernet</TYPE>
-      <POWER>false</POWER>
-      <PINS>false</PINS>
-      <BANDWIDTH>100000</BANDWIDTH>
-      <FULLDUPLEX>false</FULLDUPLEX>
-      <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-      <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-      <MACADDRESS>0010.112B.A101</MACADDRESS>
-      <BIA>0010.112B.A101</BIA>
-      <CLOCKRATE>0</CLOCKRATE>
-      <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
-      <DESCRIPTION/>
-      <CHANNEL>0</CHANNEL>
-      <IP/>
-      <SUBNET/>
-      <PORT_GATEWAY/>
-      <PORT_DNS/>
-      <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-      <ND_SUPPRESSED>false</ND_SUPPRESSED>
-      <TIMEOUT>14400000</TIMEOUT>
-      <PC_FIREWALL>false</PC_FIREWALL>
-      <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-      <IPV6_ENABLED>false</IPV6_ENABLED>
-      <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-      <IPV6_PORT_GATEWAY/>
-      <IPV6_PORT_DNS/>
-      <IPV6_LINK_LOCAL/>
-      <IPV6_DEFAULT_LINK_LOCAL>FE80::210:11FF:FE2B:A101</IPV6_DEFAULT_LINK_LOCAL>
-      <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-      <IPV6_ADDRESSES/>
-     </PORT>
-     <PORT>
-      <TYPE>eCopperFastEthernet</TYPE>
-      <POWER>false</POWER>
-      <PINS>false</PINS>
-      <BANDWIDTH>100000</BANDWIDTH>
-      <FULLDUPLEX>false</FULLDUPLEX>
-      <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-      <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-      <MACADDRESS>0010.112B.A102</MACADDRESS>
-      <BIA>0010.112B.A102</BIA>
-      <CLOCKRATE>0</CLOCKRATE>
-      <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
-      <DESCRIPTION/>
-      <CHANNEL>0</CHANNEL>
-      <IP/>
-      <SUBNET/>
-      <PORT_GATEWAY/>
-      <PORT_DNS/>
-      <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-      <ND_SUPPRESSED>false</ND_SUPPRESSED>
-      <TIMEOUT>14400000</TIMEOUT>
-      <PC_FIREWALL>false</PC_FIREWALL>
-      <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-      <IPV6_ENABLED>false</IPV6_ENABLED>
-      <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-      <IPV6_PORT_GATEWAY/>
-      <IPV6_PORT_DNS/>
-      <IPV6_LINK_LOCAL/>
-      <IPV6_DEFAULT_LINK_LOCAL>FE80::210:11FF:FE2B:A102</IPV6_DEFAULT_LINK_LOCAL>
-      <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-      <IPV6_ADDRESSES/>
-     </PORT>
-    </MODULE>
-   </SLOT>
-  </MODULE>
-  <CUSTOM_VARS>AAAAAA==</CUSTOM_VARS>
-  <CUSTOM_INTERFACE></CUSTOM_INTERFACE>
-  <SYS_CONTACT></SYS_CONTACT>
-  <SYS_LOCATION></SYS_LOCATION>
-  <COORD_SETTINGS>
-   <X_COORD>1924.35</X_COORD>
-   <Y_COORD>1924.35</Y_COORD>
-   <Z_COORD>0</Z_COORD>
-  </COORD_SETTINGS>
-  <SERIALNUMBER>FHK1111UDY4</SERIALNUMBER>
-  <SYS_NAME>zfwRouter</SYS_NAME>
-  <RUNNINGCONFIG>
-   <LINE>!</LINE>
-   <LINE>version 12.4</LINE>
-   <LINE>no service timestamps log datetime msec</LINE>
-   <LINE>no service timestamps debug datetime msec</LINE>
-   <LINE>no service password-encryption</LINE>
-   <LINE>!</LINE>
-   <LINE>hostname zfwRouter</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>ip cef</LINE>
-   <LINE>no ipv6 cef</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>ip ssh version 1</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>spanning-tree mode pvst</LINE>
-   <LINE>!</LINE>
-   <LINE>class-map type inspect match-any priv-allow-class</LINE>
-   <LINE> match protocol telnet</LINE>
-   <LINE> match protocol http</LINE>
-   <LINE> match protocol icmp</LINE>
-   <LINE> match protocol tcp</LINE>
-   <LINE>!</LINE>
-   <LINE>policy-map type inspect pmap</LINE>
-   <LINE> class type inspect priv-allow-class</LINE>
-   <LINE>  inspect</LINE>
-   <LINE> class type inspect class-default</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>zone security private</LINE>
-   <LINE>zone security public</LINE>
-   <LINE>zone-pair security priv-pub source private destination public</LINE>
-   <LINE> service-policy type inspect pmap</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/0</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/0</LINE>
-   <LINE> ip address 10.10.1.10 255.0.0.0</LINE>
-   <LINE> zone-member security private</LINE>
-   <LINE> clock rate 64000</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/1</LINE>
-   <LINE> ip address 172.16.1.88 255.255.255.0</LINE>
-   <LINE> zone-member security public</LINE>
-   <LINE> clock rate 64000</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Vlan1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>ip classless</LINE>
-   <LINE>!</LINE>
-   <LINE>ip flow-export version 9</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>line con 0</LINE>
-   <LINE>!</LINE>
-   <LINE>line aux 0</LINE>
-   <LINE>!</LINE>
-   <LINE>line vty 0 4</LINE>
-   <LINE> login</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>end</LINE>
-  </RUNNINGCONFIG>
-  <STARTUPCONFIG>
-   <LINE>!</LINE>
-   <LINE>version 12.4</LINE>
-   <LINE>no service timestamps debug datetime msec</LINE>
-   <LINE>no service password-encryption</LINE>
-   <LINE>!</LINE>
-   <LINE>hostname zfwRouter</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>ip ssh version 1</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/0</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/0</LINE>
-   <LINE> ip address 10.10.1.10 255.0.0.0</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE> clock rate 64000</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/1</LINE>
-   <LINE> ip address 172.16.1.88 255.255.255.0</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE> clock rate 64000</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Vlan1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>ip classless</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>line con 0</LINE>
-   <LINE>line vty 0 4</LINE>
-   <LINE> login</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>end</LINE>
-  </STARTUPCONFIG>
-  <CURRENT_COMMAND_SET>1841_advip_12.4</CURRENT_COMMAND_SET>
-  <FILE_MANAGER>
-   <FILE class="CDirectory">
-    <FILE_NUMBER>0</FILE_NUMBER>
-    <NAME></NAME>
-    <DATE_TIME>0</DATE_TIME>
-    <PERMISSION>6</PERMISSION>
-    <FILE_CONTENT/>
-    <FILES>
-     <FILE class="CFileSystem">
-      <FILE_NUMBER>0</FILE_NUMBER>
-      <NAME>flash:</NAME>
-      <DATE_TIME>0</DATE_TIME>
-      <PERMISSION>6</PERMISSION>
-      <FILE_CONTENT/>
-      <FILES>
-       <FILE class="CFile">
-        <FILE_NUMBER>1</FILE_NUMBER>
-        <NAME>c1841-advipservicesk9-mz.124-15.T1.bin</NAME>
-        <DATE_TIME>0</DATE_TIME>
-        <PERMISSION>6</PERMISSION>
-        <FILE_CONTENT class="CIosFileContent">
-         <DEVICE_TYPE>Router</DEVICE_TYPE>
-         <SET_NAME>1841_advip_12.4</SET_NAME>
-        </FILE_CONTENT>
-       </FILE>
-      </FILES>
-      <FILE_COUNTER>1</FILE_COUNTER>
-      <CAPACITY>64016384</CAPACITY>
-     </FILE>
-    </FILES>
-   </FILE>
-  </FILE_MANAGER>
-  <CONFIG_REGISTER>8450</CONFIG_REGISTER>
-  <NEXT_CONFIG_REGISTER>8450</NEXT_CONFIG_REGISTER>
-  <CURRENT_BOOT_FILE>flash:/c1841-advipservicesk9-mz.124-15.T1.bin</CURRENT_BOOT_FILE>
-  <BUILD_IN_ADDR>0001.4348.4623</BUILD_IN_ADDR>
-  <SECURITY>
-   <KEY_NAME></KEY_NAME>
-   <TEMP_KEY_NAME></TEMP_KEY_NAME>
-   <RSA_KEY></RSA_KEY>
-   <TEMP_RSA_KEY></TEMP_RSA_KEY>
-   <TIME_DATE></TIME_DATE>
-   <ENABLED>0</ENABLED>
-   <MODULUS_BITS>0</MODULUS_BITS>
-  </SECURITY>
-  <ALGORITHM_SETTINGS>
-   <USE_GLOBAL>true</USE_GLOBAL>
-   <CBAC_HALF_OPEN_SESSION_MULTIPLIER>1</CBAC_HALF_OPEN_SESSION_MULTIPLIER>
-   <TCP_MAX_CONNECTING_SESSIONS>100</TCP_MAX_CONNECTING_SESSIONS>
-   <TCP_MAX_OPENED_SESSIONS>1000</TCP_MAX_OPENED_SESSIONS>
-   <INTERFACE_QUEUE_SIZE>10</INTERFACE_QUEUE_SIZE>
-   <STORM_CONTROL_MULTIPLIER>1000</STORM_CONTROL_MULTIPLIER>
-   <TCP_MAX_RETRANSMISSION_TIMEOUT>1000</TCP_MAX_RETRANSMISSION_TIMEOUT>
-  </ALGORITHM_SETTINGS>
-  <VLANS>
-   <VLAN number="1" name="default"/>
-   <VLAN number="1002" name="fddi-default"/>
-   <VLAN number="1003" name="token-ring-default"/>
-   <VLAN number="1004" name="fddinet-default"/>
-   <VLAN number="1005" name="trnet-default"/>
-  </VLANS>
-  <VTP>
-   <DOMAIN_NAME></DOMAIN_NAME>
-   <MODE>0</MODE>
-   <VERSION>1</VERSION>
-   <PASSWORD></PASSWORD>
-   <CONFIG_REVISION>0</CONFIG_REVISION>
-   <UPDATER_IP>0.0.0.0</UPDATER_IP>
-   <UPDATE_TIMESTAMP>0-0-00 00:00:00</UPDATE_TIMESTAMP>
-  </VTP>
-  <SIG_IPSPROCESS>
-   <SIGNATURE>
-    <SIG_ID>2004</SIG_ID>
-    <SUB_ID>0</SUB_ID>
-    <RETIRED>0</RETIRED>
-    <ENABLED>0</ENABLED>
-    <EVENT_ACTION>0</EVENT_ACTION>
-   </SIGNATURE>
-  </SIG_IPSPROCESS>
- </ENGINE>
-</DEVICE>
+      <CUSTOM_VARS>AAAAAA==</CUSTOM_VARS>
+      <CUSTOM_INTERFACE></CUSTOM_INTERFACE>
+      <SYS_CONTACT></SYS_CONTACT>
+      <SYS_LOCATION></SYS_LOCATION>
+      <COORD_SETTINGS>
+        <X_COORD>1924.35</X_COORD>
+        <Y_COORD>1924.35</Y_COORD>
+        <Z_COORD>0</Z_COORD>
+      </COORD_SETTINGS>
+      <SERIALNUMBER>FTX1111F225</SERIALNUMBER>
+      <SYS_NAME>public_router</SYS_NAME>
+      <RUNNINGCONFIG>
+        <LINE>!</LINE>
+        <LINE>version 12.4</LINE>
+        <LINE>no service timestamps log datetime msec</LINE>
+        <LINE>no service timestamps debug datetime msec</LINE>
+        <LINE>no service password-encryption</LINE>
+        <LINE>!</LINE>
+        <LINE>hostname public_router</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>ip cef</LINE>
+        <LINE>no ipv6 cef</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>username cisco password 0 cisco</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>ip ssh version 1</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>spanning-tree mode pvst</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/0</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/0</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> clock rate 2000000</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/1</LINE>
+        <LINE> ip address 172.16.1.89 255.255.255.0</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Vlan1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>ip classless</LINE>
+        <LINE>ip route 0.0.0.0 0.0.0.0 172.16.1.88 </LINE>
+        <LINE>!</LINE>
+        <LINE>ip flow-export version 9</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>line con 0</LINE>
+        <LINE>!</LINE>
+        <LINE>line aux 0</LINE>
+        <LINE>!</LINE>
+        <LINE>line vty 0 4</LINE>
+        <LINE> password cisco</LINE>
+        <LINE> login</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>end</LINE>
+      </RUNNINGCONFIG>
+      <STARTUPCONFIG>
+        <LINE>!</LINE>
+        <LINE>version 12.4</LINE>
+        <LINE>no service timestamps debug datetime msec</LINE>
+        <LINE>no service password-encryption</LINE>
+        <LINE>!</LINE>
+        <LINE>hostname public_router</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>username cisco password 0 cisco</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>ip ssh version 1</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/0</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> duplex auto</LINE>
+        <LINE> speed auto</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/0</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Serial0/0/1</LINE>
+        <LINE> ip address 172.16.1.89 255.255.255.0</LINE>
+        <LINE> ip mtu 1500</LINE>
+        <LINE> ipv6 mtu 1280</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Vlan1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>ip classless</LINE>
+        <LINE>ip route 0.0.0.0 0.0.0.0 172.16.1.88 </LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>line con 0</LINE>
+        <LINE>line vty 0 4</LINE>
+        <LINE> password cisco</LINE>
+        <LINE> login</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>end</LINE>
+      </STARTUPCONFIG>
+      <CURRENT_COMMAND_SET>1841_advip_12.4</CURRENT_COMMAND_SET>
+      <FILE_MANAGER>
+        <FILE class="CDirectory">
+          <FILE_NUMBER>0</FILE_NUMBER>
+          <NAME></NAME>
+          <DATE_TIME>0</DATE_TIME>
+          <PERMISSION>6</PERMISSION>
+          <FILE_CONTENT/>
+          <FILES>
+            <FILE class="CFileSystem">
+              <FILE_NUMBER>0</FILE_NUMBER>
+              <NAME>flash:</NAME>
+              <DATE_TIME>0</DATE_TIME>
+              <PERMISSION>6</PERMISSION>
+              <FILE_CONTENT/>
+              <FILES>
+                <FILE class="CFile">
+                  <FILE_NUMBER>1</FILE_NUMBER>
+                  <NAME>c1841-advipservicesk9-mz.124-15.T1.bin</NAME>
+                  <DATE_TIME>0</DATE_TIME>
+                  <PERMISSION>6</PERMISSION>
+                  <FILE_CONTENT class="CIosFileContent">
+                    <DEVICE_TYPE>Router</DEVICE_TYPE>
+                    <SET_NAME>1841_advip_12.4</SET_NAME>
+                  </FILE_CONTENT>
+                </FILE>
+              </FILES>
+              <FILE_COUNTER>1</FILE_COUNTER>
+              <CAPACITY>64016384</CAPACITY>
+            </FILE>
+          </FILES>
+        </FILE>
+      </FILE_MANAGER>
+      <CONFIG_REGISTER>8450</CONFIG_REGISTER>
+      <NEXT_CONFIG_REGISTER>8450</NEXT_CONFIG_REGISTER>
+      <CURRENT_BOOT_FILE>flash:/c1841-advipservicesk9-mz.124-15.T1.bin</CURRENT_BOOT_FILE>
+      <BUILD_IN_ADDR>0001.960E.4D91</BUILD_IN_ADDR>
+      <SECURITY>
+        <KEY_NAME></KEY_NAME>
+        <TEMP_KEY_NAME></TEMP_KEY_NAME>
+        <RSA_KEY></RSA_KEY>
+        <TEMP_RSA_KEY></TEMP_RSA_KEY>
+        <TIME_DATE></TIME_DATE>
+        <ENABLED>0</ENABLED>
+        <MODULUS_BITS>0</MODULUS_BITS>
+      </SECURITY>
+      <ALGORITHM_SETTINGS>
+        <USE_GLOBAL>true</USE_GLOBAL>
+        <CBAC_HALF_OPEN_SESSION_MULTIPLIER>1</CBAC_HALF_OPEN_SESSION_MULTIPLIER>
+        <TCP_MAX_CONNECTING_SESSIONS>100</TCP_MAX_CONNECTING_SESSIONS>
+        <TCP_MAX_OPENED_SESSIONS>1000</TCP_MAX_OPENED_SESSIONS>
+        <INTERFACE_QUEUE_SIZE>10</INTERFACE_QUEUE_SIZE>
+        <STORM_CONTROL_MULTIPLIER>1000</STORM_CONTROL_MULTIPLIER>
+        <TCP_MAX_RETRANSMISSION_TIMEOUT>1000</TCP_MAX_RETRANSMISSION_TIMEOUT>
+      </ALGORITHM_SETTINGS>
+      <VLANS>
+        <VLAN number="1" name="default"/>
+        <VLAN number="1002" name="fddi-default"/>
+        <VLAN number="1003" name="token-ring-default"/>
+        <VLAN number="1004" name="fddinet-default"/>
+        <VLAN number="1005" name="trnet-default"/>
+      </VLANS>
+      <VTP>
+        <DOMAIN_NAME></DOMAIN_NAME>
+        <MODE>0</MODE>
+        <VERSION>1</VERSION>
+        <PASSWORD></PASSWORD>
+        <CONFIG_REVISION>0</CONFIG_REVISION>
+        <UPDATER_IP>0.0.0.0</UPDATER_IP>
+        <UPDATE_TIMESTAMP>0-0-00 00:00:00</UPDATE_TIMESTAMP>
+      </VTP>
+      <SIG_IPSPROCESS>
+        <SIGNATURE>
+          <SIG_ID>2004</SIG_ID>
+          <SUB_ID>0</SUB_ID>
+          <RETIRED>0</RETIRED>
+          <ENABLED>0</ENABLED>
+          <EVENT_ACTION>0</EVENT_ACTION>
+        </SIGNATURE>
+      </SIG_IPSPROCESS>
+    </ENGINE>
+  </DEVICE>
 
-<PORTMAP device='zfwRouter'>
-<PORT name='Vlan1' 
+  <PORTMAP device='public_router'>
+    <PORT name='Vlan1' power='false'
 />
-<PORT name='FastEthernet0/0' 
+    <PORT name='FastEthernet0/0' power='false'
 />
-<PORT name='FastEthernet0/1' 
+    <PORT name='FastEthernet0/1' power='false'
 />
-<PORT name='Serial0/0/0' 
-type='8106'
- other-dev='private_router' other-port='Serial0/0/0'/>
-<PORT name='Serial0/0/1' 
-type='8106'
- other-dev='public_router' other-port='Serial0/0/1'/>
-</PORTMAP>
-<DEVICE>
- <ENGINE>
-  <TYPE customModel="" model="1841">Router</TYPE>
-  <NAME translate="true">public_router</NAME>
-  <POWER>true</POWER>
-  <DESCRIPTION></DESCRIPTION>
-  <MODULE>
-   <TYPE>eNonRemovableModule</TYPE>
-   <MODEL/>
-   <SLOT>
-    <TYPE>eNonRemovableModule</TYPE>
-    <MODULE>
-     <TYPE>eNonRemovableModule</TYPE>
-     <MODEL/>
-     <SLOT>
-      <TYPE>eInterfaceCard</TYPE>
+    <PORT name='Serial0/0/0' power='false'
+/>
+    <PORT name='Serial0/0/1' power='true'
+>
+      <LINK type='8106'
+      device='zfwRouter' port='Serial0/0/1'/>
+    </PORT>
+  </PORTMAP>
+  <DEVICE>
+    <ENGINE>
+      <TYPE customModel="" model="Switch-PT">Switch</TYPE>
+      <NAME translate="true">private_switch</NAME>
+      <POWER>true</POWER>
+      <DESCRIPTION></DESCRIPTION>
       <MODULE>
-       <TYPE>eInterfaceCard</TYPE>
-       <MODEL>WIC-2T</MODEL>
-       <PORT>
-        <TYPE>eSmartSerial</TYPE>
-        <POWER>false</POWER>
-        <PINS>false</PINS>
-        <BANDWIDTH>1544</BANDWIDTH>
-        <FULLDUPLEX>true</FULLDUPLEX>
-        <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-        <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-        <MACADDRESS>0000.0CB5.E401</MACADDRESS>
-        <BIA>0000.0CB5.E401</BIA>
-        <CLOCKRATE>2000000</CLOCKRATE>
-        <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
-        <DESCRIPTION/>
-        <CHANNEL>0</CHANNEL>
-        <IP/>
-        <SUBNET/>
-        <PORT_GATEWAY/>
-        <PORT_DNS/>
-        <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-        <ND_SUPPRESSED>false</ND_SUPPRESSED>
-        <TIMEOUT>14400000</TIMEOUT>
-        <PC_FIREWALL>false</PC_FIREWALL>
-        <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-        <IPV6_ENABLED>false</IPV6_ENABLED>
-        <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-        <IPV6_PORT_GATEWAY/>
-        <IPV6_PORT_DNS/>
-        <IPV6_LINK_LOCAL/>
-        <IPV6_DEFAULT_LINK_LOCAL>FE80::200:CFF:FEB5:E401</IPV6_DEFAULT_LINK_LOCAL>
-        <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-        <IPV6_ADDRESSES/>
-       </PORT>
-       <PORT>
-        <TYPE>eSmartSerial</TYPE>
-        <POWER>true</POWER>
-        <PINS>false</PINS>
-        <BANDWIDTH>1544</BANDWIDTH>
-        <FULLDUPLEX>true</FULLDUPLEX>
-        <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-        <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-        <MACADDRESS>0000.0CB5.E402</MACADDRESS>
-        <BIA>0000.0CB5.E402</BIA>
-        <CLOCKRATE>2000000</CLOCKRATE>
-        <CLOCKRATEFLAG>true</CLOCKRATEFLAG>
-        <DESCRIPTION/>
-        <CHANNEL>0</CHANNEL>
-        <IP>172.16.1.89</IP>
-        <SUBNET>255.255.255.0</SUBNET>
-        <PORT_GATEWAY/>
-        <PORT_DNS/>
-        <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-        <ND_SUPPRESSED>false</ND_SUPPRESSED>
-        <TIMEOUT>14400000</TIMEOUT>
-        <PC_FIREWALL>false</PC_FIREWALL>
-        <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-        <IPV6_ENABLED>false</IPV6_ENABLED>
-        <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-        <IPV6_PORT_GATEWAY/>
-        <IPV6_PORT_DNS/>
-        <IPV6_LINK_LOCAL/>
-        <IPV6_DEFAULT_LINK_LOCAL>FE80::200:CFF:FEB5:E402</IPV6_DEFAULT_LINK_LOCAL>
-        <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-        <IPV6_ADDRESSES/>
-       </PORT>
+        <TYPE>eNonRemovableModule</TYPE>
+        <MODEL/>
+        <SLOT>
+          <TYPE>ePtSwitchModule</TYPE>
+          <MODULE>
+            <TYPE>ePtSwitchModule</TYPE>
+            <MODEL>PT-SWITCH-NM-1CFE</MODEL>
+            <PORT>
+              <TYPE>eCopperFastEthernet</TYPE>
+              <POWER>true</POWER>
+              <PINS>true</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>true</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0001.643D.49A3</MACADDRESS>
+              <BIA>0001.643D.49A3</BIA>
+              <CLOCKRATE>2000000</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+            </PORT>
+          </MODULE>
+        </SLOT>
+        <SLOT>
+          <TYPE>ePtSwitchModule</TYPE>
+          <MODULE>
+            <TYPE>ePtSwitchModule</TYPE>
+            <MODEL>PT-SWITCH-NM-1CFE</MODEL>
+            <PORT>
+              <TYPE>eCopperFastEthernet</TYPE>
+              <POWER>true</POWER>
+              <PINS>true</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>false</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0006.2AAE.2543</MACADDRESS>
+              <BIA>0006.2AAE.2543</BIA>
+              <CLOCKRATE>2000000</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+            </PORT>
+          </MODULE>
+        </SLOT>
+        <SLOT>
+          <TYPE>ePtSwitchModule</TYPE>
+          <MODULE>
+            <TYPE>ePtSwitchModule</TYPE>
+            <MODEL>PT-SWITCH-NM-1CFE</MODEL>
+            <PORT>
+              <TYPE>eCopperFastEthernet</TYPE>
+              <POWER>true</POWER>
+              <PINS>true</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>false</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0001.64C1.4951</MACADDRESS>
+              <BIA>0001.64C1.4951</BIA>
+              <CLOCKRATE>2000000</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+            </PORT>
+          </MODULE>
+        </SLOT>
+        <SLOT>
+          <TYPE>ePtSwitchModule</TYPE>
+          <MODULE>
+            <TYPE>ePtSwitchModule</TYPE>
+            <MODEL>PT-SWITCH-NM-1CFE</MODEL>
+            <PORT>
+              <TYPE>eCopperFastEthernet</TYPE>
+              <POWER>true</POWER>
+              <PINS>true</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>false</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0006.2AD0.6609</MACADDRESS>
+              <BIA>0006.2AD0.6609</BIA>
+              <CLOCKRATE>2000000</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+            </PORT>
+          </MODULE>
+        </SLOT>
+        <SLOT>
+          <TYPE>ePtSwitchModule</TYPE>
+          <MODULE>
+            <TYPE>ePtSwitchModule</TYPE>
+            <MODEL>PT-SWITCH-NM-1FFE</MODEL>
+            <PORT>
+              <TYPE>eFiberFastEthernet</TYPE>
+              <POWER>true</POWER>
+              <PINS>true</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>false</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>0060.2F27.A56E</MACADDRESS>
+              <BIA>0060.2F27.A56E</BIA>
+              <CLOCKRATE>2000000</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+            </PORT>
+          </MODULE>
+        </SLOT>
+        <SLOT>
+          <TYPE>ePtSwitchModule</TYPE>
+          <MODULE>
+            <TYPE>ePtSwitchModule</TYPE>
+            <MODEL>PT-SWITCH-NM-1FFE</MODEL>
+            <PORT>
+              <TYPE>eFiberFastEthernet</TYPE>
+              <POWER>true</POWER>
+              <PINS>true</PINS>
+              <BANDWIDTH>100000</BANDWIDTH>
+              <FULLDUPLEX>false</FULLDUPLEX>
+              <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
+              <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
+              <MACADDRESS>000C.CF7D.9423</MACADDRESS>
+              <BIA>000C.CF7D.9423</BIA>
+              <CLOCKRATE>2000000</CLOCKRATE>
+              <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
+              <DESCRIPTION/>
+              <CHANNEL>0</CHANNEL>
+            </PORT>
+          </MODULE>
+        </SLOT>
+        <SLOT>
+          <TYPE>ePtSwitchModule</TYPE>
+        </SLOT>
+        <SLOT>
+          <TYPE>ePtSwitchModule</TYPE>
+        </SLOT>
+        <SLOT>
+          <TYPE>ePtSwitchModule</TYPE>
+        </SLOT>
+        <SLOT>
+          <TYPE>ePtSwitchModule</TYPE>
+        </SLOT>
       </MODULE>
-     </SLOT>
-     <SLOT>
-      <TYPE>eInterfaceCard</TYPE>
-      <MODULE>
-       <TYPE>eInterfaceCard</TYPE>
-       <MODEL>WIC-Cover</MODEL>
-      </MODULE>
-     </SLOT>
-     <PORT>
-      <TYPE>eCopperFastEthernet</TYPE>
-      <POWER>false</POWER>
-      <PINS>false</PINS>
-      <BANDWIDTH>100000</BANDWIDTH>
-      <FULLDUPLEX>false</FULLDUPLEX>
-      <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-      <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-      <MACADDRESS>0004.9A72.DC01</MACADDRESS>
-      <BIA>0004.9A72.DC01</BIA>
-      <CLOCKRATE>0</CLOCKRATE>
-      <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
-      <DESCRIPTION/>
-      <CHANNEL>0</CHANNEL>
-      <IP/>
-      <SUBNET/>
-      <PORT_GATEWAY/>
-      <PORT_DNS/>
-      <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-      <ND_SUPPRESSED>false</ND_SUPPRESSED>
-      <TIMEOUT>14400000</TIMEOUT>
-      <PC_FIREWALL>false</PC_FIREWALL>
-      <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-      <IPV6_ENABLED>false</IPV6_ENABLED>
-      <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-      <IPV6_PORT_GATEWAY/>
-      <IPV6_PORT_DNS/>
-      <IPV6_LINK_LOCAL/>
-      <IPV6_DEFAULT_LINK_LOCAL>FE80::204:9AFF:FE72:DC01</IPV6_DEFAULT_LINK_LOCAL>
-      <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-      <IPV6_ADDRESSES/>
-     </PORT>
-     <PORT>
-      <TYPE>eCopperFastEthernet</TYPE>
-      <POWER>false</POWER>
-      <PINS>false</PINS>
-      <BANDWIDTH>100000</BANDWIDTH>
-      <FULLDUPLEX>false</FULLDUPLEX>
-      <AUTONEGOTIATEBANDWIDTH>true</AUTONEGOTIATEBANDWIDTH>
-      <AUTONEGOTIATEDUPLEX>true</AUTONEGOTIATEDUPLEX>
-      <MACADDRESS>0004.9A72.DC02</MACADDRESS>
-      <BIA>0004.9A72.DC02</BIA>
-      <CLOCKRATE>0</CLOCKRATE>
-      <CLOCKRATEFLAG>false</CLOCKRATEFLAG>
-      <DESCRIPTION/>
-      <CHANNEL>0</CHANNEL>
-      <IP/>
-      <SUBNET/>
-      <PORT_GATEWAY/>
-      <PORT_DNS/>
-      <PORT_DHCP_ENABLE>false</PORT_DHCP_ENABLE>
-      <ND_SUPPRESSED>false</ND_SUPPRESSED>
-      <TIMEOUT>14400000</TIMEOUT>
-      <PC_FIREWALL>false</PC_FIREWALL>
-      <PC_IPV6_FIREWALL>false</PC_IPV6_FIREWALL>
-      <IPV6_ENABLED>false</IPV6_ENABLED>
-      <IPV6_ADDRESS_AUTOCONFIG>false</IPV6_ADDRESS_AUTOCONFIG>
-      <IPV6_PORT_GATEWAY/>
-      <IPV6_PORT_DNS/>
-      <IPV6_LINK_LOCAL/>
-      <IPV6_DEFAULT_LINK_LOCAL>FE80::204:9AFF:FE72:DC02</IPV6_DEFAULT_LINK_LOCAL>
-      <IPV6_PORT_DHCP_ENABLED>false</IPV6_PORT_DHCP_ENABLED>
-      <IPV6_ADDRESSES/>
-     </PORT>
-    </MODULE>
-   </SLOT>
-  </MODULE>
-  <CUSTOM_VARS>AAAAAA==</CUSTOM_VARS>
-  <CUSTOM_INTERFACE></CUSTOM_INTERFACE>
-  <SYS_CONTACT></SYS_CONTACT>
-  <SYS_LOCATION></SYS_LOCATION>
-  <COORD_SETTINGS>
-   <X_COORD>1924.35</X_COORD>
-   <Y_COORD>1924.35</Y_COORD>
-   <Z_COORD>0</Z_COORD>
-  </COORD_SETTINGS>
-  <SERIALNUMBER>FHK1111P25G</SERIALNUMBER>
-  <SYS_NAME>public_router</SYS_NAME>
-  <RUNNINGCONFIG>
-   <LINE>!</LINE>
-   <LINE>version 12.4</LINE>
-   <LINE>no service timestamps log datetime msec</LINE>
-   <LINE>no service timestamps debug datetime msec</LINE>
-   <LINE>no service password-encryption</LINE>
-   <LINE>!</LINE>
-   <LINE>hostname public_router</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>ip cef</LINE>
-   <LINE>no ipv6 cef</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>username cisco password 0 cisco</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>ip ssh version 1</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>spanning-tree mode pvst</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/0</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/0</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> clock rate 2000000</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/1</LINE>
-   <LINE> ip address 172.16.1.89 255.255.255.0</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Vlan1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>ip classless</LINE>
-   <LINE>ip route 0.0.0.0 0.0.0.0 172.16.1.88 </LINE>
-   <LINE>!</LINE>
-   <LINE>ip flow-export version 9</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>line con 0</LINE>
-   <LINE>!</LINE>
-   <LINE>line aux 0</LINE>
-   <LINE>!</LINE>
-   <LINE>line vty 0 4</LINE>
-   <LINE> password cisco</LINE>
-   <LINE> login</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>end</LINE>
-  </RUNNINGCONFIG>
-  <STARTUPCONFIG>
-   <LINE>!</LINE>
-   <LINE>version 12.4</LINE>
-   <LINE>no service timestamps debug datetime msec</LINE>
-   <LINE>no service password-encryption</LINE>
-   <LINE>!</LINE>
-   <LINE>hostname public_router</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>username cisco password 0 cisco</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>ip ssh version 1</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/0</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface FastEthernet0/1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> duplex auto</LINE>
-   <LINE> speed auto</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/0</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Serial0/0/1</LINE>
-   <LINE> ip address 172.16.1.89 255.255.255.0</LINE>
-   <LINE> ip mtu 1500</LINE>
-   <LINE> ipv6 mtu 1280</LINE>
-   <LINE>!</LINE>
-   <LINE>interface Vlan1</LINE>
-   <LINE> no ip address</LINE>
-   <LINE> shutdown</LINE>
-   <LINE>!</LINE>
-   <LINE>ip classless</LINE>
-   <LINE>ip route 0.0.0.0 0.0.0.0 172.16.1.88 </LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>line con 0</LINE>
-   <LINE>line vty 0 4</LINE>
-   <LINE> password cisco</LINE>
-   <LINE> login</LINE>
-   <LINE>!</LINE>
-   <LINE>!</LINE>
-   <LINE>end</LINE>
-  </STARTUPCONFIG>
-  <CURRENT_COMMAND_SET>1841_advip_12.4</CURRENT_COMMAND_SET>
-  <FILE_MANAGER>
-   <FILE class="CDirectory">
-    <FILE_NUMBER>0</FILE_NUMBER>
-    <NAME></NAME>
-    <DATE_TIME>0</DATE_TIME>
-    <PERMISSION>6</PERMISSION>
-    <FILE_CONTENT/>
-    <FILES>
-     <FILE class="CFileSystem">
-      <FILE_NUMBER>0</FILE_NUMBER>
-      <NAME>flash:</NAME>
-      <DATE_TIME>0</DATE_TIME>
-      <PERMISSION>6</PERMISSION>
-      <FILE_CONTENT/>
-      <FILES>
-       <FILE class="CFile">
-        <FILE_NUMBER>1</FILE_NUMBER>
-        <NAME>c1841-advipservicesk9-mz.124-15.T1.bin</NAME>
-        <DATE_TIME>0</DATE_TIME>
-        <PERMISSION>6</PERMISSION>
-        <FILE_CONTENT class="CIosFileContent">
-         <DEVICE_TYPE>Router</DEVICE_TYPE>
-         <SET_NAME>1841_advip_12.4</SET_NAME>
-        </FILE_CONTENT>
-       </FILE>
-      </FILES>
-      <FILE_COUNTER>1</FILE_COUNTER>
-      <CAPACITY>64016384</CAPACITY>
-     </FILE>
-    </FILES>
-   </FILE>
-  </FILE_MANAGER>
-  <CONFIG_REGISTER>8450</CONFIG_REGISTER>
-  <NEXT_CONFIG_REGISTER>8450</NEXT_CONFIG_REGISTER>
-  <CURRENT_BOOT_FILE>flash:/c1841-advipservicesk9-mz.124-15.T1.bin</CURRENT_BOOT_FILE>
-  <BUILD_IN_ADDR>0001.960E.4D91</BUILD_IN_ADDR>
-  <SECURITY>
-   <KEY_NAME></KEY_NAME>
-   <TEMP_KEY_NAME></TEMP_KEY_NAME>
-   <RSA_KEY></RSA_KEY>
-   <TEMP_RSA_KEY></TEMP_RSA_KEY>
-   <TIME_DATE></TIME_DATE>
-   <ENABLED>0</ENABLED>
-   <MODULUS_BITS>0</MODULUS_BITS>
-  </SECURITY>
-  <ALGORITHM_SETTINGS>
-   <USE_GLOBAL>true</USE_GLOBAL>
-   <CBAC_HALF_OPEN_SESSION_MULTIPLIER>1</CBAC_HALF_OPEN_SESSION_MULTIPLIER>
-   <TCP_MAX_CONNECTING_SESSIONS>100</TCP_MAX_CONNECTING_SESSIONS>
-   <TCP_MAX_OPENED_SESSIONS>1000</TCP_MAX_OPENED_SESSIONS>
-   <INTERFACE_QUEUE_SIZE>10</INTERFACE_QUEUE_SIZE>
-   <STORM_CONTROL_MULTIPLIER>1000</STORM_CONTROL_MULTIPLIER>
-   <TCP_MAX_RETRANSMISSION_TIMEOUT>1000</TCP_MAX_RETRANSMISSION_TIMEOUT>
-  </ALGORITHM_SETTINGS>
-  <VLANS>
-   <VLAN number="1" name="default"/>
-   <VLAN number="1002" name="fddi-default"/>
-   <VLAN number="1003" name="token-ring-default"/>
-   <VLAN number="1004" name="fddinet-default"/>
-   <VLAN number="1005" name="trnet-default"/>
-  </VLANS>
-  <VTP>
-   <DOMAIN_NAME></DOMAIN_NAME>
-   <MODE>0</MODE>
-   <VERSION>1</VERSION>
-   <PASSWORD></PASSWORD>
-   <CONFIG_REVISION>0</CONFIG_REVISION>
-   <UPDATER_IP>0.0.0.0</UPDATER_IP>
-   <UPDATE_TIMESTAMP>0-0-00 00:00:00</UPDATE_TIMESTAMP>
-  </VTP>
-  <SIG_IPSPROCESS>
-   <SIGNATURE>
-    <SIG_ID>2004</SIG_ID>
-    <SUB_ID>0</SUB_ID>
-    <RETIRED>0</RETIRED>
-    <ENABLED>0</ENABLED>
-    <EVENT_ACTION>0</EVENT_ACTION>
-   </SIGNATURE>
-  </SIG_IPSPROCESS>
- </ENGINE>
-</DEVICE>
+      <CUSTOM_VARS>AAAAAA==</CUSTOM_VARS>
+      <CUSTOM_INTERFACE></CUSTOM_INTERFACE>
+      <SYS_CONTACT></SYS_CONTACT>
+      <SYS_LOCATION></SYS_LOCATION>
+      <COORD_SETTINGS>
+        <X_COORD>1924.35</X_COORD>
+        <Y_COORD>1924.35</Y_COORD>
+        <Z_COORD>0</Z_COORD>
+      </COORD_SETTINGS>
+      <SERIALNUMBER>PTT0810610L</SERIALNUMBER>
+      <SYS_NAME>Switch</SYS_NAME>
+      <RUNNINGCONFIG>
+        <LINE>!</LINE>
+        <LINE>version 12.1</LINE>
+        <LINE>no service timestamps log datetime msec</LINE>
+        <LINE>no service timestamps debug datetime msec</LINE>
+        <LINE>no service password-encryption</LINE>
+        <LINE>!</LINE>
+        <LINE>hostname Switch</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>spanning-tree mode pvst</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet0/1</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet1/1</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet2/1</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet3/1</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet4/1</LINE>
+        <LINE>!</LINE>
+        <LINE>interface FastEthernet5/1</LINE>
+        <LINE>!</LINE>
+        <LINE>interface Vlan1</LINE>
+        <LINE> no ip address</LINE>
+        <LINE> shutdown</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>line con 0</LINE>
+        <LINE>!</LINE>
+        <LINE>line vty 0 4</LINE>
+        <LINE> login</LINE>
+        <LINE>line vty 5 15</LINE>
+        <LINE> login</LINE>
+        <LINE>!</LINE>
+        <LINE>!</LINE>
+        <LINE>end</LINE>
+      </RUNNINGCONFIG>
+      <STARTUPCONFIG/>
+      <CURRENT_COMMAND_SET>pt_12.1_EA4</CURRENT_COMMAND_SET>
+      <FILE_MANAGER>
+        <FILE class="CDirectory">
+          <FILE_NUMBER>0</FILE_NUMBER>
+          <NAME></NAME>
+          <DATE_TIME>0</DATE_TIME>
+          <PERMISSION>6</PERMISSION>
+          <FILE_CONTENT/>
+          <FILES>
+            <FILE class="CFileSystem">
+              <FILE_NUMBER>0</FILE_NUMBER>
+              <NAME>flash:</NAME>
+              <DATE_TIME>0</DATE_TIME>
+              <PERMISSION>6</PERMISSION>
+              <FILE_CONTENT/>
+              <FILES>
+                <FILE class="CFile">
+                  <FILE_NUMBER>1</FILE_NUMBER>
+                  <NAME>pt3000-i6q4l2-mz.121-22.EA4.bin</NAME>
+                  <DATE_TIME>0</DATE_TIME>
+                  <PERMISSION>6</PERMISSION>
+                  <FILE_CONTENT class="CIosFileContent">
+                    <DEVICE_TYPE>Switch</DEVICE_TYPE>
+                    <SET_NAME>pt_12.1_EA4</SET_NAME>
+                  </FILE_CONTENT>
+                </FILE>
+              </FILES>
+              <FILE_COUNTER>1</FILE_COUNTER>
+              <CAPACITY>64016384</CAPACITY>
+            </FILE>
+          </FILES>
+        </FILE>
+      </FILE_MANAGER>
+      <CONFIG_REGISTER>15</CONFIG_REGISTER>
+      <NEXT_CONFIG_REGISTER>15</NEXT_CONFIG_REGISTER>
+      <CURRENT_BOOT_FILE>flash:/pt3000-i6q4l2-mz.121-22.EA4.bin</CURRENT_BOOT_FILE>
+      <BUILD_IN_ADDR>00D0.58A9.02AA</BUILD_IN_ADDR>
+      <SECURITY>
+        <KEY_NAME></KEY_NAME>
+        <TEMP_KEY_NAME></TEMP_KEY_NAME>
+        <RSA_KEY></RSA_KEY>
+        <TEMP_RSA_KEY></TEMP_RSA_KEY>
+        <TIME_DATE></TIME_DATE>
+        <ENABLED>0</ENABLED>
+        <MODULUS_BITS>0</MODULUS_BITS>
+      </SECURITY>
+      <ALGORITHM_SETTINGS>
+        <USE_GLOBAL>true</USE_GLOBAL>
+        <CBAC_HALF_OPEN_SESSION_MULTIPLIER>1</CBAC_HALF_OPEN_SESSION_MULTIPLIER>
+        <TCP_MAX_CONNECTING_SESSIONS>100</TCP_MAX_CONNECTING_SESSIONS>
+        <TCP_MAX_OPENED_SESSIONS>1000</TCP_MAX_OPENED_SESSIONS>
+        <INTERFACE_QUEUE_SIZE>10</INTERFACE_QUEUE_SIZE>
+        <STORM_CONTROL_MULTIPLIER>10</STORM_CONTROL_MULTIPLIER>
+        <TCP_MAX_RETRANSMISSION_TIMEOUT>1000</TCP_MAX_RETRANSMISSION_TIMEOUT>
+      </ALGORITHM_SETTINGS>
+      <VLANS>
+        <VLAN number="1" name="default"/>
+        <VLAN number="1002" name="fddi-default"/>
+        <VLAN number="1003" name="token-ring-default"/>
+        <VLAN number="1004" name="fddinet-default"/>
+        <VLAN number="1005" name="trnet-default"/>
+      </VLANS>
+      <VTP>
+        <DOMAIN_NAME></DOMAIN_NAME>
+        <MODE>0</MODE>
+        <VERSION>1</VERSION>
+        <PASSWORD></PASSWORD>
+        <CONFIG_REVISION>0</CONFIG_REVISION>
+        <UPDATER_IP>0.0.0.0</UPDATER_IP>
+        <UPDATE_TIMESTAMP>0-0-00 00:00:00</UPDATE_TIMESTAMP>
+      </VTP>
+      <DHCP_SNOOPING_BINDING_DB_AGENT>
+        <CONFIGURED_FILENAME></CONFIGURED_FILENAME>
+        <TMP_FILENAME></TMP_FILENAME>
+      </DHCP_SNOOPING_BINDING_DB_AGENT>
+    </ENGINE>
+  </DEVICE>
 
-<PORTMAP device='public_router'>
-<PORT name='Vlan1' 
+  <PORTMAP device='private_switch'>
+    <PORT name='Vlan1' power='false'
 />
-<PORT name='FastEthernet0/0' 
+    <PORT name='FastEthernet0/1' power='true'
+>
+      <LINK type='8100'
+      device='private_router' port='FastEthernet0/0'/>
+    </PORT>
+    <PORT name='FastEthernet1/1' power='true'
 />
-<PORT name='FastEthernet0/1' 
+    <PORT name='FastEthernet2/1' power='true'
 />
-<PORT name='Serial0/0/0' 
+    <PORT name='FastEthernet3/1' power='true'
 />
-<PORT name='Serial0/0/1' 
-type='8106'
- other-dev='zfwRouter' other-port='Serial0/0/1'/>
-</PORTMAP>
+    <PORT name='FastEthernet4/1' power='true'
+/>
+    <PORT name='FastEthernet5/1' power='true'
+/>
+  </PORTMAP>
 </NETWORK>

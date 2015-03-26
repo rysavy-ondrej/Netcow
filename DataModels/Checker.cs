@@ -34,6 +34,7 @@ namespace DataModels
 	using Microsoft.Formula.Common.Terms;
 	using Microsoft.Formula.Common;
     using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     
     public delegate bool CreateObjectGraph(Env env, ProgramName progName, string modelName, out Task<ObjectGraphResult> task);
 
@@ -103,20 +104,20 @@ namespace DataModels
 			if (res == null) { return false; }
 
 			foreach (var f in res.Flags) {
-				Console.WriteLine ("{0} ({1}, {2}) : {3} {4} : {5}",
+                Trace.WriteLine(String.Format("{0} ({1}, {2}) : {3} {4} : {5}",
 					f.Item2.ProgramName,
 					f.Item2.Span.StartLine,
 					f.Item2.Span.StartCol,
 					f.Item2.Severity,
 					f.Item2.Code,
-					f.Item2.Message);
+					f.Item2.Message),"INFO");
 			}
 				
 			if (res.Succeeded) {
-				Console.WriteLine ("Program {0} installed.", _domainProgramName);
+                Trace.WriteLine(String.Format("Program {0} installed.", _domainProgramName),"INFO");
 				return true;
 			} else {
-				Console.WriteLine ("Could not install file; exiting");
+                Trace.WriteLine("Could not install file; exiting","ERROR");
 				return false;
 			}
 		}
@@ -136,24 +137,24 @@ namespace DataModels
 			Task<ObjectGraphResult> createTask;
             if (!_createObjectGraph(_4mlEnvironment, modelProgramName, modelName, out createTask))
 			{
-				Console.WriteLine("Could not start object graph creation");
+				Trace.WriteLine("Could not start object graph creation","ERROR");
 				return false;
 			}
 
 			createTask.Wait();
 			foreach (var f in createTask.Result.Flags)
 			{
-				Console.WriteLine("({0}, {1}) : {2} {3} : {4}",
+                Trace.WriteLine(String.Format("({0}, {1}) : {2} {3} : {4}",
 					f.Span.StartLine,
 					f.Span.StartCol,
 					f.Severity,
 					f.Code,
-					f.Message);
+					f.Message),"INFO");
 			}
 
 			if (!createTask.Result.Succeeded)
 			{
-				Console.WriteLine("Could not create object graph of the domain; exiting");
+				Trace.WriteLine("Could not create object graph of the domain; exiting","ERROR");
 				return false;
 			}
 
@@ -199,15 +200,15 @@ namespace DataModels
 				Microsoft.Formula.Common.ImmutableCollection<Flag> flags;
 				var parsedGoal = Factory.Instance.ParseDataTerm (goal, out flags);
 				if (parsedGoal == null) {
-					Console.Error.WriteLine ("ERROR: Cannot parse query:");
+					Trace.WriteLine ("ERROR: Cannot parse query:","ERROR");
 					foreach (var f in flags) {
-						Console.Error.WriteLine ("{0} ({1}, {2}) : {3} {4} : {5}",
+						Trace.WriteLine (String.Format("{0} ({1}, {2}) : {3} {4} : {5}",
 							f.ProgramName,
 							f.Span.StartLine,
 							f.Span.StartCol,
 							f.Severity,
 							f.Code,
-							f.Message);
+							f.Message),"ERROR");
 					}
 					errorOccured = true;
 				}
@@ -232,16 +233,16 @@ namespace DataModels
 			Microsoft.Formula.Common.Rules.ExecuterStatistics exeStats;
 			var res = _4mlEnvironment.Query (programName, modelName, queryTerms, true, true, out queryFlags, out queryTask, out exeStats);
 			if (!res || queryTask == null) {
-				Console.Error.WriteLine ("ERROR: Cannot execute query:");
+				Trace.WriteLine ("ERROR: Cannot execute query:","ERROR");
 				foreach (var f in queryFlags)
 				{
-					Console.Error.WriteLine("{0} ({1}, {2}) : {3} {4} : {5}",
+					Trace.WriteLine(String.Format("{0} ({1}, {2}) : {3} {4} : {5}",
 						f.ProgramName,
 						f.Span.StartLine,
 						f.Span.StartCol,
 						f.Severity,
 						f.Code,
-						f.Message);
+						f.Message),"ERROR");
 				}
 				errorOccured = true;
 			}
@@ -250,12 +251,12 @@ namespace DataModels
 				return null;
 
 			System.Diagnostics.Stopwatch swatch = new System.Diagnostics.Stopwatch ();
-			Console.Write ("\rExecuting query...");
+			Trace.Write ("\rExecuting query...","INFO");
 			swatch.Start ();
 			queryTask.Start ();
 			queryTask.Wait();
 			swatch.Stop ();
-			Console.WriteLine("\rExecuting query completed. Execution time was {0}ms.               ", swatch.ElapsedMilliseconds);
+		    Trace.WriteLine(String.Format("\rExecuting query completed. Execution time was {0}ms.               ", swatch.ElapsedMilliseconds),"INFO");
 
 			var result = queryTask.Result;
 			if (result != null) {
@@ -279,7 +280,7 @@ namespace DataModels
 			AST<Model> modelNode;
 
 			if (!Factory.Instance.MkModel (modelName, _domainName, gndTerms, out modelNode, null, _domainProgramName.Uri.AbsolutePath)) {
-				Console.Error.WriteLine("Cannot create model from provided facts.");
+				Trace.WriteLine("Cannot create model from provided facts.","ERROR");
 				return false;
 			}
 
@@ -295,18 +296,18 @@ namespace DataModels
 			this._4mlEnvironment.Install(program, out result);
 
 			if (result.Succeeded) {
-				Console.WriteLine ("Sucessfully installed model program {0}.", modelName);
+				Trace.WriteLine (String.Format("Sucessfully installed model program {0}.", modelName),"INFO");
 				this.installedPrograms.Add (modelName, modelProgramName);
 				return true;
 			} else {
 				foreach (var f in result.Flags) {
-					Console.Error.WriteLine ("{0} ({1}, {2}) : {3} {4} : {5}",
+					Trace.WriteLine (String.Format("{0} ({1}, {2}) : {3} {4} : {5}",
 						f.Item2.ProgramName,
 						f.Item2.Span.StartLine,
 						f.Item2.Span.StartCol,
 						f.Item2.Severity,
 						f.Item2.Code,
-						f.Item2.Message);
+						f.Item2.Message),"INFO");
 				}
 				return false;
 			}

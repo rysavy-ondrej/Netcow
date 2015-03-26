@@ -19,20 +19,20 @@ namespace DataModels
         {
             var _assembly = Assembly.GetExecutingAssembly();
             var resourceName = String.Format("Netcow.DataModels._4mlFiles.{0}.4ml", domain);
-            Trace.WriteLine("Attempting to load domain content from resource file '" + resourceName + "'.");
+            Trace.WriteLine("Attempting to get domain content from resource file '" + resourceName + "'.", "INFO");
             try
             {
                 using (var _textStreamReader = new StreamReader(_assembly.GetManifestResourceStream(resourceName)))
                 {
-                    var tmpFileName = Path.GetTempFileName();
+                    var tmpFileName = Path.ChangeExtension(Path.GetTempFileName(),domain+".4ml");
                     File.WriteAllText(tmpFileName, _textStreamReader.ReadToEnd());
-                    Trace.WriteLine("Success, content wrote to '" + tmpFileName + "'.");
+                    Trace.WriteLine("Success, domain file '" + tmpFileName + "' created.", "INFO");
                     return tmpFileName;
                 }
             }
             catch (Exception)
             {
-                Trace.WriteLine("Failed - no such file in the assembly.");
+                Trace.WriteLine("Failed - no such file in the assembly.", "ERROR");
                 return null;
             }               
         }
