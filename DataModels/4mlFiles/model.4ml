@@ -1,0 +1,27 @@
+model T of Reachability at "Reachability.4ml" {
+    d_private_router is Device("private_router", ROUTER).
+        p_private_router_FastEthernet0_0 is Port("FastEthernet0/0",d_private_router).
+        p_private_router_Serial0_0_0 is Port("Serial0/0/0",d_private_router).
+        Idge(p_private_router_FastEthernet0_0, p_private_router_Serial0_0_0).
+        Idge(p_private_router_Serial0_0_0, p_private_router_FastEthernet0_0).
+    d_zfwRouter is Device("zfwRouter", ROUTER).
+        p_zfwRouter_Serial0_0_0 is Port("Serial0/0/0",d_zfwRouter).
+        p_zfwRouter_Serial0_0_1 is Port("Serial0/0/1",d_zfwRouter).
+        Idge(p_zfwRouter_Serial0_0_0, p_zfwRouter_Serial0_0_1).
+        Idge(p_zfwRouter_Serial0_0_1, p_zfwRouter_Serial0_0_0).
+    d_public_router is Device("public_router", ROUTER).
+        p_public_router_Serial0_0_1 is Port("Serial0/0/1",d_public_router).
+    l0 is Link("private_switch.vlan1").
+    l1 is Link("private_router.Serial0/0/0+zfwRouter.Serial0/0/0").
+    l2 is Link("public_router.Serial0/0/1+zfwRouter.Serial0/0/1").
+    EdgeO(p_private_router_FastEthernet0_0,l0).
+    EdgeO(p_private_router_Serial0_0_0,l1).
+    EdgeI(l1,p_zfwRouter_Serial0_0_0).
+    EdgeO(p_zfwRouter_Serial0_0_0,l1).
+    EdgeI(l1,p_private_router_Serial0_0_0).
+    EdgeO(p_zfwRouter_Serial0_0_1,l2).
+    EdgeI(l2,p_public_router_Serial0_0_1).
+    EdgeO(p_public_router_Serial0_0_1,l2).
+    EdgeI(l2,p_zfwRouter_Serial0_0_1).
+    EdgeI(l0,p_private_router_FastEthernet0_0).
+}

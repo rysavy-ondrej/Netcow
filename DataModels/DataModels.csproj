@@ -7,14 +7,13 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Netcow.DataModels</RootNamespace>
     <AssemblyName>Netcow.Models</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>  
-    <FormulaCsGenPath>$(SolutionDir)Microsoft.Formula\CsGen\bin\x86\Debug</FormulaCsGenPath>  
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FormulaCsGenPath>$(SolutionDir)Microsoft.Formula\CsGen\bin\x86\Debug</FormulaCsGenPath>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -33,15 +32,22 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Checker.cs" />
+    <Compile Include="CheckerFactory.cs" />
+    <Compile Include="NetworkObjectModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup />
   <ItemGroup>
-    <Cs4mlCompile Include="4mlFiles\Network.4ml" />
-    <Cs4mlCompile Include="4mlFiles\Firewall.4ml" />
+    <EmbeddedResource Include="4mlFiles\Reachability.4ml" />
+    <EmbeddedResource Include="4mlFiles\Routing.4ml" />
+    <EmbeddedResource Include="4mlFiles\Policy.4ml" />
+    <EmbeddedResource Include="4mlFiles\Network.4ml" />
+    <EmbeddedResource Include="4mlFiles\Firewall.4ml" />
   </ItemGroup>
   <!--
     =======================================================================================================
@@ -72,8 +78,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="4mlFiles\Reachability.4ml" />
-    <None Include="4mlFiles\Routing.4ml" />
-    <None Include="4mlFiles\Policy.4ml" />
+    <Cs4mlCompile Include="4mlFiles\Reachability.4ml" />
+    <Cs4mlCompile Include="4mlFiles\Routing.4ml" />
+    <Cs4mlCompile Include="4mlFiles\Policy.4ml" />
+    <Cs4mlCompile Include="4mlFiles\Network.4ml" />
+    <Cs4mlCompile Include="4mlFiles\Firewall.4ml" />
   </ItemGroup>
 </Project>

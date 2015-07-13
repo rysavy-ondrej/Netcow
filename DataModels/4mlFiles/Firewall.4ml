@@ -4,7 +4,7 @@ domain Firewall {
 	Protocol 	::= { IPV4, ICMP, ICMP_ECHO, ICMP_ECHOREPLY, IGMP, UDP, TCP, TCP_ESTABLISHED }.
     Action      ::= { ACCEPT, DENY }.
 
-      
+      				    
     /// IP Domain
 	IP       	::= new (ip:String,   left:UInt32, right:UInt32).
 	/// Port Domain

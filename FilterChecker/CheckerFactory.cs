@@ -55,18 +55,18 @@ namespace Netcow.FilterChecker
 		public static string theDomainFile = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "firewall.4ml");
 		private CheckerFactory ()
 		{
-			checker = Checker.Create ("Firewall", theDomainFile);
+            checker = Checker.Create("Firewall", theDomainFile, Firewall_Root.CreateObjectGraph);
 		}
 
-		public static Checker CreateAclModelChecker(string modelName, IEnumerable<AccessGroup> groups)
+        public static Checker CreateAclModelChecker(string modelName, IEnumerable<AccessGroup> groups)
 		{
 			var factory = new CheckerFactory ();
 			if (factory == null)
 				return null;
 			return factory.createAclModelChecker (modelName, groups);
 		}
-		
-		Checker createAclModelChecker(string modelName, IEnumerable<AccessGroup> groups)
+
+        Checker createAclModelChecker(string modelName, IEnumerable<AccessGroup> groups)
 		{
 			List<ICSharpTerm> facts = new List<ICSharpTerm> ();
 

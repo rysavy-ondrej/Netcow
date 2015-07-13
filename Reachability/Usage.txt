@@ -1,0 +1,8 @@
+Netcow.Reachability
+Reachability analysis tool, a part of Netcow solution.
+Copyright (c) 2015 Ondrej Rysavy
+
+[mono] Netcow.Reachability	<model file>
+   
+    <model file>  Specifies input file name. A 4ml model file is expected.
+

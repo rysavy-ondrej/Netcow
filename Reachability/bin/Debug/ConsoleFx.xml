@@ -1,0 +1,521 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ConsoleFx</name>
+    </assembly>
+    <members>
+        <member name="T:ConsoleFx.OptionParameterType">
+            <summary>
+            Specify whether the parameters of an option are repeating or individual
+            </summary>
+        </member>
+        <member name="F:ConsoleFx.OptionParameterType.Individual">
+            <summary>
+            Each parameter is independant, has its own meaning and is at a specific position
+            </summary>
+        </member>
+        <member name="F:ConsoleFx.OptionParameterType.Repeating">
+            <summary>
+            The parameters are repeating and have the same meaning
+            </summary>
+        </member>
+        <member name="T:ConsoleFx.OptionRequirement">
+            <summary>
+            Specifies whether an option is required, optional or not allowed for a program context.
+            </summary>
+        </member>
+        <member name="F:ConsoleFx.OptionRequirement.Optional">
+            <summary>
+            The option is optional (this is the default). Sets the option's MinOccurences property to 0 (zero) and MaxOccurences
+            property to 1 (one). However, the MaxOccurence value can be increased, and as long as the MinOccurence
+            value is zero, it will be considered optional.
+            </summary>
+        </member>
+        <member name="F:ConsoleFx.OptionRequirement.Required">
+            <summary>
+            The option is required. Sets the option's MinOccurences and MaxOccurences properties to 1 (one).
+            </summary>
+        </member>
+        <member name="F:ConsoleFx.OptionRequirement.NotAllowed">
+            <summary>
+            The option is not allowed. Sets the option's MinOccurences and MaxOccurences properties to 0 (zero).
+            </summary>
+        </member>
+        <member name="T:ConsoleFx.Programs.ConsoleProgramBase">
+            <summary>
+            Base class for the simple and complex ConsoleProgram classes. It provides common base functionality
+            for usage building and error handling
+            </summary>
+        </member>
+        <member name="T:ConsoleFx.Resources.ConsoleProgramMessages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.ArgumentValidatorsNotSpecified">
+            <summary>
+              Looks up a localized string similar to No validators were specified for the argument. Please specify at least one validator..
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.AssignToCannotSpecifyAllParameters">
+            <summary>
+              Looks up a localized string similar to Parameter index cannot apply to all parameters in an AssignTo method.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.AutoUsageBuilderFooter">
+            <summary>
+              Looks up a localized string similar to Use the /{0} option to view help.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.CannotAddValidatorInvalidParameterIndex">
+            <summary>
+              Looks up a localized string similar to Cannot add validators to the parameter at index {0} for the &apos;{1}&apos; option because that many parameters have not been defined.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.CannotAddValidatorNoParametersDefined">
+            <summary>
+              Looks up a localized string similar to Cannot add validators to the &apos;{0}&apos; option because it does not have any parameters defined.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.ContextNotAvailable">
+            <summary>
+              Looks up a localized string similar to A context could not be calculated for these inputs.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.ConverterNotFound">
+            <summary>
+              Looks up a localized string similar to Cannot find default converter for type &apos;{0}&apos;. Please specify one manually.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.ExpressionNotAssignableToBaseType">
+            <summary>
+              Looks up a localized string similar to Expression data member &apos;{0}&apos; should be assignable to type &apos;{1}&apos;.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.ExpressionNotDataMemberFunc">
+            <summary>
+              Looks up a localized string similar to The expression should return a data member (field or property) from the &apos;{0}&apos; type..
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.ExpressionNotEqualToType">
+            <summary>
+              Looks up a localized string similar to Expression data member &apos;{0}&apos; should be of type &apos;{1}&apos;.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.HelpOptionName">
+            <summary>
+              Looks up a localized string similar to help.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.HelpOptionShortName">
+            <summary>
+              Looks up a localized string similar to ?.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.InternalErrorLine1">
+            <summary>
+              Looks up a localized string similar to An internal error has occurred with the following message:.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.InternalErrorLine2">
+            <summary>
+              Looks up a localized string similar to Please contact the developer or your administrator for assistance..
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.InvalidParameterIndex">
+            <summary>
+              Looks up a localized string similar to Parameter index value should be -1 (to signify all parameters), zero or greater than zero..
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.OptionValidatorsNotSpecified">
+            <summary>
+              Looks up a localized string similar to No validators were specified for the &apos;{0}&apos; option in the ValidateWith method. Please specify at least one validator..
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ConsoleProgramMessages.TypeMemberNotData">
+            <summary>
+              Looks up a localized string similar to The member &apos;{0}&apos; in type &apos;{1}&apos; should be either a property or a field to be specified in an argument/option handler.
+            </summary>
+        </member>
+        <member name="T:ConsoleFx.Resources.MiscMessages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.MiscMessages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.MiscMessages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.MiscMessages.InvalidEnumType">
+            <summary>
+              Looks up a localized string similar to The enumType parameter should specify a enumerator type.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.MiscMessages.RepeatNegativeIndent">
+            <summary>
+              Looks up a localized string similar to Indent length cannot be a negative value.
+            </summary>
+        </member>
+        <member name="T:ConsoleFx.Validators.MultipleMessageValidator">
+            <summary>
+            Base class for validators that perform multiple checks and hence can produce more than one
+            error message.
+            </summary>
+        </member>
+        <member name="M:ConsoleFx.Validators.MultipleMessageValidator.ValidationFailed(System.String,System.String)">
+            <summary>
+            Shortcut method for throwing a failed validation exception. Use this from derived classes,
+            instead of throwing the exception directly
+            </summary>
+            <param name="message">The validation error message</param>
+            <param name="parameterValue">The parameter value that caused the validation to fail</param>
+        </member>
+        <member name="T:ConsoleFx.Validators.SingleMessageValidator">
+            <summary>
+            Base class for validators that only do a single check and hence can only produce a single error
+            message.
+            For such validators, you can set the ErrorMessage property to customize the exception message
+            in the thrown validation exception.
+            </summary>
+        </member>
+        <member name="M:ConsoleFx.Validators.SingleMessageValidator.ValidationFailed(System.String)">
+            <summary>
+            Shortcut method for throwing a failed validation exception. Use this from derived classes,
+            instead of throwing the exception directly
+            </summary>
+            <param name="parameterValue">The parameter value that caused the validation to fail</param>
+        </member>
+        <member name="P:ConsoleFx.Validators.SingleMessageValidator.ErrorMessage">
+            <summary>
+            Custom error message that is assigned to the validation failure exception
+            </summary>
+            <remarks>
+            The error message can have one placeholder parameter representing the parameter value.
+            </remarks>
+        </member>
+        <member name="T:ConsoleFx.ProgramContext">
+            <summary>
+            Specifies the two most commonly-used types of program contexts.
+            </summary>
+        </member>
+        <member name="F:ConsoleFx.ProgramContext.Normal">
+            <summary>
+            Represents a normal usage context
+            </summary>
+        </member>
+        <member name="F:ConsoleFx.ProgramContext.Help">
+            <summary>
+            Represents a help usage context
+            </summary>
+        </member>
+        <member name="T:ConsoleFx.Resources.CaptureMessages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.CaptureMessages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.CaptureMessages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.CaptureMessages.FileDoesNotExist">
+            <summary>
+              Looks up a localized string similar to File &apos;{0}&apos; does not exist.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.CaptureMessages.ProcessAborted">
+            <summary>
+              Looks up a localized string similar to The process was aborted.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.CaptureMessages.ProcessStartFailed">
+            <summary>
+              Looks up a localized string similar to Could not start the process with file name &apos;{0}&apos;.
+            </summary>
+        </member>
+        <member name="T:ConsoleFx.Resources.ParserMessages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.InvalidNumberOfArguments">
+            <summary>
+              Looks up a localized string similar to Invalid number of arguments specified.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.InvalidOptionParameterSpecifier">
+            <summary>
+              Looks up a localized string similar to Option &quot;{0}&quot; should be followed by a colon (:) to specify its parameters.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.InvalidOptionParametersSpecified">
+            <summary>
+              Looks up a localized string similar to Invalid parameter format for option &quot;{0}&quot;.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.InvalidOptionSpecified">
+            <summary>
+              Looks up a localized string similar to Invalid option was specified: &quot;{0}&quot;.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.InvalidParametersSpecified">
+            <summary>
+              Looks up a localized string similar to Invalid parameters specified for option &apos;{0}&apos;.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.OccurenceParameterValueNegative">
+            <summary>
+              Looks up a localized string similar to Occurence/parameter values cannot be negative.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.OptionAlreadyExists">
+            <summary>
+              Looks up a localized string similar to An option by the name &apos;{0}&apos; already exists.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.OptionsAfterParameters">
+            <summary>
+              Looks up a localized string similar to The options should be specified after the arguments.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.OptionsBeforeParameters">
+            <summary>
+              Looks up a localized string similar to The options should be specified before the arguments.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.RequiredArgumentsDefinedAfterOptional">
+            <summary>
+              Looks up a localized string similar to Cannot specify required arguments after optional ones.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.RequiredOptionAbsent">
+            <summary>
+              Looks up a localized string similar to The option &quot;{0}&quot; should be specified.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.RequiredParametersAbsent">
+            <summary>
+              Looks up a localized string similar to Required parameters absent for option &apos;{0}&apos;.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.TooFewOptions">
+            <summary>
+              Looks up a localized string similar to &quot;{0}&quot; option should be specified at least {1} times.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ParserMessages.TooManyOptions">
+            <summary>
+              Looks up a localized string similar to &quot;{0}&quot; option cannot be specified more than {1} times.
+            </summary>
+        </member>
+        <member name="T:ConsoleFx.Programs.Simple.ConsoleProgram">
+            <summary>
+            Represents a simple console application that performs a discrete function and can optionally
+            display help about its usage
+            </summary>
+        </member>
+        <member name="M:ConsoleFx.Programs.Simple.ConsoleProgram.#ctor(ConsoleFx.Programs.ExecuteHandler,System.Boolean,ConsoleFx.CommandGrouping,System.Boolean)">
+            <summary>
+            Initializes a new instance of the ConsoleProgram class
+            </summary>
+            <param name="handler">A delegate that will execute the primary functionality of the application</param>
+            <param name="includeHelpSupport">Adds support for providing help in the application</param>
+            <param name="commandGrouping">The order in which the options and arguments can be specified on the command line</param>
+            <param name="displayUsageOnError">Whether to automatically display help if an error occurs</param>
+        </member>
+        <member name="M:ConsoleFx.ConsoleEx.Prompt(System.String,System.Object[])">
+            <summary>
+            Displays a message and waits for user input.
+            </summary>
+            <param name="message">A composite format string representing the message to be displayed</param>
+            <param name="args">An array of objects to write using message</param>
+            <returns>The input entered by the user</returns>
+        </member>
+        <member name="M:ConsoleFx.ConsoleEx.Prompt(System.Nullable{System.ConsoleColor},System.Nullable{System.ConsoleColor},System.String,System.Object[])">
+            <summary>
+            Displays a message in the specific foreground and background colors and waits for user input.
+            </summary>
+            <param name="foreColor">The foreground color to display the message. Specify null to use the default foreground color.</param>
+            <param name="backColor">The background color to display the message. Specify null to use the default background color.</param>
+            <param name="message">A composite format string representing the message to be displayed</param>
+            <param name="args">An array of objects to write using message</param>
+            <returns>The input entered by the user</returns>
+        </member>
+        <member name="M:ConsoleFx.ConsoleEx.WaitForEnter">
+            <summary>
+            Waits for the user to press the ENTER (RETURN) key
+            </summary>
+        </member>
+        <member name="M:ConsoleFx.ConsoleEx.WaitForAnyKey">
+            <summary>
+            Waits for the user to press any key on the keyboard. Displays the character representing
+            the pressed key in the console window.
+            </summary>
+            <returns>Information about the pressed key</returns>
+        </member>
+        <member name="M:ConsoleFx.ConsoleEx.WaitForKeys(System.Char[])">
+            <summary>
+            Waits for any of a specified set of keys to be pressed by the user.
+            </summary>
+            <param name="keys">An array of characters representing the allowed set of characters.</param>
+            <returns>The character pressed by the user</returns>
+        </member>
+        <member name="M:ConsoleFx.ConsoleEx.WaitForKeys(System.ConsoleKey[])">
+            <summary>
+            Waits for any of a specified set of keys to be pressed by the user.
+            </summary>
+            <param name="keys">An array of ConsoleKey objects representing the allowed set of keys.</param>
+            <returns>The key pressed by the user</returns>
+        </member>
+        <member name="M:ConsoleFx.ConsoleEx.Write(System.Nullable{System.ConsoleColor},System.Nullable{System.ConsoleColor},System.String,System.Object[])">
+            <summary>
+            Displays a string on the Console using the specified foreground and background colors. Similar
+            to the Console.Write method.
+            </summary>
+            <param name="foreColor">The foreground color to display the message. Specify null to use the default foreground color.</param>
+            <param name="backColor">The background color to display the message. Specify null to use the default background color.</param>
+            <param name="text">A composite format string representing the message to be displayed</param>
+            <param name="args">An array of objects to write using message</param>
+        </member>
+        <member name="M:ConsoleFx.ConsoleEx.WriteBlankLine">
+            <summary>
+            Writes a blank line to the Console. Just a more descriptive way to do a Console.WriteLine().
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.ConsoleEx.SecretMask">
+            <summary>
+            <para>The character to be used when entering a secret value using the ReadSecret methods. The default is '*'.</para>
+            <para>Changing this value applies globally.</para>
+            </summary>
+            <remarks>
+            <para>You can specify a null character (\x0) to prevent any output from displaying and the cursor
+            from moving as characters are typed.</para>
+            <para>Alternatively, you can specify a space character to prevent any output from displaying,
+            although the cursor will move with the characters typed.</para>
+            </remarks>
+        </member>
+        <member name="T:ConsoleFx.Validators.ValidatorCollection">
+            <summary>
+            Collection of validator classes
+            </summary>
+        </member>
+        <member name="T:ConsoleFx.Validators.ParameterIndex">
+            <summary>
+            Few constants representing the index of a parameter for an option.
+            </summary>
+            <remarks>
+            The parameter index needs to be specified when assigning a validator to an option. It indicates
+            the index of the parameter whose value it must check using the validator.
+            A special value of All (-1) represents all parameters.
+            Unfortunately, at this time, there is no way to specify a range of parameter indices, although
+            this is a very rare requirement.
+            </remarks>
+        </member>
+        <member name="T:ConsoleFx.Validators.BooleanValidator">
+            <summary>
+            Checks whether the parameter value is 'True' or 'False'. The check is not case sensitive.
+            </summary>
+        </member>
+        <member name="T:ConsoleFx.Resources.ValidationMessages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.Boolean">
+            <summary>
+              Looks up a localized string similar to Expecting a true/false value.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.Custom">
+            <summary>
+              Looks up a localized string similar to Custom validation failed.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.Enum">
+            <summary>
+              Looks up a localized string similar to The parameter you specified &quot;{0}&quot; does not match any of the allowed values.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.Integer_NotAnInteger">
+            <summary>
+              Looks up a localized string similar to {0} is not a valid integer.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.Integer_OutOfRange">
+            <summary>
+              Looks up a localized string similar to {0} does not fall into the valid range of {1} to {2}.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.Lookup">
+            <summary>
+              Looks up a localized string similar to The parameter you specified &quot;{0}&quot; does not match any of the allowed values: &quot;{1}&quot;.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.Path">
+            <summary>
+              Looks up a localized string similar to The path &apos;{0}&apos; does not exist.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.Regex">
+            <summary>
+              Looks up a localized string similar to The parameters you specified &quot;{0}&quot; does not match a valid value.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.String_MaxLength">
+            <summary>
+              Looks up a localized string similar to The parameter you specified &quot;{0}&quot; should not be more than {1} characters long.
+            </summary>
+        </member>
+        <member name="P:ConsoleFx.Resources.ValidationMessages.String_MinLength">
+            <summary>
+              Looks up a localized string similar to The parameter you specified &quot;{0}&quot; should be at least {1} characters long.
+            </summary>
+        </member>
+    </members>
+</doc>
