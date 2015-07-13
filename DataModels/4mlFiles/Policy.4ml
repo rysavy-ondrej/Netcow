@@ -7,11 +7,24 @@
     UI32Range ::= new (left:UI32,right:UI32).
     UI16Range ::= new (left:UI16,right:UI16).
 
+    /// This predicate tests if x in range r. 
+    inrange ::= (r:UI32Range,x:Integer).
+    inrange(r,x) :- r is UI32Range(x,_).
+    inrange(r,y) :- inrange(r,x), y = x + 1, y <= r.right.  
+    
     /// These are derived types, which can be used in specification and querying.
     IP ::= (address:UI32).
     PN ::= (port:UI16).
     TrunkEncapsulation ::= {DOT1Q, ISL}.
 }
+
+model TypesTest of Types {
+    r is UI32Range(10,20).
+    /// query TypesTest inrange(%r, 15) ~ true
+    /// query TypesTest inrange(%r, 5) ~ false
+    /// query TypesTest inrange(%r, 25) ~ false
+}
+
 domain NetworkBasedApplications {
     /// NBAR2 classification is used to describe kind of communication:
     /// http://www.cisco.com/c/en/us/products/collateral/ios-nx-os-software/network-based-application-recognition-nbar/product_bulletin_c25-627831.html
@@ -20,70 +33,311 @@ domain NetworkBasedApplications {
         }. /// TODO: Add rest protocols...
     Category ::= { BROWSING, BUSINESS, EMAIL, FILESHARING, GAMING, INDUSTRIAL, MESSAGING, PRIVACY, L3OVERIP, LOCSERVICES, NETADMIN, NEWSGROUP, SOCIALNET, STREAMING, TROJAN, MULTIMEDIA, OTHER, OBSOLETE }.
     Transport ::= { P2P, TUNNELED, ENCRYPTED }.
-    ApplicationInfo ::= new (application:Application, category:Category, p2p:{YES,NO,NIL},tunneled:{YES,NO,NIL},encrypted:{YES,NO,NIL}).
-    ApplicationInfo(FLASHMYSPACE,BROWSING,NO,NO,NO).
-    ApplicationInfo(FLASHVIDEO,BROWSING,NO,NO,NO).
-    ApplicationInfo(FLASHYAHOO,BROWSING,NO,NO,NO).
-    ApplicationInfo(GOPHER,BROWSING,NO,NO,NO).
-    ApplicationInfo(GSSHTTP,BROWSING,NIL,NIL,NIL).
-    ApplicationInfo(HTTP,BROWSING,NO,NO,NO).
-    ApplicationInfo(HTTPALT,BROWSING,NO,NO,NO).
-    ApplicationInfo(QQACCOUNTS,BROWSING,NO,NO,NO).
-    ApplicationInfo(SHOCKWAVE,BROWSING,NO,NO,NO).
-    ApplicationInfo(RTP,MULTIMEDIA,NO,NO,NO).
+    ApplicationTable ::= new (application:Application, category:Category, p2p:{YES,NO,NIL},tunneled:{YES,NO,NIL},encrypted:{YES,NO,NIL}).
+    ApplicationTable(FLASHMYSPACE,BROWSING,NO,NO,NO).
+    ApplicationTable(FLASHVIDEO,BROWSING,NO,NO,NO).
+    ApplicationTable(FLASHYAHOO,BROWSING,NO,NO,NO).
+    ApplicationTable(GOPHER,BROWSING,NO,NO,NO).
+    ApplicationTable(GSSHTTP,BROWSING,NIL,NIL,NIL).
+    ApplicationTable(HTTP,BROWSING,NO,NO,NO).
+    ApplicationTable(HTTPALT,BROWSING,NO,NO,NO).
+    ApplicationTable(QQACCOUNTS,BROWSING,NO,NO,NO).
+    ApplicationTable(SHOCKWAVE,BROWSING,NO,NO,NO).
+    ApplicationTable(RTP,MULTIMEDIA,NO,NO,NO).
     /// TODO import rest of application info...
+    
+    isApplication ::= (a:Application).
+    isApplication(a) :- ApplicationTable(a,_,_,_,_).
+    isCategory ::= (c:Category).
+    isCategory(c) :- ApplicationTable(_,c,_,_,_).
 }
 
 //// This domain represents models that represent network policy specifications. 
+//// Policy contains:
+////   Path         which 
+////   Target       which can be flow or service
+////   Conditions   that represent additional constraints 
+////   Action Items that express actions that should be enforced 
+////                on Target if Conditions are met.
 domain Policy includes Types, NetworkBasedApplications {
-    /// This class represents known applications and their parameters that can be used in policy specifications.
-    Protocol ::= Application + Protocol + Transport + {ANY}.
+
+    /// SCOPE:
+    Zone ::= new (name:String).
+    Network ::= new (name:String, network:UI32Range).
+    Host ::= new (name:String, address:UI32).
+    Device ::= new (name:String).
+    Netloc ::= Zone + Network + Host + Device + {ANY}.
+    //// Relations between Zones, Networks, Hosts and Devices.
+    //// Zone has 1..* Networks
+    //// Network has 1..* Hosts, this relation is derived from IP addresses.
+    //// Device has 1..* Hosts (as Host represent IP Host and Device may have more interfaces).
+    //// This relation is also derived as Device and Host should have the same name.
+    ZoneNetworks ::= new (z:Zone, n:Network).
+    NetworkHost ::= (n:Network,h:Host).
+    NetworkHost(n,h) :- n is Network, h is Host, 
+                        n.network.left < h.address, 
+                        h.address < n.network.right.
     
-    Zone ::= new(name:String).
-    Network ::= new(name:String, network:UI32Range).
-    Host ::= new(name:String, address:UI32).
-    Device ::= new(name:String).
-    Netloc ::= Zone + Network + Host + Device.
+    /// Paths are composed of network locations. A path may contain wildcard
+    /// that can be substituted for zero or mode netwotk locations.
+    Path ::= new (Netloc, any Path + {NIL}).
+    Waypoint ::= new (loc:Netloc).
+    Avoid ::= new (loc:Netloc).
+    SpaceScope ::= Path + Waypoint + Avoid.
+    
+    DayOfWeek ::= {MON,THU,WED,THU,FRI,SAT,SUN}.
+    TimeOfDay ::= new (hour: {1..23}, minute:{0..59}).
+    DateTime ::= DayOfWeek + TimeOfDay.
+    Between ::= new (from:DateTime,until:DateTime).
+    Except ::= new (from:DateTime,until:DateTime).
+    
+    TimeScope ::= Between + Except.
+    
+    /// TARGET:
+    /// This class represents known applications and their parameters that can be used in policy specifications.
+    Protocol ::= Application + Category + Transport + {ANY}.
     
     Request ::= new (requestor:Netloc, target:Netloc, protocol: Protocol).
     Response ::= new (responder:Netloc, target:Netloc, protocol: Protocol). 
-    Flow ::= new (requestor:Netloc, target:Netloc, protocol: Protocol).
+    Flow ::= new (source:Netloc, target:Netloc, protocol: Protocol).
+    
+    /// Modifiers for Flows:
+    /// Users - specifies user class of a flow:
+    Users ::= new (class:String).
+    Service ::= new (service:String).    
+    FlowClass ::= new (flow:Flow, class:Users+Service).
+        
+    ///ExprCompare ::= EQ, GT, LT, GE, LE, NE.
+    ///Expression ::= ExprCompare  
+    /// This action predicate constrains QoS-related parameters.
+    Gbps ::= new(gbps:Integer).
+    Mbps ::= new(mbps:Integer).
+    Kbps ::= new(kbps:Integer).
+    Bps ::= new(bps:Integer).
+    Band ::= Gbps + Mbps + Kbps + Bps.
+    Ms ::= new (ms:Integer).
+    Us ::= new (us:Integer).
+    Time ::= Ms + Us.
 
-    Service ::= new (service:String).
-    /// This action predicates constrains QoS-related parameters.
-    Qos ::= new (latency:Integer+{NIL}, jitter:Integer+{NIL}, band:Integer+{NIL}).
-    /// This action predicate requires that specified key has required value.
-    Set ::= new (key:String,value:String).
+    Qos ::= new (latency:Time+{NIL}, jitter:Time+{NIL}, band:Band+{NIL}).
+    /// Requires priority of the traffic.
+    Priority ::= new (priority:Integer).
     /// This action predicate defines whether flow is permitted or denied.
-    Access ::= new (exec:{PERMIT, DROP}).
-    /// Flow action is one of the above defined kinds.
-    FlowAction ::= Qos+Set+Access.
+    Access ::= new (exec: {PERMIT,DENY}).
+    /// Flow action is one of the above de= Qos + Ensure + Priorityfined kinds.
+    FlowAction ::= Access + Qos + Priority.
+    
+    ///Args ::= new (arg:??, any Args + {NIL}).
+    ///Fun ::= new (name:String, args:Args).
+    Var ::= new (name:String).
+    Not ::= new (arg:any Proposition).
+    Expr ::= Var + Integer + Real + String.
+    Cmp ::= new (op:{EQ, GT, LT, GE, LE, NE}, left:Expr,right:Expr).
+    Predicate ::= new (name:String).
+    Proposition ::= Not + Cmp + Predicate.
 
     /// Each Policy object should have the unique id and target object.
     /// Target object of FlowPolicy is a flow object.
-    FlowPolicy ::= new (id:String, flow:Flow, action:FlowAction).
+    FlowPolicyRule ::= new (id:String, flow:Flow, action:FlowAction).
     
     ServiceAction::= {ENABLED, DISABLED}.
     /// Target object of ServicePolicy is a service object.
     ServicePolicy ::= new (id:String, service:Service, action:ServiceAction).
     
-    Path ::= new (path:String).
-    Waypoint ::= new (loc:Netloc).
-    Avoid ::= new (loc:Netloc).
-    
-    SpaceScope ::= Path + Waypoint + Avoid.
-    
-    TimeScope ::= new (id:String).
-    Scope ::= SpaceScope + TimeScope.
-    
     Policy ::= FlowPolicy + ServicePolicy.
-    PolicyScope ::= new (policy:Policy,scope:Scope).
+    Scope ::= new (policy:Policy,scope:SpaceScope + TimeScope). 
+    Cond ::= new(policy:FlowPolicy,prop:Proposition).
 }
+
+domain Network {
+    Link ::= new (Netloc,Netloc).    
+}
+
+domain PolicySemantics includes Policy, Network, State {
+    /// Flow is represented as n-tuple that characterizes all relevant properties
+    /// with respect to Policy domain.  
+    flow ::= ( source:Integer,target:Integer,application:Application,
+               priority:Integer,qos_delay:Integer,qos_jitter:Integer,qos_band:Integer,
+               class: {POS,NEG,INV}).
+    
+    /// Maps locations to integer representation of ip address.
+    location ::= (nl:Netloc,l:Integer).
+    location(nl,l) :- nl : Network, nl is Network(_, UI32Range(l,_)).
+    location(nl,x) :- nl is Network, location(nl,k), x = k + 1, x <= nl.network.right.
+    
+    /// Maps categories to applications...      
+    application ::= (p:Protocol,a:Application).
+    application(c,a) :- isCategory(c), ApplicationTable(a,c,_,_,_).
+    application(a,a) :- isApplication(a).
+    
+    /// Priority range
+    UI32Range(0,100).
+    
+        
+    flow(s,t,a,p,0,0,0,NEG) :-
+        FlowPolicy(_, Flow(fs,ft,fa),Access(DENY)), inrange(UI32Range(0,100),p),
+        location(fs,s),location(ft,t),application(fa,a).
+
+    flow(s,t,a,p,0,0,0,POS) :-
+        FlowPolicy(_, Flow(fs,ft,fa),Access(PERMIT)), inrange(UI32Range(0,100),p),
+        location(fs,s),location(ft,t),application(fa,a).
+        
+    flow(s,t,a,p,0,0,0,POS) :-
+        FlowPolicy(_, Flow(fs,ft,fa),Priority(p)),
+        location(fs,s),location(ft,t),application(fa,a).       
+        
+}
+
+/// Flowsets domain represents a set of flows
+domain Reachability {
+    UID ::= String + Integer.
+    IP ::= Integer.
+    PN ::= Integer.
+    PT ::= Integer.
+    /// Flow 
+    Flow :: = new (srcIp:IP,dstIp:IP,srcPn:PN,dstPn:PN,pt:PT).
+    /// Specifies a filter as a set of permitted flows.
+    Filter ::= new (id:UID, flow:Flow).
+    Interface ::= new (id:UID).
+    Idge ::= new(is:Interface,id:Interface,t:UID).
+    Edge ::= new(es:Interface,ed:Interface,f:UID).
+}
+
+transform DenotationalMapping (policy::Policy) (network::Network) returns (output::FlowReach)
+{
+
+}
+
+model PolicySemanticsTest of PolicySemantics {
+    z_access is Network("Access",UI32Range(10,20)).
+    z_data is Network("Data Center",UI32Range(40,50)).    
+
+    f is Flow(z_access,z_data,MULTIMEDIA).
+    FlowPolicy("a", f, Access(DENY)).
+    
+    /// query PolicySemanticsTest flow(s,t,a,p,qd,qj,qb,NEG)   
+}
+
+
+
+//// This domain implements consistency checking methods for policies. 
+domain PolicyConsistencyChecking includes PolicySemantics {
+    disjoint ::= (x:Network,y:Network).
+    disjoint(x,y) :- x is Network, y is Network, x.network.right < y.network.left.
+    disjoint(x,y) :- x is Network, y is Network, y.network.right < x.network.left.
+    
+    common_netloc ::= (l1:Netloc, l2:Netloc).
+    common_netloc(x,y) :- common_netloc(y,x).
+    common_netloc(n,h) :- NetworkHost(n,h).
+    common_netloc(z,n) :- ZoneNetworks(z,n).
+    common_netloc(n1,n2) :- n1 is Network, n2 is Network, no disjoint(n1,n2).
+    
+    /// Tests whether given two protocols has something in common. 
+    common_proto ::= (p1:Protocol,p2:Protocol).
+    common_proto(p,ANY) :- isApplication(p); isCategory(p); p = ANY. 
+    common_proto(a1,a2) :- isApplication(a1), isApplication(a2), a1 = a2.
+    common_proto(p,c) :- ApplicationTable(p,c,_,_,_).
+    common_proto(x,y) :- common_proto(y,x).
+    /// Checking whether the same target has applied different actions:
+    common_flow ::= (f1:Flow,f2:Flow).
+    
+    
+}
+
+
+
+/// This is PolicyConsistencyChecking Test model.
+model Safe of PolicyConsistencyChecking {
+    z_management is Zone("Management").
+    z_access is Zone("Access").
+    z_data is Zone("Data Center").
+    z_core is Zone("Core").
+    z_edge is Zone("Internet Edge").
+    z_public is Zone("Public Services").    
+    z_internet is Zone("Internet").
+    z_branch is Zone("Branch"). 
+    z_partner is Zone("Partner Site"). 
+    z_tworker is Zone("Teleworker").
+    Link(z_core,z_management).
+    Link(z_core,z_access).
+    Link(z_core,z_data).
+    Link(z_core,z_edge).
+    Link(z_edge,z_public).
+    Link(z_edge,z_internet).
+    
+    Link(z_branch,z_internet).
+    Link(z_partner,z_internet).
+    Link(z_tworker,z_internet).
+    
+    /// Test queries:
+    /// query CExample common_proto(HTTP,EMAIL)    -> false
+    /// query CExample common_proto(HTTP,BROWSING) -> true
+    /// query CExample common_proto(ANY,RTP)       -> true
+}
+
+model PathExample of Policy {
+    anynet is Network("*", UI32Range(0,4294967295)).
+    anyflow is Flow(anynet,anynet,ANY).
+
+    /// Zone definitions:
+    z_transit is Zone("Transit").
+    z_university is Zone("University").
+    z_public is Zone("Public").
+    z_server is Zone("Servers").
+                    
+    /// User definitions:
+    u_faculty is Users("faculty").
+    u_students is Users("students").
+                    
+    
+    /// Policies from Stone-2001:
+    /// P1 is a rule, which states that the path starting at zone Public, 
+    /// traversing to zone University, and ending at zone Servers will provide high priority for faculty users.
+    faculty_flow is Flow(anynet,anynet,ANY).
+                    FlowClass(faculty_flow, Users("faculty")).
+    p1 is FlowPolicy("Policy1<net_manager>", faculty_flow, Priority(1)).
+          Scope(p1, Path(Zone("Public"),Path(Zone("University"),Path(Zone("Servers"),NIL)))).
+    
+    /// P2 rule states that all traffic will be allowed to traverse through nodes 2 and 4 during 
+    /// nonworking hours. Unless granted by another policy, traffic will not be able to traverse 
+    /// through nodes 2 and 4 during working hours. This is as a result of the default action, 
+    /// which is an explicit deny.          
+    p2 is FlowPolicy("Policy2<stone>", anyflow,Access(PERMIT)).
+          Scope(p2, Between(TimeOfDay(16,00),TimeOfDay(08,00))).
+    
+    /// This is a rule which states that no path in the network will be permitted if it has a hop 
+    /// count greater than 19. This example shows the ability to use explicit deny.
+    p3 is FlowPolicy("Policy3<net_manager>", anyflow, Access(DENY)).
+          ///PolicyScope(p3, PathLength(Gt(19))).
+          /// ???
+    
+    /// All hosts with a network address starting with 131.1 will be permitted to traverse zone Transit. 
+    flow131_1 is Flow(Network("131.1.*.*", UI32Range(2197880832,2197946367)), anynet, ANY).
+    p4 is FlowPolicy("Policy4<net_manager>", flow131_1, Access(PERMIT)).
+          Scope(p4, Waypoint(Zone("Transit"))).  
+          
+    /// This policy shows the ability for compromise. Voice and video traffic are provided with 
+    /// an allotted bandwidth of 50 Mb/s, but when the network loss rate is greater than
+    /// 40 percent, a compromise will be made to lower the allotted bandwidth to 40 Mb/s.
+    flow_mult is Flow(anynet,anynet,MULTIMEDIA).
+    p5_1 is FlowPolicy("Policy5<xie>", flow_mult, Qos(NIL,NIL, Mbps(50))).
+            /// loss_rate (data) <= 40%
+            Cond(p5_1, Cmp(LE, Var("loss_rate(data)"), 0.4)).
+    p5_2 is FlowPolicy("Policy5<xie>", flow_mult, Qos(NIL,NIL, Mbps(40))).
+            /// loss_rate (data) > 40%
+            Cond(p5_2, Cmp(GT, Var("loss_rate(data)"), 0.4)).
+    
+    /// All business traffic will be assigned a priority level of 10.  
+    f_business is Flow(anynet,anynet, BUSINESS). 
+    p6         is FlowPolicy("Policy6<net_manager>", f_business, Priority(10)).
+     
+}
+
 model QosExample of Policy {
     customers is Zone("Customers").
-    internet is Zone("Internet").
-    gw is Device("VoiceGateway").
-    voip is Flow(customers, internet,RTP).   
-    p1 is FlowPolicy("p1", voip, Qos(100,5,3000)).
-    PolicyScope(p1, Waypoint(gw)).
+    internet  is Zone("Internet").
+    gw        is Device("VoiceGateway").
+    voip      is Flow(customers, internet,RTP).   
+    p1        is FlowPolicy("p1", voip, Qos(Ms(200),Ms(10),Kbps(30))).
+                 Scope(p1, Waypoint(gw)).
 }

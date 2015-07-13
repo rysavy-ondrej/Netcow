@@ -1,4 +1,13 @@
 ﻿domain Reachability {
-
-
+    UID ::= String + Integer.
+    IP ::= Integer.
+    PN ::= Integer.
+    PT ::= Integer.
+    /// Flow 
+    Flow :: = new (srcIp:IP,dstIp:IP,srcPn:PN,dstPn:PN,pt:PT).
+    /// Specifies a filter as a set of permitted flows.
+    Filter ::= new (id:UID, flow:Flow).
+    Interface ::= new (id:UID).
+    Idge ::= new(is:Interface,id:Interface,t:UID).
+    Edge ::= new(es:Interface,ed:Interface,f:UID).
 }
