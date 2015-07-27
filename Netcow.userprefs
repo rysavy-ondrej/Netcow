@@ -1,8 +1,10 @@
-﻿<Properties GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="FilterChecker/Checker.cs">
+﻿<Properties GitUserInfo="UsingGIT" StartupItem="NetworkModelGenerator/NetworkModelGenerator.fsproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="NetworkModelGenerator/CiscoConfig.fs">
     <Files>
-      <File FileName="FilterChecker/Checker.cs" Line="14" Column="14" />
+      <File FileName="NetworkModelGenerator/GnsNetParser.fs" Line="1" Column="1" />
+      <File FileName="NetworkModelGenerator/Utils.fs" Line="1" Column="1" />
+      <File FileName="NetworkModelGenerator/CiscoConfig.fs" Line="121" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
