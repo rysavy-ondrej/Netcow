@@ -1,8 +1,49 @@
+                         .                 
+                        .    '`                
+                        @    .#                
+                        @.   .+                
+                        #'   +# '###           
+                   `##',@@###@:@#',@.          
+                  ,@@+:;      @@+##`           
+                  '+.#+@      ,+               
+                    `  +`   `, @               
+                       `: ,    @               
+                      `+###    @               
+          @@;.     ,#+` @      #`              
+         ,@@@@@@@@@@    @      +.              
+         +@@@@@@@@@@`   #      ;;              
+         @`@@@@@@@@@;   '`     `@              
+        `@ @@@@@@@@:     '  #@@@@              
+        '@ @@@@@@@#  ;   ',@@@@@#              
+        +@ ,@@;@@@`  :  .@+@@@@@`              
+        ;+;    @.,   '  @@+,@`                 
+        , @:  `,     @  @@'                    
+       +# #   #@@+#'`#  @@`                    
+       +: ,; '@@#    #  @@                     
+        `  .`; @,    :  @+                     
+            +; '@     , @,                     
+            .   @`    # @,                     
+            `;:+@;    , #+                     
+                       :,                      
+                                               
+                                               
+    @:  @##`+#+@ @#'++@  @@  #@: @@+ ##.''@    
+    ,@:  @   @ , + ,@ , @:' @  @@`@  @#  @     
+     @@  @   @     ,@  `#  ,@   @ @` @@ @      
+     @ @ @   @@@   ;@  `'  ,@   @ '@#`@ @      
+     @  @@   @     ;@   @ ` @   @  @@ ,@,      
+   ,@@: .@  ;@@@  @@@@  @@# '@@@   @+  @       
+         .                             ,   
+
 Netcow.Reachability
-Reachability analysis tool, a part of Netcow solution.
+Network Reachability Analysis Tool is a part of Netcow solution.
+https://github.com/rysavy-ondrej/Netcow
 Copyright (c) 2015 Ondrej Rysavy
 
-[mono] Netcow.Reachability	<model file>
-   
-    <model file>  Specifies input file name. A 4ml model file is expected.
+[mono] Netcow.Reachability get-model --input=<input model>
 
+[mono] Netcow.Reachability get-filter --size=<size of filter>
+
+[mono] Netcow.Reachability query-model --model=<model> --query=<query>
+
+Type Netcow.Reachability <command> help for a specific help on individual commands. 

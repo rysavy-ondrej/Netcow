@@ -72,7 +72,9 @@ domain NetworkTypes {
 	ID ::= Integer + String.
 	IP ::= new (value:{0..4294967295}).
 	PN ::= new (value:{0..65535}).
-    R ::= new (l:IP+PN, r:IP+PN).
+
+	Network ::= new(id:ID, net:IP, bcast:IP).
+
 
 	_tt ::= (TrafficType).	   
 	_tt(ARP). _tt(BGP).  _tt(CDP).  _tt(DHCP).  _tt(DNS).  _tt(DTP).  
@@ -108,22 +110,30 @@ domain NetworkFlow includes NetworkTypes {
    /// flow is an aggregation of packets. Flow is defined 
    /// using range constructors for each of its dimensions.
    Flow  ::= new (id:ID).
+
+   SrcNet ::= new (Flow,ID).
    SrcIp ::= new (Flow, IP, IP).
+   SrcIp(f,l,r) :- SrcNet(f,x),Network(x,l,r).
+   
+   DstNet ::= new (Flow,ID).
    DstIp ::= new (Flow, IP, IP).
+   DstIp(f,l,r) :- DstNet(f,x),Network(x,l,r).
+   
    SrcPn ::= new (Flow, PN, PN).
    DstPn ::= new (Flow, PN, PN). 
    App   ::= new (Flow, TrafficType).
-  
+   
 	_(x) :- SrcIp(_,x,_); SrcIp(_,_,x).
 	_(x) :- DstIp(_,x,_); DstIp(_,_,x).
 	_(x) :- SrcPn(_,x,_); SrcPn(_,_,x).	
 	_(x) :- DstPn(_,x,_); DstPn(_,_,x).
-
+	
    Flow("*").
    SrcIp(Flow("*"), IP(0),IP(4294967295)).
    DstIp(Flow("*"), IP(0),IP(4294967295)).
    SrcPn(Flow("*"), PN(0),PN(65535)).
    DstPn(Flow("*"), PN(0),PN(65535)).
+
    App(Flow("*"), ARP). App(Flow("*"),BGP). App(Flow("*"),CDP).  
    App(Flow("*"),DHCP). App(Flow("*"),DNS). App(Flow("*"),DTP).  
    App(Flow("*"),EIGRP). App(Flow("*"),FTP). App(Flow("*"),H323).  
@@ -138,12 +148,16 @@ domain NetworkFlow includes NetworkTypes {
    App(Flow("*"),TCP). App(Flow("*"),TELNET). App(Flow("*"),TFTP).  
    App(Flow("*"),UDP). 	App(Flow("*"),VTP).
 
+   Range ::= new(Integer,Integer).
+   /// This computes a unified range representation for Flow specification.
+   flow ::= (f:Flow,srcipRange:Range,dstipRange:Range,srcPnRange:Range,dstPnRange:Range,appRange:Range).
+				
    /// Determines whether the specified packet is a part of the given flow.
-   packet ::= (flow:Flow,srcip:IP,dstip:IP, 
+   packet ::= (f:Flow,srcip:IP,dstip:IP, 
                srcpn:PN,dstpn:PN,app:TrafficType).
 
-   packet (flow,srcip,dstip,srcpn,dstpn,app) :-
-       flow is Flow, 
+   packet (f,srcip,dstip,srcpn,dstpn,app) :-
+       f is Flow, 
 	   SrcIp(f, IP(l1),IP(r1)), srcip is IP(x1), l1 <= x1, x1 <= r1,    
 	   DstIp(f, IP(l2),IP(r2)), dstip is IP(x2), l2 <= x2, x2 <= r2,    
 	   SrcPn(f, PN(l3),PN(r3)), srcpn is PN(x3), l3 <= x3, x3 <= r3,     
@@ -165,34 +179,10 @@ domain Reachability includes NetworkTopology, NetworkFlow {
 
 	transformation ::= (idge:Idge, inflow:Flow, outflow:Flow).
 	transformation(idge, Flow("*"), Flow("*")) :- idge is Idge, no Transform(idge,_,_).
-
-	/// This is real problem!!!
-	/// How to write 
-	mem ::= (path:Path, item:Edge+Idge).
-	mem(Path(x,NIL),x) :- x is Edge; x is Idge. 
-	mem(Path(y,path),x) :- y is Edge, mem(path,x).
-	mem(Path(y,path),x) :- y is Idge, mem(path,x).
-
-	/// reach computes for the given path a relation between input and output packets.
-    reach ::= (path:Path,packetIn:packet,packetOut:packet).
-    reach(Path(edge,NIL),pck,pck) :- edge is Edge, filter(edge,flw),
-        packets(flw,pck).
-    
-    reach(Path(idge,NIL),pin,pout) :- idge is Idge, transformation(idge,flowIn,flowOut),
-        packets(flowIn,pin), packets(flowOut,pout).
-    NAME ::= (String).    
-    reach(Path(edge,Path(edge2,path)),pin,pout) :- edge is Edge, filter(edge,flw),
-        edge2 is Edge, edge.to = edge2.from, isSubterm(path,edge2) = true, 
-        packets(flw,pin), 
-		reach(Path(edge2,path),pin,pout).
-        
-    reach(Path(idge,Path(edge,path)),pin,pout) :- idge is Idge, transformation(idge,flowIn,flowOut),
-        edge is Edge, idge.to = edge.from, 
-		packets(flowIn,pin), packets(flowOut,pmid), 
-		reach(Path(edge,path),pmid,pout).  
+	transformation(idge, inflw,outflw) :- idge is Idge, Transform(idge,inflw,outflw).
 }
 
-model M1 of Reachability {
+model N1 of Reachability {
 
 	///
 	///					 src.ip in 10..20
@@ -234,8 +224,6 @@ model M1 of Reachability {
     e8 is EdgeO(p_public_router_Serial0_0_1,l2).
     e9 is EdgeI(l2,p_zfwRouter_Serial0_0_1).
     e10 is EdgeI(l0,p_private_router_FastEthernet0_0).
-
-	p1 is Path(i1,Path(e2,Path(e3,NIL))).
 }
 
 ///	query M1 filter(EdgeO(%p_private_router_FastEthernet0_0,%l0),p)
@@ -250,3 +238,35 @@ model M1 of Reachability {
 ///	Majority of time is spend for (~6s):
 /// query M1 EdgeO(%p_private_router_FastEthernet0_0,%l0)
 
+domain NetworkQuery includes  NetworkTopology, NetworkFlow {
+	Query ::= new (id:ID).
+
+	/// Path Constraints:	
+	Path ::= new (id:ID).
+	Avoid ::= new (path:Path, place:Device+Port+Link).
+	Waypoint ::= new (path:Path, place:Device+Port+Link).
+	SomePath ::= new (query:Query, path:Path).
+	AllPaths ::= new (query:Query, path:Path).
+		
+	/// Flow Constraints
+	Assume::= new (query:Query, flow:Flow).
+	Ensure::= new (query:Query, flow:Flow).
+}
+
+model Q1 of NetworkQuery {
+	q is Query("web-traffic must go through web-proxy").
+	p is Path(1).
+	Waypoint(p, Device("web-proxy",SERVER)).
+	Network("local",IP(11),IP(21)).
+	Network("internet",IP(0),IP(10)).
+	Network("internet",IP(11),IP(100)).
+	f is Flow("web-traffic").
+	     SrcNet(f,"local").
+		 DstNet(f,"internet").
+		 DstPn(f,PN(80),PN(80)).
+		 DstPn(f,PN(443),PN(443)).
+		 App(f,HTTP). App(f,HTTPS).
+
+	Assume(q, f).
+	Ensure(q, f).
+}

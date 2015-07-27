@@ -1,5 +1,5 @@
 ﻿//
-//  ReachabilityProgram.cs
+//  GenerateModelFromPT.cs
 //
 //  Author:
 //       Ondrej Rysavy <rysavy@fit.vutbr.cz>
@@ -18,25 +18,16 @@
 //
 //  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+module Netcow.Reachability.PacketTracer
 open System
 open System.IO
 open System.Diagnostics
 open DataModels
 open DataModels.PacketTracer
-open ConsoleFx
-open ConsoleFx.Programs.Simple
-open ConsoleFx.Validators
 open System.Linq.Expressions
 open Microsoft.FSharp.Quotations
 open Microsoft.FSharp.Linq.RuntimeHelpers
 type IndentedTextWriter = System.CodeDom.Compiler.IndentedTextWriter
-
-/// This is a helper function to convert parameterless lambda function to Func expression of LINQ.
-let toLinqFunc (expr : Expr<unit -> 'b>) =
-  let linq = LeafExpressionConverter.QuotationToExpression expr
-  let call = linq :?> MethodCallExpression
-  let lambda = call.Arguments.[0] :?> LambdaExpression
-  Expression.Lambda<Func<'b>>(lambda.Body, []) 
 
 /// Takes an arbitrary name and produces identifier from it by replacing
 /// all characters that violate identifier specification. 
@@ -44,18 +35,12 @@ let mkIdentifier (name:String) : String =
     let idmap (c:Char) : String = if Char.IsLetterOrDigit c || c = '_' then c.ToString() else "_" 
     String.collect idmap name                              
 
-let mutable inputFile = String.Empty
-
-let programHandler () = 
-    Trace.WriteLine ("Embedded domain files:", "INFO");
-    for s in CheckerFactory.AvailableDomainFiles() do                                                             
-        Trace.WriteLine(String.Format(" +-{0}",s),"INFO")
-    let checker = CheckerFactory.Create("Reachability");
-
-    Trace.WriteLine (String.Format("Processing input file '{0}'.", inputFile), "INFO");
+[<Netcow.Commands.Cmdlet("Get","Model")>]
+let GenerateModel(input:String) = 
+    Trace.WriteLine (String.Format("Processing input file '{0}'.", input), "INFO");
     
     /// Load Network file and print out all devices...
-    let network = PtNetwork(inputFile);
+    let network = PtNetwork(input);
     let writer = new IndentedTextWriter(Console.Out)
     writer.WriteLine("model T of Reachability at \"Reachability.4ml\" {")
     writer.Indent <- writer.Indent + 1
@@ -127,21 +112,3 @@ let programHandler () =
         
     writer.Indent <- writer.Indent - 1
     Console.WriteLine("}");
-
-    0
-    
-[<EntryPoint>]
-let main argv =    
-    Trace.Listeners.Add(new TextWriterTraceListener(Console.Error)) |> ignore
-    Trace.AutoFlush <- true
-
-    let app = new Programs.Simple.ConsoleProgram(Programs.ExecuteHandler(programHandler),true,CommandGrouping.DoesNotMatter, true)
-    in try
-        app.AddArgument(false)
-           .ValidateWith(new PathValidator(checkIfExists=true))
-           .ValidateWith(new CustomValidator(fun arg -> Path.GetExtension(arg).Equals(".xml", StringComparison.OrdinalIgnoreCase)))  
-           .AssignTo(<@ fun () -> inputFile @> |> toLinqFunc );
-
-        app.SetUsageBuilder<Programs.Simple.SimpleResourceUsageBuilder>()
-        app.Run()
-       with ex -> app.HandleError(ex)

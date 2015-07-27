@@ -25,7 +25,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DocumentationFile>bin\Debug\Reachability.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
-    <StartArguments>zpf.xml</StartArguments>
+    <StartArguments>Test-Disjoint -f 10 -p 10 &gt; t.smt</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,27 +55,39 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="ReachabilityProgram.fs" />
+    <Compile Include="Utils.fs" />
+    <Compile Include="PacketTracer.fs" />
+    <Compile Include="Benchmarks.fs" />
+    <Compile Include="Reachability.fs" />
     <None Include="App.config" />
     <None Include="packages.config" />
-    <Content Include="Usage.txt" />
+    <EmbeddedResource Include="Usage.txt" />
+    <EmbeddedResource Include="FirewallTest.smt" />
+    <None Include="Scripts\Perftest.fsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CmdLets\CmdLets.csproj">
+      <Name>CmdLets</Name>
+      <Project>{a664af8f-bbd0-4f5a-ab93-60d439e3f6fa}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\Microsoft.Formula\Core\Formula.Core.csproj">
       <Name>Formula.Core</Name>
       <Project>{1b5724ec-fff1-48d7-a700-ad46f0150afc}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <Reference Include="ConsoleFx">
-      <HintPath>..\packages\ConsoleFx.1.4\lib\net40\ConsoleFx.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management.Automation">
+      <HintPath>..\packages\System.Management.Automation.6.1.7601.17515\lib\net45\System.Management.Automation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Numerics" />
     <ProjectReference Include="..\DataModels\DataModels.csproj">
       <Name>DataModels</Name>

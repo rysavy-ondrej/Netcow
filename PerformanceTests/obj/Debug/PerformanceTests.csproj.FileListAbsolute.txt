@@ -1,0 +1,6 @@
+C:\Users\Ondrej\Documents\GitHub\Netcow\PerformanceTests\bin\Debug\PerformanceTests.dll
+C:\Users\Ondrej\Documents\GitHub\Netcow\PerformanceTests\bin\Debug\PerformanceTests.pdb
+C:\Users\Ondrej\Documents\GitHub\Netcow\PerformanceTests\bin\Debug\System.Management.Automation.dll
+C:\Users\Ondrej\Documents\GitHub\Netcow\PerformanceTests\obj\Debug\PerformanceTests.csprojResolveAssemblyReference.cache
+C:\Users\Ondrej\Documents\GitHub\Netcow\PerformanceTests\obj\Debug\PerformanceTests.dll
+C:\Users\Ondrej\Documents\GitHub\Netcow\PerformanceTests\obj\Debug\PerformanceTests.pdb

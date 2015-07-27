@@ -1,0 +1,8 @@
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLets\obj\Debug\CmdLets.csprojResolveAssemblyReference.cache
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLets\bin\Debug\CmdLets.dll
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLets\bin\Debug\CmdLets.pdb
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLets\bin\Debug\FluentCommandLineParser.dll
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLets\bin\Debug\FluentCommandLineParser.pdb
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLets\bin\Debug\FluentCommandLineParser.xml
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLets\obj\Debug\CmdLets.dll
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLets\obj\Debug\CmdLets.pdb

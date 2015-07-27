@@ -1,6 +1,4 @@
-C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\Netcow.Reachability.exe.config
 C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\Reachability.XML
-C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\Netcow.Reachability.exe
 C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\Netcow.Reachability.pdb
 C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\FSharp.Core.dll
 C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\Netcow.Models.dll
@@ -11,8 +9,14 @@ C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\FSharp.Core.xml
 C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\Formula.Core.pdb
 C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\libz3.dll
 C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\obj\Debug\Reachability.fsprojResolveAssemblyReference.cache
-C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\obj\Debug\Netcow.Reachability.exe
 C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\obj\Debug\Netcow.Reachability.pdb
-C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\ConsoleFx.dll
-C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\ConsoleFx.pdb
-C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\ConsoleFx.xml
+C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\System.Management.Automation.dll
+C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\Netcow.Reachability.exe.config
+C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\Netcow.Reachability.exe
+C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\CmdLets.dll
+C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\CmdLets.pdb
+C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\obj\Debug\Netcow.Reachability.exe
+C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\FluentCommandLineParser.dll
+C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\FluentCommandLineParser.pdb
+C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\FluentCommandLineParser.xml
+C:\Users\Ondrej\Documents\GitHub\Netcow\Reachability\bin\Debug\Scripts\Perftest.fsx

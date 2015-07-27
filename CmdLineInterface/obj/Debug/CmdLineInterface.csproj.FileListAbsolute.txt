@@ -1,0 +1,12 @@
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\obj\Debug\CmdLineInterface.csprojResolveAssemblyReference.cache
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\obj\Debug\CmdLineInterface.csproj.GenerateResource.Cache
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\bin\Debug\Netcow.Cli.exe.config
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\bin\Debug\Netcow.Cli.exe
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\bin\Debug\Netcow.Cli.pdb
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\bin\Debug\ConsoleFx.dll
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\bin\Debug\ConsoleFx.pdb
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\bin\Debug\ConsoleFx.xml
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\obj\Debug\Netcow.Cli.Resource.resources
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\obj\Debug\Netcow.Cli.exe
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\obj\Debug\Netcow.Cli.pdb
+C:\Users\Ondrej\Documents\GitHub\Netcow\CmdLineInterface\bin\Debug\System.Management.Automation.dll
